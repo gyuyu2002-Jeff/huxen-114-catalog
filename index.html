@@ -2509,6 +2509,84 @@
       border-radius: 2px;
     }
 
+  
+    /* ---------------- 同款外觀・速度與型號切換選單 ---------------- */
+    .pm-series-selector-wrap {
+      background: linear-gradient(135deg, rgba(240, 249, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+      border: 1.5px solid #bae6fd;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.06);
+    }
+    .pm-series-selector-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0369a1;
+      margin-bottom: 8px;
+    }
+    .pm-series-chips {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .pm-speed-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pm-speed-btn:hover {
+      border-color: #0284c7;
+      color: #0284c7;
+      background: #f0f9ff;
+      transform: translateY(-1px);
+    }
+    .pm-speed-btn.active {
+      background: linear-gradient(135deg, #005bac 0%, #0284c7 100%);
+      border-color: #005bac;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0, 91, 172, 0.3);
+      transform: scale(1.02);
+    }
+    .pm-speed-badge {
+      font-size: 10px;
+      padding: 1px 5px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+    }
+    .pm-speed-btn.active .pm-speed-badge {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+    .pm-chassis-note {
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #64748b;
+      text-align: center;
+    }
+    .pm-chassis-note strong {
+      color: #005bac;
+    }
+
   </style>
 </head>
 <body>
@@ -2745,14 +2823,26 @@
             <img id="productModalImg" src="" alt="事務機產品實機照" class="product-modal-img">
           </div>
           <div class="product-modal-family" id="productModalFamily">互盛彩色智慧型複合機旗艦系列</div>
+          <div class="pm-chassis-note" id="pmChassisNote" style="display: none;"></div>
         </div>
 
         <div class="product-modal-details">
+          <!-- 同款外觀・選擇輸出速度與機型切換列 -->
+          <div class="pm-series-selector-wrap" id="pmSeriesSelectorWrap" style="display: none;">
+            <div class="pm-series-selector-title">
+              <span>⚡ 同系列旗艦機身・選擇輸出速度與對應項次：</span>
+            </div>
+            <div class="pm-series-chips" id="pmSeriesChips"></div>
+          </div>
           <div class="product-modal-type" id="productModalType">彩色雷射數位多功能複合機</div>
           
           <div class="product-modal-chips" id="productModalChips"></div>
 
           <div class="product-spec-table">
+            <div class="spec-row" id="specRowTarget" style="display: none;">
+              <span class="spec-label">🏢 採購選型建議</span>
+              <span class="spec-val" id="productModalTarget" style="color: #0369a1; font-weight: 600;"></span>
+            </div>
             <div class="spec-row">
               <span class="spec-label">⚡ 影印/列印速度</span>
               <span class="spec-val" id="productModalSpeed"></span>
@@ -3645,13 +3735,13 @@
     
     /* ---------------- 型錄各頁面事務機機種關聯對照表 ---------------- */
     const PAGE_PRODUCTS_MAP = {
-      2: ['RICOH IM C2510', 'RICOH IM 3500'],
-      3: ['RICOH IM C2510', 'RICOH IM 3500'],
-      4: ['RICOH IM C2510', 'RICOH IM 3500'],
-      5: ['RICOH IM C2510', 'RICOH IM 3500', 'RICOH IM 7000', 'Epson AM-C4000', 'Epson EM-C7100', 'brother MFC-L2770DW', 'HP LaserJet Pro MFP 3103fdn'],
-      6: ['RICOH IM 3500', 'RICOH IM 7000'],
-      7: ['RICOH IM C2510'],
-      8: ['RICOH IM 3500', 'RICOH IM C2510'],
+      2: ['RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM 3500'],
+      3: ['RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM 3500'],
+      4: ['RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM C3510', 'RICOH IM C4510', 'RICOH IM 3500'],
+      5: ['RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM C3510', 'RICOH IM C4510', 'RICOH IM 3500', 'RICOH IM 7000', 'Epson AM-C4000', 'Epson EM-C7100', 'brother MFC-L2770DW', 'HP LaserJet Pro MFP 3103fdn'],
+      6: ['RICOH IM 3500', 'RICOH IM 5000', 'RICOH IM 7000'],
+      7: ['RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM C3510', 'RICOH IM C4510'],
+      8: ['RICOH IM 3500', 'RICOH IM C2510', 'RICOH IM C3010', 'RICOH IM C3510'],
       9: ['Epson AM-C4000', 'Epson EM-C7100'],
       10: ['RICOH MP 5055SP'],
       11: ['RICOH MP 5055SP'],
@@ -4383,111 +4473,141 @@
         name: 'RICOH IM C2510',
         family: '互盛彩色主力旗艦',
         type: '彩色雷射數位多功能複合機',
-        speed: '每分鐘 25 張 (彩色/黑白)',
+        speed: '每分鐘 25 張 (彩色/黑白同速)',
+        speedLabel: '25張 (C2510)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【常規主力首選】適合各級機關公文彩色列印、一般科室（10~25人）、TEC 超低耗電節能第一',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '搭載 Android 系統直覺滑動操控、雙面同步掃描、無針裝訂環保支援、直接加熱極速省電 (TEC 0.6W)',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 1 (買賣)', 'LP5-114034 組別 2 項次 1 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM C2010': {
         name: 'RICOH IM C2010',
         family: '互盛彩色主力旗艦',
         type: '彩色雷射數位多功能複合機',
-        speed: '每分鐘 20 張 (彩色/黑白)',
+        speed: '每分鐘 20 張 (彩色/黑白同速)',
+        speedLabel: '20張 (C2010)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【小型單位/基層處室】低印量但需 A3 全彩輸出、雙面掃描與安全傳真功能',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '搭載 Android 系統、豐富 App 應用程式、雙面高速複印列印、能源之星 2.0 超低耗電',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 1 (買賣)', 'LP5-114034 組別 2 項次 1 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM C3010': {
         name: 'RICOH IM C3010 / C3010EX',
         family: '互盛彩色高階旗艦',
         type: '彩色雷射數位多功能複合機',
-        speed: '每分鐘 30 張 (彩色/黑白)',
+        speed: '每分鐘 30 張 (彩色/黑白同速)',
+        speedLabel: '30張 (C3010)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【主流平衡旗艦】公家機關最受歡迎速度段、適合中型科室（15~35人）、兼顧效率與經濟性',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
-        highlight: '公家部門最愛主力機款、支援 A3 內置自動折紙器、無針裝訂、高解析全彩輸出',
+        highlight: '公家部門最愛主力機款、支援 A3 內置自動折紙器、無針裝訂、高解析 1200x1200dpi 全彩輸出',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 2 (買賣)', 'LP5-114034 組別 2 項次 2 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM C3510': {
         name: 'RICOH IM C3510 / C3510EX',
         family: '互盛彩色高階旗艦',
         type: '彩色雷射數位多功能複合機',
-        speed: '每分鐘 35 張 (彩色/黑白)',
+        speed: '每分鐘 35 張 (彩色/黑白同速)',
+        speedLabel: '35張 (C3510)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【高印量核心處室】業務科室、會議頻繁、大量研考公文與定期彩色報表印發專用',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
-        highlight: '高速公文與大量報告輸出首選、支援 ID 卡片雙面掃描 App、大容量紙匣擴充',
+        highlight: '高速公文與大量報告輸出首選、支援 ID 卡片雙面掃描 App、大容量紙匣擴充、極速首頁輸出',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 2 (買賣)', 'LP5-114034 組別 2 項次 2 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM C4510': {
         name: 'RICOH IM C4510',
         family: '互盛彩色高速旗艦',
         type: '彩色雷射數位多功能複合機 (高速旗艦)',
         speed: '每分鐘 45 張 (彩色/黑白高速)',
+        speedLabel: '45張 (C4510)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【大型處室/總務發文】秘書室、發文中心、大量報告快速印發、完全不排隊等待',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
-        highlight: '大型部門與學校總務處首選、雙面高速同步掃描、專業裝訂後製設備支援',
+        highlight: '大型部門與學校總務處首選、雙面高速同步掃描 (達 240 ipm)、專業裝訂後製設備支援',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 3 (買賣)', 'LP5-114034 組別 2 項次 3 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM C6010': {
         name: 'RICOH IM C6010',
         family: '互盛彩色極速旗艦',
         type: '彩色雷射數位多功能複合機 (極速旗艦)',
         speed: '每分鐘 60 張 (極速彩色輸出)',
+        speedLabel: '60張 (C6010)',
+        seriesGroup: 'ricoh_im_c',
+        targetDept: '【頂級極速旗艦】機關大印量輸出核心、極速大量秒印、支援高階文件加密保密控管',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '最高等級生產力、秒速輸出大文件、支援高階排程列印與全方位文件加密防護',
         image: 'products/ricoh_im_c2510.webp',
-        contracts: ['LP5-114036 (買賣)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 2 項次 4 (買賣)', 'LP5-114034 組別 2 項次 4 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM 2500': {
         name: 'RICOH IM 2500',
         family: '互盛黑白主力旗艦',
         type: '黑白雷射數位多功能複合機',
         speed: '每分鐘 25 張',
+        speedLabel: '25張 (IM 2500)',
+        seriesGroup: 'ricoh_im_mono',
+        targetDept: '【標準科室首選】各級機關日常黑白公文複印、極低故障率與高耐久度',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
-        highlight: '10.1 吋大螢幕直覺操控、物聯網智能主動客服 15 分鐘回覆、節能耐用經典首選',
+        highlight: '經典耐用、操作流暢、低耗電省能源、雙面高速輸出',
         image: 'products/ricoh_im_3500.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 1 項次 2 (買賣)', 'LP5-114034 組別 1 項次 2 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM 3500': {
         name: 'RICOH IM 3500',
         family: '互盛黑白主力旗艦',
-        type: '黑白雷射數位多功能複合機',
+        type: '黑白雷射數位多功能複合機 (租賃人氣冠軍)',
         speed: '每分鐘 35 張',
+        speedLabel: '35張 (IM 3500)',
+        seriesGroup: 'ricoh_im_mono',
+        targetDept: '【租賃最受歡迎第一名】公務機關租賃首選機型、高可靠度、穩定耐操',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '各級機關學校租賃最熱門機型、雙面高速自動送稿、極低故障率、省電節能',
         image: 'products/ricoh_im_3500.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 1 項次 3 (買賣)', 'LP5-114034 組別 1 項次 3 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM 5000': {
         name: 'RICOH IM 5000',
         family: '互盛黑白高速旗艦',
         type: '黑白雷射數位多功能複合機 (高速型)',
         speed: '每分鐘 50 張高速輸出',
+        speedLabel: '50張 (IM 5000)',
+        seriesGroup: 'ricoh_im_mono',
+        targetDept: '【大批發文專用】總務處、文書科、大量進紙容量與極速雙面同時掃描',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '公文大批印發專用機、超快首頁輸出、雙面同時掃描達 240 ipm、大量進紙容量',
         image: 'products/ricoh_im_3500.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 1 項次 4 (買賣)', 'LP5-114034 組別 1 項次 4 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM 6000': {
         name: 'RICOH IM 6000',
         family: '互盛黑白極速旗艦',
         type: '黑白雷射數位多功能複合機 (極速型)',
         speed: '每分鐘 60 張極速輸出',
+        speedLabel: '60張 (IM 6000)',
+        seriesGroup: 'ricoh_im_mono',
+        targetDept: '【高印量重裝處室】極速秒印、堅固鋼製機身結構、高負荷連續運轉',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '高印量專屬旗艦、堅固耐用鋼製結構骨架、極速雙面同時進紙、最高可靠度',
         image: 'products/ricoh_im_3500.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 1 項次 5 (買賣)', 'LP5-114034 組別 1 項次 5 (租賃)'],
+        samplePage: 5
       },
       'RICOH IM 7000': {
         name: 'RICOH IM 7000',
@@ -4497,8 +4617,8 @@
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '量產印刷級高階引擎、支援萬張連續不間斷印刷、極長壽命感光滾筒與專業裝訂配備',
         image: 'products/ricoh_im_7000.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 1 項次 6 (買賣)', 'LP5-114034 組別 1 項次 6 (租賃)'],
+        samplePage: 5
       },
       'RICOH MP 5055SP': {
         name: 'RICOH MP 5055SP / MP 3555SP',
@@ -4506,59 +4626,59 @@
         type: '黑白數位式多功能複合機 (長青經典款)',
         speed: '每分鐘 35~50 張',
         screen: '10.1 吋智慧操作面板',
-        highlight: '公家機關租賃成熟穩定之長青主力機、結構堅固、複印字體銳利清晰、維護簡便',
+        highlight: '長青耐操耐印經典神機、高性價比、租賃買賣實惠之選',
         image: 'products/ricoh_mp_5055.webp',
-        contracts: ['LP5-114035 (二手租賃)'],
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
         samplePage: 10
       },
       'RICOH IM 2702': {
         name: 'RICOH IM 2702',
         family: '互盛精巧型 A3 黑白系列',
-        type: 'A3 黑白多功能複合機 (桌面精巧型)',
+        type: 'A3 黑白雷射數位複合機 (精巧桌面/落地兩用)',
         speed: '每分鐘 27 張',
-        screen: '7 吋彩色中文觸控螢幕',
-        highlight: '小型空間與科室辦公首選、具備專業 A3 影印與自動雙面進紙、價格實惠經濟',
+        screen: '7 吋彩色智慧觸控面板 (可調角度)',
+        highlight: '體積超緊湊精巧、佔地空間極小、標配 7 吋大螢幕智慧連網與雙面自動送稿',
         image: 'products/ricoh_im_2702.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
-        samplePage: 15
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 14
       },
       'Epson AM-C4000': {
-        name: 'Epson WorkForce Enterprise AM-C4000 / C5000 / C6000',
-        family: 'Epson 免加熱微噴彩色旗艦',
-        type: '陣列式微噴彩色多功能複合機',
+        name: 'Epson WorkForce Enterprise AM-C4000',
+        family: '互盛微噴 免加熱高速彩色複合機',
+        type: 'A3 彩色極速微噴免加熱複合機 (Heat-Free 節能減碳)',
         speed: '每分鐘 40~60 張高速微噴',
-        screen: '10.1 吋彩色中文觸控螢幕',
-        highlight: 'Heat-Free 免加熱技術節能減碳達 85%、超低耗電量、極少耗材消耗零臭氧廢氣、高速首頁輸出',
+        screen: '10.1 吋觸控螢幕',
+        highlight: '免加熱噴墨技術、超低耗電節能 85%、超長壽命高容量墨水袋、列印過程零臭氧零粉塵',
         image: 'products/epson_am_c4000.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 3 項次 2 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 5
       },
       'Epson EM-C7100': {
-        name: 'Epson WorkForce Pro EM-C7100 / EM-C8100',
-        family: 'Epson 商用微噴彩色系列',
-        type: 'A3+ 彩色微噴多功能複合機',
+        name: 'Epson WorkForce Pro EM-C7100',
+        family: '互盛微噴 精巧彩色複合機',
+        type: 'A3+ 彩色微噴免加熱複合機 (精巧桌面型)',
         speed: '每分鐘 25 張 (彩色/黑白同速)',
-        screen: '5.0 吋彩色中文觸控螢幕',
-        highlight: 'PrecisionCore 四色防水墨水、免加熱省電達 94%、大容量墨袋可印 11,500 頁、耐用 30 萬頁',
+        screen: '4.3 吋彩色觸控液晶螢幕',
+        highlight: '首頁輸出僅 5.5 秒、免加熱極速喚醒、單套高容量墨袋可印 50,000 張、支援 A3+ 列印',
         image: 'products/epson_em_c7100.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 3 項次 1 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 5
       },
       'brother MFC-L2770DW': {
-        name: 'brother MFC-L2770DW / MFC-L2805DW',
-        family: 'Brother 高速黑白雷射傳真機',
-        type: 'A4 黑白雷射雙面多功能傳真事務機',
+        name: 'Brother MFC-L2770DW / MFC-L2805DW',
+        family: 'A4 黑白無線雙面多功能事務機',
+        type: 'A4 黑白雷射傳真多功能事務機 (有線/無線/雙面)',
         speed: '每分鐘 34 張高速列印',
-        screen: '2.7 吋彩色中文觸控面板',
-        highlight: '列印/影印/掃描/傳真四合一、自動雙面列印與掃描、雙網 + Wi-Fi 行動列印、50 頁自動送稿',
+        screen: '2.7 吋彩色液晶觸控螢幕',
+        highlight: '支援自動雙面列印/複印/掃描/傳真、50 頁雙面自動送稿、極速高效、機身精巧',
         image: 'products/brother_mfc_l2770dw.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 4 項次 1 (買賣)', 'LP5-114021 (週邊設備)'],
+        samplePage: 5
       },
       'brother MFC-L3760CDW': {
-        name: 'brother MFC-L3760CDW / MFC-L8900CDW',
-        family: 'Brother 彩色雷射傳真事務機',
-        type: 'A4 彩色雷射雙面多功能事務機',
+        name: 'Brother MFC-L3760CDW / MFC-L8900CDW',
+        family: 'A4 彩色雷射雙面多功能事務機',
+        type: 'A4 彩色雷射無線雙面多功能傳真複合機',
         speed: '每分鐘 26~31 張彩色列印',
         screen: '3.5 吋彩色觸控螢幕',
         highlight: 'LED 全彩高速輸出、低噪音設計、支援有線網路/無線雙網及雲端行動 App 直印',
@@ -4574,8 +4694,8 @@
         screen: '2.7 吋彩色圖形觸控螢幕',
         highlight: 'HP Wolf Pro 專業安全防護、自動雙面高速列印、50 頁雙面自動送稿、Gigabit 高速網路',
         image: 'products/hp_mfp_3103fdn.webp',
-        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
-        samplePage: 4
+        contracts: ['LP5-114036 組別 4 項次 3 (買賣)', 'LP5-114021 (週邊設備)'],
+        samplePage: 5
       }
     };
 
@@ -4620,7 +4740,6 @@
     function openProductModal(modelKey) {
       let prod = PRODUCT_CATALOG[modelKey];
       if (!prod) {
-        // Fallback match
         for (const [k, p] of Object.entries(PRODUCT_CATALOG)) {
           if (modelKey.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(modelKey.toLowerCase())) {
             prod = p;
@@ -4641,11 +4760,63 @@
       document.getElementById('productModalContracts').textContent = prod.contracts.join('、');
       document.getElementById('productModalHighlight').textContent = prod.highlight;
 
+      // 採購選型建議
+      const targetRow = document.getElementById('specRowTarget');
+      const targetVal = document.getElementById('productModalTarget');
+      if (targetRow && targetVal) {
+        if (prod.targetDept) {
+          targetRow.style.display = 'flex';
+          targetVal.textContent = prod.targetDept;
+        } else {
+          targetRow.style.display = 'none';
+        }
+      }
+
+      // 同款外觀說明與系列切換列
+      const seriesWrap = document.getElementById('pmSeriesSelectorWrap');
+      const seriesChips = document.getElementById('pmSeriesChips');
+      const chassisNote = document.getElementById('pmChassisNote');
+
+      if (prod.seriesGroup) {
+        if (chassisNote) {
+          chassisNote.style.display = 'block';
+          if (prod.seriesGroup === 'ricoh_im_c') {
+            chassisNote.innerHTML = '📷 <strong>同外觀平台說明</strong>：互盛 IM C 全家族共用日本原廠同款旗艦機身，外觀與觸控面板一致；差異在於內部引擎速度、耐印量與適用臺銀契約項次。';
+          } else if (prod.seriesGroup === 'ricoh_im_mono') {
+            chassisNote.innerHTML = '📷 <strong>同外觀平台說明</strong>：互盛 IM 黑白系列共用鋼製結構旗艦機身，外觀一致；差異在於黑白極速與大量公文印發耐印量。';
+          }
+        }
+
+        if (seriesWrap && seriesChips) {
+          seriesWrap.style.display = 'block';
+          seriesChips.innerHTML = '';
+          
+          // 找出同一 seriesGroup 的所有兄弟機種
+          for (const [sKey, sProd] of Object.entries(PRODUCT_CATALOG)) {
+            if (sProd.seriesGroup === prod.seriesGroup) {
+              const sBtn = document.createElement('button');
+              sBtn.className = 'pm-speed-btn' + (sKey === modelKey ? ' active' : '');
+              sBtn.innerHTML = `
+                <span>⚡ ${sProd.speedLabel || sKey}</span>
+              `;
+              sBtn.onclick = (e) => {
+                e.stopPropagation();
+                openProductModal(sKey);
+              };
+              seriesChips.appendChild(sBtn);
+            }
+          }
+        }
+      } else {
+        if (seriesWrap) seriesWrap.style.display = 'none';
+        if (chassisNote) chassisNote.style.display = 'none';
+      }
+
       const chipsBox = document.getElementById('productModalChips');
       chipsBox.innerHTML = '';
       const tags = [
         prod.speed.split(' ')[0] + ' ' + prod.speed.split(' ')[1],
-        prod.family.includes('彩色') ? '🌈 彩色雙面' : '⚡ 黑白高速',
+        prod.family.includes('彩色') || prod.family.includes('微噴') ? '🌈 彩色雙面' : '⚡ 黑白高速',
         '📜 臺銀共契標配',
         '🛡️ 互盛智能客服支援',
         '🌱 環保標章認證'
@@ -4661,22 +4832,17 @@
         if (isSingleMode) {
           setSinglePage(prod.samplePage);
         } else {
-          goTo(prod.samplePage === 1 ? 0 : Math.floor(prod.samplePage / 2));
+          goToPage(prod.samplePage);
         }
       };
 
       document.getElementById('productModalCopyBtn').onclick = () => {
-        const cleanUrl = window.location.href.split('#')[0].split('?')[0];
-        const shareUrl = `${cleanUrl}?v=10#product=${encodeURIComponent(modelKey)}`;
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            showToast(`✅ 已複製 ${prod.name} 專屬分享連結！`);
-          }).catch(() => {
-            showToast(`🔗 專屬連結：${shareUrl}`);
-          });
-        } else {
-          showToast(`🔗 專屬連結：${shareUrl}`);
-        }
+        const url = `${window.location.origin}${window.location.pathname}#page=${prod.samplePage}&model=${encodeURIComponent(modelKey)}`;
+        navigator.clipboard.writeText(url).then(() => {
+          showToast(`已複製 ${prod.name} 專屬直連連結！`);
+        }).catch(() => {
+          prompt('請手動複製網址：', url);
+        });
       };
 
       document.getElementById('productModalBackdrop').classList.add('open');

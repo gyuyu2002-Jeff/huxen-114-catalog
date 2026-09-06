@@ -324,6 +324,34 @@
       white-space: nowrap;
     }
 
+    #helpGuideBtn {
+      height: 32px;
+      padding: 0 11px;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 6px;
+      font-weight: 500;
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: #e2e8f0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    #helpGuideBtn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+    .help-btn-text {
+      display: inline;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
     .nav-btn {
       height: 32px;
       padding: 0 10px;
@@ -1123,6 +1151,249 @@
       pointer-events: auto;
     }
 
+    /* Operation Guide Modal (進入網站操作說明指引) */
+    .guide-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 31, 61, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .guide-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .guide-modal {
+      background: #ffffff;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(10, 31, 61, 0.45);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.92) translateY(14px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .guide-modal-backdrop.open .guide-modal {
+      transform: scale(1) translateY(0);
+    }
+    .guide-modal-header {
+      background: linear-gradient(135deg, #0a1f3d 0%, #102a54 100%);
+      color: #ffffff;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(56, 189, 248, 0.35);
+    }
+    .guide-modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .guide-modal-badge {
+      background: #005bac;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(0, 91, 172, 0.35);
+    }
+    .guide-modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+    .guide-modal-close {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+    .guide-modal-close:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.08);
+    }
+    .guide-modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #f8fafc;
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .guide-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 14px 14px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: transform 0.18s, border-color 0.18s;
+    }
+    .guide-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.1);
+    }
+    .guide-card.full-width {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+      border-color: #bae6fd;
+    }
+    .guide-card-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      line-height: 1.2;
+      background: #eef6ff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #dbeafe;
+    }
+    .guide-card-content {
+      flex: 1;
+    }
+    .guide-card-content h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .guide-card-content p {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+    .guide-card-content p:last-child {
+      margin-bottom: 0;
+    }
+    .guide-card-content code {
+      background: #e2e8f0;
+      color: #0284c7;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .guide-card-content strong {
+      color: #0f172a;
+    }
+    .guide-modal-footer {
+      padding: 14px 20px;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .guide-dont-show {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      color: #64748b;
+      cursor: pointer;
+      user-select: none;
+    }
+    .guide-dont-show input {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #005bac;
+    }
+    .guide-confirm-btn {
+      background: linear-gradient(135deg, #005bac 0%, #0284c7 100%);
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 91, 172, 0.35);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .guide-confirm-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 91, 172, 0.45);
+      filter: brightness(1.06);
+    }
+    .guide-confirm-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+      .guide-modal {
+        max-height: 86vh;
+        border-radius: 14px;
+      }
+      .guide-modal-header {
+        padding: 14px 16px;
+      }
+      .guide-modal-body {
+        padding: 14px 16px;
+        gap: 10px;
+      }
+      .guide-modal-footer {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .guide-dont-show {
+        justify-content: center;
+      }
+      .guide-confirm-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
     /* Footer structural containers */
     .footer-row-meta { display: contents; }
     .footer-row-controls { display: contents; }
@@ -1226,6 +1497,27 @@
         color: #ffffff;
       }
       .share-btn-text {
+        display: inline !important;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap !important;
+      }
+      #helpGuideBtn {
+        height: 32px;
+        padding: 0 8px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        border-radius: 6px;
+        gap: 4px;
+        display: inline-flex !important;
+        align-items: center;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+      }
+      .help-btn-text {
         display: inline !important;
         font-size: 12px;
         font-weight: 600;
@@ -1439,7 +1731,7 @@
         </button>
       </div>
 
-      <!-- 目錄與複製連結工具組 (緊鄰排列做在目錄旁邊) -->
+      <!-- 目錄、複製連結與操作說明工具組 (緊鄰排列做在目錄旁邊) -->
       <div class="toc-share-group">
         <button class="nav-btn" id="tocBtn" title="型錄章節索引">
           <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -1448,6 +1740,10 @@
         <button class="nav-btn" id="shareBtn" title="複製本頁專屬分享網址 (網址帶頁碼直連)">
           <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <span class="share-btn-text">複製連結</span>
+        </button>
+        <button class="nav-btn" id="helpGuideBtn" title="查看各項操作說明">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="help-btn-text">說明</span>
         </button>
       </div>
 
@@ -1602,6 +1898,82 @@
       <input type="text" id="drawerSearchInput" placeholder="🔍 快速搜尋商品、案號或章節..." style="width:100%;height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;box-sizing:border-box;">
     </div>
     <ul class="drawer-list" id="drawerList"></ul>
+    <div style="padding:10px 14px;border-top:1px solid #e2e8f0;background:#f8fafc;margin-top:auto;">
+      <button id="drawerHelpBtn" style="width:100%;height:36px;border-radius:6px;background:#e0f2fe;border:1px solid #bae6fd;color:#0284c7;font-weight:600;font-size:12.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">❓ 查看各項操作說明</button>
+    </div>
+  </div>
+
+  <!-- Welcome & Operation Guide Modal (進入網站各項操作說明指引) -->
+  <div class="guide-modal-backdrop" id="guideModalBackdrop">
+    <div class="guide-modal" id="guideModal">
+      <div class="guide-modal-header">
+        <div class="guide-modal-title-group">
+          <span class="guide-modal-badge">互盛 114年度</span>
+          <h2 class="guide-modal-title">型錄各項操作指引說明</h2>
+        </div>
+        <button class="guide-modal-close" id="guideModalClose" aria-label="關閉說明">&times;</button>
+      </div>
+
+      <div class="guide-modal-body">
+        <div class="guide-grid">
+          <!-- Card 1: 翻頁操作 -->
+          <div class="guide-card">
+            <div class="guide-card-icon">📖</div>
+            <div class="guide-card-content">
+              <h3>輕鬆翻頁</h3>
+              <p><strong>📱 手機端</strong>：左右水平滑動螢幕即可切換，或點擊底端「上一頁 / 下一頁」。</p>
+              <p><strong>💻 電腦端</strong>：點擊畫面兩側、兩端箭頭，或使用鍵盤 <code>←</code> <code>→</code> 鍵。</p>
+            </div>
+          </div>
+
+          <!-- Card 2: 放大檢視 -->
+          <div class="guide-card">
+            <div class="guide-card-icon">🔍</div>
+            <div class="guide-card-content">
+              <h3>極限放大 (高達 5x)</h3>
+              <p><strong>📱 手機端</strong>：<strong>雙擊螢幕（Double Tap）</strong>快速放大局部規格細節，再次雙擊還原。</p>
+              <p><strong>💻 電腦端</strong>：推動<strong>滑鼠滾輪</strong>或點擊「5x 極限」，600 DPI 極致清晰，可按住拖曳平移。</p>
+            </div>
+          </div>
+
+          <!-- Card 3: 閱讀模式切換 -->
+          <div class="guide-card">
+            <div class="guide-card-icon">📄</div>
+            <div class="guide-card-content">
+              <h3>雙模閱讀體驗</h3>
+              <p><strong>📄 單頁模式</strong>（手機預設）：滿版大圖閱讀，字體超大超清晰。</p>
+              <p><strong>📖 雙頁 3D 模式</strong>（桌機推薦）：擬真紙本翻頁，如翻閱實體採購型錄。</p>
+            </div>
+          </div>
+
+          <!-- Card 4: 目錄索引 & 搜尋 -->
+          <div class="guide-card">
+            <div class="guide-card-icon">📑</div>
+            <div class="guide-card-content">
+              <h3>目錄索引 & 搜尋</h3>
+              <p>點擊頂部<strong>「目錄」</strong>展開所有章節與契約案號；電腦版可透過搜尋框輸入機型（如 IM C3010）或案號快速查詢。</p>
+            </div>
+          </div>
+
+          <!-- Card 5: 一鍵複製專屬連結 (業務採購必備) -->
+          <div class="guide-card full-width">
+            <div class="guide-card-icon">🔗</div>
+            <div class="guide-card-content">
+              <h3>複製專屬分享連結 (採購/業務必備)</h3>
+              <p>點擊頂部目錄旁的<strong>「複製連結」</strong>（或目錄清單內每項右側的 🔗 按鈕），會自動複製當前頁面的專屬直連網址。傳送給採購承辦或同仁，點開立即直達該單頁滿版大圖！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-modal-footer">
+        <label class="guide-dont-show">
+          <input type="checkbox" id="dontShowAgainCheck">
+          <span>下次進入時不再主動顯示</span>
+        </label>
+        <button class="guide-confirm-btn" id="guideConfirmBtn">開始瀏覽型錄 🚀</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -2371,6 +2743,10 @@
       if (e.key === 'ArrowRight' || e.key === 'PageDown') goNext();
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') goPrev();
       if (e.key === 'Escape') {
+        if (guideModalBackdrop && guideModalBackdrop.classList.contains('open')) {
+          closeGuideModal();
+          return;
+        }
         if (isFocused) resetFocus();
         if (isSingleMode) applySingleWidth(980, '100% (980px)');
       }
@@ -2646,6 +3022,46 @@
       });
     }
 
+    /* ---------------- Operation Guide Modal (進入網站各項操作說明指引) ---------------- */
+    const guideModalBackdrop = document.getElementById('guideModalBackdrop');
+    const guideModalClose = document.getElementById('guideModalClose');
+    const guideConfirmBtn = document.getElementById('guideConfirmBtn');
+    const helpGuideBtn = document.getElementById('helpGuideBtn');
+    const drawerHelpBtn = document.getElementById('drawerHelpBtn');
+    const dontShowAgainCheck = document.getElementById('dontShowAgainCheck');
+
+    function openGuideModal() {
+      if (guideModalBackdrop) {
+        guideModalBackdrop.classList.add('open');
+      }
+    }
+
+    function closeGuideModal() {
+      if (guideModalBackdrop) {
+        guideModalBackdrop.classList.remove('open');
+      }
+      if (dontShowAgainCheck && dontShowAgainCheck.checked) {
+        try {
+          localStorage.setItem('huxen_guide_dismissed_v2', '1');
+        } catch (e) {}
+      }
+    }
+
+    if (guideModalClose) guideModalClose.onclick = closeGuideModal;
+    if (guideConfirmBtn) guideConfirmBtn.onclick = closeGuideModal;
+    if (guideModalBackdrop) {
+      guideModalBackdrop.onclick = (e) => {
+        if (e.target === guideModalBackdrop) closeGuideModal();
+      };
+    }
+    if (helpGuideBtn) helpGuideBtn.onclick = openGuideModal;
+    if (drawerHelpBtn) {
+      drawerHelpBtn.onclick = () => {
+        toggleDrawer(false);
+        openGuideModal();
+      };
+    }
+
     /* ---------------- Preload & Init (支援手機自動單頁 + URL 路由直連) ---------------- */
     async function init() {
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -2692,6 +3108,16 @@
       const overlay = document.getElementById('loadingOverlay');
       overlay.classList.add('fade');
       setTimeout(() => overlay.remove(), 450);
+
+      // 網站進入時，主動提供各項操作說明指引
+      try {
+        const dismissed = localStorage.getItem('huxen_guide_dismissed_v2');
+        if (!dismissed) {
+          setTimeout(openGuideModal, 350);
+        }
+      } catch (e) {
+        setTimeout(openGuideModal, 350);
+      }
     }
 
     window.addEventListener('DOMContentLoaded', init);

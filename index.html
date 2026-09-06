@@ -1069,26 +1069,31 @@
         display: none;
       }
 
-      /* Mobile Quick Guide */
-      .quick-guide-bar {
-        top: 58px;
-        font-size: 10.5px;
-        padding: 4px 12px;
-        gap: 6px;
-        border-radius: 16px;
-      }
-      .quick-guide-bar .guide-item:nth-child(n+5) {
+      /* Mobile Single Page Tip & Adjustments */
+      .mobile-single-tip {
         display: none;
       }
 
-      /* Mobile 2-tier Adaptive Footer (完美適應手機窄螢幕，絕不破版) */
+      /* Mobile Quick Guide & Zoom Pill & Side buttons: Hide to avoid blocking reading */
+      .quick-guide-bar {
+        display: none !important;
+      }
+      .single-zoom-pill {
+        display: none !important;
+      }
+      .single-side-btn {
+        display: none !important;
+      }
+
+      /* Mobile 2-tier Adaptive Footer (針對拇指單手操作優化，絕不破版) */
       .footer {
-        height: 84px;
+        height: 80px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-        padding: 6px 10px;
+        justify-content: space-around;
+        gap: 3px;
+        padding: 6px 12px;
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
       }
       .footer-row-meta {
         display: flex;
@@ -1106,14 +1111,24 @@
       }
       .spread-meta {
         max-width: 72%;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         overflow: hidden;
+      }
+      .contract-badge {
+        font-size: 10.5px;
+        padding: 2px 6px;
       }
       .spread-caption {
         font-size: 11.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .mobile-page-readout {
         display: block;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 700;
         color: #38bdf8;
         white-space: nowrap;
@@ -1124,61 +1139,92 @@
       .category-group {
         width: auto;
         gap: 4px;
+        display: flex;
       }
       .category-group .category-btn {
-        width: 80px;
-        height: 28px;
+        width: auto;
+        min-width: 58px;
+        height: 32px;
         font-size: 11px;
-        padding: 0 4px;
+        padding: 0 6px;
+        border-radius: 6px;
       }
       .scrubber-wrap {
         flex: 1;
-        margin: 0 2px;
+        margin: 0 4px;
+        display: flex;
+        align-items: center;
       }
       .page-actions {
         width: auto;
         gap: 4px;
+        display: flex;
       }
       .page-actions .nav-btn {
-        height: 28px;
-        padding: 0 6px;
+        height: 32px;
+        min-width: 66px;
+        padding: 0 8px;
+        font-size: 11.5px;
+        font-weight: 600;
+        background: #005bac;
+        border-color: #38bdf8;
+        color: #fff;
+        border-radius: 6px;
       }
-      .page-actions .nav-btn span { display: none; }
+      .page-actions .nav-btn span { display: inline !important; }
       .page-actions #firstPageBtn,
       .page-actions #lastPageBtn {
-        display: none;
+        display: none !important;
       }
 
       /* Main Viewport Adjustments for Mobile */
       .main-viewport {
         top: 52px;
-        bottom: 84px;
+        bottom: 80px;
       }
-      .single-side-btn {
-        width: 40px;
-        height: 40px;
-      }
-      .single-side-btn.left { left: 6px; }
-      .single-side-btn.right { right: 6px; }
-      .single-side-btn svg { width: 18px; height: 18px; }
 
-      .single-zoom-pill {
-        top: 58px;
-        right: 8px;
-        padding: 2px 6px;
-        gap: 4px;
-      }
-      .pill-btn {
-        height: 24px;
-        min-width: 24px;
-        font-size: 11px;
-      }
-      .pill-btn.pill-text {
-        font-size: 10.5px;
-        padding: 0 6px;
-      }
-      #btnZoomHuge, #btnZoomMax {
+      /* Mobile Single Page HD Viewport: 100% full width, zero overflow */
+      .view-mode-single {
+        padding: 6px 0 88px 0 !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
         display: none;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box !important;
+      }
+      .mobile-single-tip {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        background: rgba(10, 31, 61, 0.9);
+        color: #94a3b8;
+        font-size: 11px;
+        padding: 4px 12px;
+        border-radius: 12px;
+        margin: 2px auto 8px auto;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        pointer-events: none;
+      }
+      .single-page-sheet {
+        width: 100% !important;
+        max-width: calc(100vw - 10px) !important;
+        margin: 0 auto 16px auto !important;
+        border-radius: 6px !important;
+        box-shadow: 0 4px 18px rgba(10, 31, 61, 0.16) !important;
+        cursor: default !important;
+        transition: width 0.25s ease, max-width 0.25s ease !important;
+      }
+      .single-page-sheet.is-zoomed {
+        width: 200% !important;
+        max-width: none !important;
+      }
+      .single-page-img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        border-radius: 6px !important;
       }
     }
   </style>
@@ -1314,6 +1360,10 @@
         <button class="pill-btn pill-text active" id="btnWheelMode" title="切換滑鼠滾輪行為：縮放 或 捲動 (亦可直接按住 Ctrl 滾動縮放)">🖱️ 滾輪縮放</button>
       </div>
 
+      <div class="mobile-single-tip" id="mobileSingleTip">
+        💡 左右滑動或點下方按鈕翻頁 · 雙擊圖片可局部放大
+      </div>
+
       <div class="single-page-sheet" id="singlePageSheet">
         <img class="single-page-img" id="singlePageImg" src="pages/page_01.webp" alt="型錄頁面">
       </div>
@@ -1369,6 +1419,9 @@
     <div class="drawer-header">
       <div class="drawer-title">型錄章節快速索引</div>
       <button class="close-btn" id="closeDrawer">&times;</button>
+    </div>
+    <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
+      <input type="text" id="drawerSearchInput" placeholder="🔍 快速搜尋商品、案號或章節..." style="width:100%;height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;box-sizing:border-box;">
     </div>
     <ul class="drawer-list" id="drawerList"></ul>
   </div>
@@ -1863,8 +1916,8 @@
     let wheelMode = 'zoom'; // 預設直接推動滾輪放大縮小！
 
     function applySingleWidth(w, modeLabel) {
-      // 支援至 4900px (5x / 500%)
-      singleWidth = Math.max(600, Math.min(4900, Math.round(w)));
+      const minW = window.innerWidth <= 768 ? Math.min(window.innerWidth - 12, 380) : 600;
+      singleWidth = Math.max(minW, Math.min(4900, Math.round(w)));
       singlePageSheet.style.setProperty('--single-w', singleWidth + 'px');
       const pct = Math.round((singleWidth / 980) * 100);
       zoomPercent.textContent = modeLabel || `${pct}% (${singleWidth}px)`;
@@ -1877,6 +1930,7 @@
     function setSinglePage(pageNumber) {
       singlePageIdx = Math.max(1, Math.min(TOTAL_PAGES, pageNumber));
       singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
+      singlePageSheet.classList.remove('is-zoomed');
 
       // Reset scroll to top
       viewModeSingle.scrollTop = 0;
@@ -1885,8 +1939,10 @@
       idx = singlePageIdx === 1 ? 0 : Math.floor((singlePageIdx) / 2);
       updateMeta();
 
-      document.getElementById('singleSidePrevBtn').disabled = singlePageIdx <= 1;
-      document.getElementById('singleSideNextBtn').disabled = singlePageIdx >= TOTAL_PAGES;
+      const prevSideBtn = document.getElementById('singleSidePrevBtn');
+      const nextSideBtn = document.getElementById('singleSideNextBtn');
+      if (prevSideBtn) prevSideBtn.disabled = singlePageIdx <= 1;
+      if (nextSideBtn) nextSideBtn.disabled = singlePageIdx >= TOTAL_PAGES;
     }
 
     document.getElementById('btnZoomIn').onclick = () => {
@@ -1924,8 +1980,9 @@
     document.getElementById('singleSidePrevBtn').onclick = () => setSinglePage(singlePageIdx - 1);
     document.getElementById('singleSideNextBtn').onclick = () => setSinglePage(singlePageIdx + 1);
 
-    // 單頁模式點擊左頁翻上一頁、點擊右頁翻下一頁
+    // 單頁模式點擊左頁翻上一頁、點擊右頁翻下一頁 (僅限桌機；手機停用以防滑動誤觸)
     singlePageSheet.onclick = e => {
+      if (window.innerWidth <= 768) return;
       const r = singlePageSheet.getBoundingClientRect();
       const isRight = (e.clientX - r.left) / r.width > 0.5;
       if (isRight) {
@@ -1935,7 +1992,26 @@
       }
     };
 
+    // 手機端雙擊 (Double Tap) 快速局部放大/還原
+    let lastTapTime = 0;
+    singlePageSheet.addEventListener('touchend', e => {
+      if (window.innerWidth > 768) return;
+      const now = performance.now();
+      const diff = now - lastTapTime;
+      if (diff > 40 && diff < 320) {
+        e.preventDefault();
+        singlePageSheet.classList.toggle('is-zoomed');
+        if (singlePageSheet.classList.contains('is-zoomed')) {
+          showToast('🔍 已放大檢視 (再次雙擊還原)');
+        } else {
+          showToast('🔍 已還原頁寬');
+        }
+      }
+      lastTapTime = now;
+    });
+
     singlePageSheet.addEventListener('mousemove', e => {
+      if (window.innerWidth <= 768) return;
       const r = singlePageSheet.getBoundingClientRect();
       const isRight = (e.clientX - r.left) / r.width > 0.5;
       singlePageSheet.style.cursor = 'pointer';
@@ -2339,11 +2415,11 @@
       const dy = e.changedTouches[0].clientY - touchStartY;
       const dt = performance.now() - touchStartTime;
 
-      // 當單頁放大且寬度大於螢幕 (使用者正在平移檢視) 時，不觸發換頁
-      if (isSingleMode && singleWidth > window.innerWidth * 1.12) return;
+      // 當單頁已處於雙擊放大檢視時，不觸發換頁手勢
+      if (singlePageSheet && singlePageSheet.classList.contains('is-zoomed')) return;
 
-      // 明確的橫向滑動判定 (距離大於 44px，耗時小於 450ms，且橫向位移明顯大於縱向位移)
-      if (dt < 450 && Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      // 明確的橫向滑動判定 (距離大於 36px，耗時小於 480ms，且橫向位移大於縱向位移 1.25 倍)
+      if (dt < 480 && Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.25) {
         if (dx < 0) {
           goNext(); // 向左滑動 -> 下一頁
         } else {
@@ -2352,9 +2428,21 @@
       }
     }, { passive: true });
 
+    // Drawer 快速搜尋商品/案號過濾
+    const drawerSearchInput = document.getElementById('drawerSearchInput');
+    if (drawerSearchInput) {
+      drawerSearchInput.addEventListener('input', e => {
+        const q = e.target.value.trim().toLowerCase();
+        document.querySelectorAll('.drawer-item').forEach(item => {
+          const t = item.textContent.toLowerCase();
+          item.style.display = t.includes(q) ? 'flex' : 'none';
+        });
+      });
+    }
+
     /* ---------------- Preload & Init (支援手機自動單頁 + URL 路由直連) ---------------- */
     async function init() {
-      const isMobileDevice = window.innerWidth <= 768;
+      const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
 
       if (route && route.page) {
@@ -2368,9 +2456,9 @@
           updateMeta();
         }
       } else if (isMobileDevice) {
-        // 行動裝置預設直接開啟單頁大圖模式，兼顧最佳閱讀清晰度與流暢度
-        singleWidth = Math.min(980, window.innerWidth - 16);
+        // 行動裝置一律預設為「單頁滿版模式」，字體巨大清晰，閱讀體驗最佳
         switchToSingle();
+        setSinglePage(1);
       } else {
         paint();
         updateMeta();

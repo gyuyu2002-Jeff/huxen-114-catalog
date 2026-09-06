@@ -120,6 +120,8 @@
       color: #94a3b8;
       letter-spacing: 0.6px;
     }
+    .title-mobile { display: none; }
+    .text-mobile { display: none; }
 
     /* View Mode Segmented Control */
     .mode-segmented {
@@ -134,6 +136,7 @@
     .seg-btn {
       display: inline-flex;
       align-items: center;
+      white-space: nowrap;
       gap: 6px;
       height: 32px;
       padding: 0 13px;
@@ -1044,8 +1047,13 @@
 
     @media (max-width: 768px) {
       .header {
-        padding: 0 10px;
-        height: 52px;
+        padding: 0 8px;
+        height: 50px;
+        justify-content: space-between;
+      }
+      .header-left {
+        flex-shrink: 0;
+        gap: 6px;
       }
       .logo-icon {
         font-size: 13px;
@@ -1053,35 +1061,63 @@
       }
       .catalog-title {
         font-size: 13px;
+        white-space: nowrap;
+      }
+      .title-desktop { display: none !important; }
+      .title-mobile {
+        display: inline !important;
+        font-size: 13px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
       }
       .catalog-sub {
-        display: none;
+        display: none !important;
       }
       .header-center {
-        gap: 6px;
-        margin: 0 4px;
+        gap: 5px;
+        margin: 0 2px;
+        flex: 0 0 auto;
       }
       .mode-segmented {
         padding: 2px;
         gap: 2px;
+        flex-shrink: 0;
       }
       .seg-btn {
         height: 28px;
-        padding: 0 8px;
+        padding: 0 7px;
         font-size: 11.5px;
         gap: 3px;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+      }
+      .text-desktop { display: none !important; }
+      .text-mobile {
+        display: inline !important;
+        font-size: 11.5px;
+        font-weight: 600;
+        white-space: nowrap !important;
       }
       #tocBtn {
         height: 28px;
-        padding: 0 8px;
+        padding: 0 7px;
         font-size: 11.5px;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+        gap: 4px;
+      }
+      .header-actions {
+        flex-shrink: 0;
+        gap: 4px;
       }
       .nav-btn {
         height: 28px;
-        padding: 0 8px;
+        padding: 0 7px;
       }
       .share-btn-text {
-        display: none;
+        display: none !important;
       }
 
       /* Mobile Single Page Tip & Adjustments */
@@ -1258,7 +1294,8 @@
       <div class="logo-badge">
         <span class="logo-icon">互盛</span>
         <div class="catalog-title">
-          114年度 臺灣銀行共同供應契約型錄
+          <span class="title-desktop">114年度 臺灣銀行共同供應契約型錄</span>
+          <span class="title-mobile">114年型錄</span>
           <span class="catalog-sub">HUXEN CORPORATION · 3D 互動型錄</span>
         </div>
       </div>
@@ -1270,11 +1307,17 @@
       <div class="mode-segmented" id="modeSegmented">
         <button class="seg-btn active" id="segSpreadBtn" title="切換為 3D 雙頁擬真翻頁模式">
           <span class="seg-icon">📖</span>
-          <span class="seg-text">雙頁 3D 擬真</span>
+          <span class="seg-text">
+            <span class="text-desktop">雙頁 3D 擬真</span>
+            <span class="text-mobile">雙頁</span>
+          </span>
         </button>
         <button class="seg-btn" id="segSingleBtn" title="切換為 單頁超高清大圖閱讀模式 (字體極大極清)">
           <span class="seg-icon">📄</span>
-          <span class="seg-text">單頁 高清大圖</span>
+          <span class="seg-text">
+            <span class="text-desktop">單頁 高清大圖</span>
+            <span class="text-mobile">單頁</span>
+          </span>
         </button>
       </div>
 
@@ -1376,7 +1419,7 @@
       </div>
 
       <div class="mobile-single-tip" id="mobileSingleTip">
-        💡 左右滑動或點下方按鈕翻頁 · 雙擊圖片可局部放大
+        💡 左右滑動翻頁 · 雙擊放大
       </div>
 
       <div class="single-page-sheet" id="singlePageSheet">

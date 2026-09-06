@@ -264,6 +264,66 @@
       gap: 8px;
     }
 
+    .toc-share-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    #tocBtn {
+      height: 32px;
+      padding: 0 12px;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 6px;
+      font-weight: 500;
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    #tocBtn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    #shareBtn {
+      height: 32px;
+      padding: 0 11px;
+      gap: 5px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      font-weight: 500;
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: #38bdf8;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    #shareBtn:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+    #shareBtn:active {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .share-btn-text {
+      display: inline;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
     .nav-btn {
       height: 32px;
       padding: 0 10px;
@@ -982,6 +1042,34 @@
       text-overflow: ellipsis;
     }
     .drawer-item-badge { font-size: 10.5px; color: #0284c7; font-weight: 600; }
+    .drawer-share-btn {
+      height: 28px;
+      width: 28px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #0284c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.18s;
+      margin-left: 6px;
+    }
+    .drawer-share-btn:hover {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      transform: scale(1.08);
+    }
+    .drawer-share-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
 
     /* Loading overlay */
     .loading-overlay {
@@ -1089,12 +1177,21 @@
       .mode-segmented {
         display: none !important;
       }
+      .header-search {
+        display: none !important;
+      }
       .header-center {
         display: flex;
         align-items: center;
         gap: 6px;
         margin: 0;
         flex: 0 0 auto;
+      }
+      .toc-share-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
       }
       #tocBtn {
         height: 32px;
@@ -1109,24 +1206,16 @@
         color: #fff;
         border-radius: 6px;
       }
-      .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
-      }
-
-      /* 手機板完整附上「複製連結」按鈕 (醒目好點) */
       #shareBtn {
         height: 32px;
-        padding: 0 10px;
+        padding: 0 9px;
         font-size: 12px;
         font-weight: 600;
         background: rgba(56, 189, 248, 0.2);
         border: 1px solid rgba(56, 189, 248, 0.5);
         color: #38bdf8;
         border-radius: 6px;
-        gap: 5px;
+        gap: 4px;
         display: inline-flex !important;
         align-items: center;
         white-space: nowrap !important;
@@ -1141,6 +1230,9 @@
         font-size: 12px;
         font-weight: 600;
         white-space: nowrap !important;
+      }
+      .header-actions {
+        display: none !important;
       }
       #fullscreenBtn {
         display: none !important;
@@ -1347,11 +1439,17 @@
         </button>
       </div>
 
-      <!-- 目錄按鈕 (依使用者指示移至模式切換與搜尋框之間) -->
-      <button class="nav-btn" id="tocBtn" title="型錄章節索引" style="height:32px; padding:0 12px; gap:6px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22); border-radius:6px; font-weight:500; flex-shrink:0; white-space:nowrap;">
-        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        <span>目錄</span>
-      </button>
+      <!-- 目錄與複製連結工具組 (緊鄰排列做在目錄旁邊) -->
+      <div class="toc-share-group">
+        <button class="nav-btn" id="tocBtn" title="型錄章節索引">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <span>目錄</span>
+        </button>
+        <button class="nav-btn" id="shareBtn" title="複製本頁專屬分享網址 (網址帶頁碼直連)">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span class="share-btn-text">複製連結</span>
+        </button>
+      </div>
 
       <!-- Search Input -->
       <div class="header-search">
@@ -1363,10 +1461,6 @@
 
     <!-- Toolbar Actions (Right) -->
     <div class="header-actions">
-      <button class="nav-btn" id="shareBtn" title="複製本頁專屬分享網址 (網址帶頁碼直連)">
-        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <span class="share-btn-text">複製連結</span>
-      </button>
       <button class="nav-btn" id="fullscreenBtn" title="全螢幕">
         <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
       </button>
@@ -2307,7 +2401,24 @@
           <div class="drawer-item-sub">${p.summary}</div>
           <div class="drawer-item-badge">${p.contract ? p.contract + ' · ' : ''}${pLabel}</div>
         </div>
+        <button class="drawer-share-btn" title="複製此章節連結">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </button>
       `;
+      const btnDrawerShare = li.querySelector('.drawer-share-btn');
+      if (btnDrawerShare) {
+        btnDrawerShare.onclick = (e) => {
+          e.stopPropagation();
+          const targetPage = p.pages[0];
+          const url = getShareUrl(targetPage);
+          const msg = `🔗 已複製「${p.title}」專屬分享網址！`;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => showToast(msg)).catch(() => fallbackCopy(url, () => showToast(msg)));
+          } else {
+            fallbackCopy(url, () => showToast(msg));
+          }
+        };
+      }
       li.onclick = () => {
         if (isSingleMode) {
           setSinglePage(p.pages[0]);
@@ -2381,11 +2492,13 @@
     const shareBtn = document.getElementById('shareBtn');
     const shareToast = document.getElementById('shareToast');
 
-    function getShareUrl() {
+    function getShareUrl(overridePage) {
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const curMode = isMobileDevice ? 'single' : (isSingleMode ? 'single' : 'spread');
       let curPage = 1;
-      if (isSingleMode || isMobileDevice) {
+      if (overridePage) {
+        curPage = overridePage;
+      } else if (isSingleMode || isMobileDevice) {
         curPage = singlePageIdx;
       } else {
         const cur = PAGES[idx];

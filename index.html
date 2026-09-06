@@ -1684,6 +1684,831 @@
         border-radius: 6px !important;
       }
     }
+
+    /* ---------------- Plan A + B: 事務機實機圖鑑與產品卡片彈窗 ---------------- */
+    /* Drawer Product Bar (Plan B) */
+    .drawer-products-bar {
+      padding: 12px 14px 10px 14px;
+      background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+      border-bottom: 1px solid #bae6fd;
+    }
+    .drawer-products-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .drawer-products-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+    .drawer-product-chip {
+      flex: 0 0 100px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .drawer-product-chip:hover {
+      border-color: #0284c7;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    }
+    .drawer-product-img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      margin-bottom: 4px;
+    }
+    .drawer-product-name {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+    .drawer-product-tag {
+      font-size: 9.5px;
+      color: #0284c7;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* Search Results Machine Cards (Plan B) */
+    .search-section-header {
+      padding: 6px 12px;
+      background: #f1f5f9;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0369a1;
+      border-bottom: 1px solid #e2e8f0;
+      letter-spacing: 0.5px;
+    }
+    .search-product-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      border-left: 3px solid #005bac;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-product-card:hover {
+      background: #f0f7ff;
+    }
+    .search-product-thumb {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 2px;
+      border: 1px solid #cbd5e1;
+      flex-shrink: 0;
+    }
+    .search-product-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .search-product-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .search-product-sub {
+      font-size: 11px;
+      color: #0284c7;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+    .search-product-desc {
+      font-size: 10.5px;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+    .search-product-actions {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .search-btn-view {
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: 1px solid #0284c7;
+      background: #e0f2fe;
+      color: #0284c7;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .search-btn-view:hover {
+      background: #0284c7;
+      color: #ffffff;
+    }
+
+    /* Product Modal (Plan A) */
+    .product-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 31, 61, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .product-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .product-modal {
+      background: #ffffff;
+      width: 100%;
+      max-width: 760px;
+      max-height: 90vh;
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(10, 31, 61, 0.45);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.92) translateY(16px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .product-modal-backdrop.open .product-modal {
+      transform: scale(1) translateY(0);
+    }
+    .product-modal-header {
+      background: linear-gradient(135deg, #0a1f3d 0%, #102a54 100%);
+      color: #ffffff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #38bdf8;
+    }
+    .product-modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .product-modal-badge {
+      background: #005bac;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .product-modal-header-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+    }
+    .product-modal-close {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 20px;
+      line-height: 1;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .product-modal-close:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .product-modal-body {
+      display: flex;
+      gap: 24px;
+      padding: 22px;
+      overflow-y: auto;
+    }
+    .product-modal-media {
+      flex: 0 0 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .product-img-box {
+      width: 100%;
+      height: 260px;
+      background: radial-gradient(circle at center, #ffffff 60%, #f1f5f9 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      box-shadow: 0 4px 16px rgba(10, 31, 61, 0.06);
+    }
+    .product-modal-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.1));
+    }
+    .product-modal-family {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 600;
+      text-align: center;
+    }
+    .product-modal-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .product-modal-type {
+      font-size: 14px;
+      font-weight: 700;
+      color: #005bac;
+    }
+    .product-modal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .product-chip {
+      font-size: 11px;
+      background: #eef3f9;
+      color: #102a54;
+      padding: 3px 9px;
+      border-radius: 12px;
+      border: 1px solid rgba(16, 42, 84, 0.12);
+      font-weight: 500;
+    }
+    .product-spec-table {
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spec-row {
+      display: flex;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .spec-label {
+      flex: 0 0 110px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .spec-val {
+      flex: 1;
+      color: #0f172a;
+      font-weight: 500;
+    }
+    .product-modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+    .pm-btn {
+      flex: 1;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pm-btn-jump {
+      background: #005bac;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 91, 172, 0.3);
+    }
+    .pm-btn-jump:hover {
+      background: #004b8e;
+      transform: translateY(-1px);
+    }
+    .pm-btn-copy {
+      background: #ffffff;
+      color: #0284c7;
+      border: 1.5px solid #0284c7;
+    }
+    .pm-btn-copy:hover {
+      background: #f0f7ff;
+    }
+
+    @media (max-width: 768px) {
+      .product-modal-body {
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+      }
+      .product-modal-media {
+        flex: none;
+        width: 100%;
+      }
+      .product-img-box {
+        height: 190px;
+      }
+      .product-modal-actions {
+        flex-direction: column;
+      }
+      .spec-label {
+        flex: 0 0 95px;
+      }
+    }
+  
+    /* ---------------- 頁面上點選實機圖鑑浮動提示列 (On-Page Product Floating Bar) ---------------- */
+    .page-active-products-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      z-index: 85;
+      background: rgba(10, 31, 61, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(217, 189, 130, 0.6);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(217, 189, 130, 0.25);
+      border-radius: 40px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 92vw;
+    }
+    .page-active-products-bar.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+    .active-prod-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #d9bd82;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+    .active-prod-header .pulse-icon {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      animation: pulseDot 1.8s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 1; }
+    }
+    .active-prod-chips {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      max-width: 68vw;
+      padding: 2px 2px;
+      scrollbar-width: none;
+    }
+    .active-prod-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .active-prod-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .active-prod-chip:hover {
+      background: #005bac;
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 91, 172, 0.5);
+    }
+    .active-prod-img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 1px;
+    }
+    .active-prod-tag {
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      color: #93c5fd;
+    }
+
+    /* ---------------- 單頁模式頁面上的直接點選徽章 (Single Page On-Sheet Badge) ---------------- */
+    .single-page-product-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 30;
+      background: rgba(10, 31, 61, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(217, 189, 130, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 320px;
+      animation: fadeInDown 0.3s ease;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .sppb-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #d9bd82;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .sppb-items {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sppb-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: #ffffff;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .sppb-item-btn:hover {
+      background: #005bac;
+      border-color: #38bdf8;
+      transform: translateX(3px);
+    }
+    .sppb-thumb {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 1px;
+    }
+    .sppb-name {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sppb-arrow {
+      font-size: 11px;
+      color: #38bdf8;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .page-active-products-bar {
+        bottom: 96px;
+        padding: 5px 12px;
+        gap: 8px;
+        border-radius: 20px;
+      }
+      .active-prod-header {
+        font-size: 11.5px;
+      }
+      .active-prod-chips {
+        max-width: 82vw;
+      }
+      .single-page-product-badge {
+        top: auto;
+        bottom: 20px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
+      }
+    }
+
+  
+    /* ---------------- Header 實機圖鑑快捷按鈕 ---------------- */
+    .header-product-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 12px;
+      background: linear-gradient(135deg, rgba(217, 189, 130, 0.25) 0%, rgba(138, 108, 56, 0.25) 100%);
+      border: 1.5px solid rgba(217, 189, 130, 0.6);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .header-product-btn:hover {
+      background: linear-gradient(135deg, #d9bd82 0%, #8a6c38 100%);
+      color: #0a1f3d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(217, 189, 130, 0.4);
+    }
+    .hpb-icon {
+      font-size: 15px;
+    }
+    .hpb-badge {
+      font-size: 10px;
+      padding: 1px 5px;
+      background: #005bac;
+      color: #ffffff;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* ---------------- 3D 雙頁模式頂部提示徽章 (Spread Mode Top Badge) ---------------- */
+    .spread-product-badge {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      background: rgba(10, 31, 61, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(217, 189, 130, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      border-radius: 30px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeInDown 0.3s ease;
+      max-width: 90vw;
+    }
+    .sppb-items-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sppb-items-row::-webkit-scrollbar {
+      display: none;
+    }
+    .sppb-item-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 5px 12px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .sppb-item-chip:hover {
+      background: #005bac;
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+    }
+    .sppb-cta {
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+  
+    /* ---------------- Header 實機圖鑑按鈕升級 ---------------- */
+    .header-product-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 36px;
+      padding: 0 14px;
+      background: linear-gradient(135deg, rgba(217, 189, 130, 0.35) 0%, rgba(138, 108, 56, 0.35) 100%);
+      border: 1.5px solid rgba(217, 189, 130, 0.85);
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(217, 189, 130, 0.3);
+    }
+    .header-product-btn:hover {
+      background: linear-gradient(135deg, #d9bd82 0%, #8a6c38 100%);
+      color: #0a1f3d;
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 16px rgba(217, 189, 130, 0.5);
+    }
+    .hpb-icon {
+      font-size: 15px;
+      animation: bounceSubtle 2s infinite ease-in-out;
+    }
+    @keyframes bounceSubtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+    .hpb-badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      background: #005bac;
+      color: #ffffff;
+      border-radius: 10px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* ---------------- 底端機種實機照浮動列 (跨頁與單頁通用，固定於底欄上方) ---------------- */
+    .page-active-products-bar {
+      position: fixed;
+      bottom: 68px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      z-index: 95;
+      background: rgba(10, 31, 61, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(217, 189, 130, 0.7);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(217, 189, 130, 0.3);
+      border-radius: 40px;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 94vw;
+    }
+    .page-active-products-bar.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+    @media (max-width: 768px) {
+      .header-left {
+        gap: 5px;
+      }
+      .header-product-btn {
+        height: 28px;
+        padding: 0 7px;
+        gap: 4px;
+        font-size: 11px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .hpb-icon {
+        font-size: 12px;
+      }
+      .hpb-badge {
+        font-size: 9px;
+        padding: 1px 4px;
+      }
+      .page-active-products-bar {
+        bottom: 86px;
+        padding: 4px 10px;
+        gap: 6px;
+        border-radius: 20px;
+        max-width: 96vw;
+      }
+      .active-prod-header {
+        font-size: 11px;
+      }
+      .active-prod-chip {
+        padding: 4px 8px;
+        font-size: 11px;
+        gap: 5px;
+      }
+      .active-prod-img {
+        width: 20px;
+        height: 20px;
+      }
+      .pm-model-tabs {
+        padding: 8px 10px;
+        gap: 5px;
+      }
+      .pm-model-tab {
+        padding: 4px 9px;
+        font-size: 11px;
+      }
+    }
+
+    /* ---------------- Product Modal 頂部 10 款機種切換選單 ---------------- */
+    .pm-model-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .pm-model-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .pm-model-tab:hover {
+      border-color: #005bac;
+      color: #005bac;
+      background: #eef6ff;
+    }
+    .pm-model-tab.active {
+      background: #005bac;
+      border-color: #005bac;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 91, 172, 0.3);
+    }
+    .pm-tab-thumb {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
   </style>
 </head>
 <body>
@@ -1705,6 +2530,12 @@
           <span class="catalog-sub">HUXEN CORPORATION · 3D 互動型錄</span>
         </div>
       </div>
+      <button class="header-product-btn" id="headerProductBtn" title="點擊查看互盛推薦 10 款事務機原廠實機圖鑑與規格">
+        <span class="hpb-icon">📷</span>
+        <span class="hpb-text">實機圖鑑</span>
+        <span class="hpb-badge">10款</span>
+      </button>
+
     </div>
 
     <!-- Center Section: 檢視模式切換 + 目錄 (TOC) + 搜尋框 -->
@@ -1843,6 +2674,16 @@
       </button>
     </div>
 
+  
+    <!-- 頁面上點選即可查看實機圖片與介紹之浮動列 (Plan A 延伸：翻頁隨選即開) -->
+    <div class="page-active-products-bar" id="pageActiveProductsBar">
+      <div class="active-prod-header">
+        <span class="pulse-icon"></span>
+        <span>📷 本頁機種實機照（點選即看）：</span>
+      </div>
+      <div class="active-prod-chips" id="pageActiveProductsChips"></div>
+    </div>
+
   </main>
 
   <!-- Bottom Footer (CSS Grid 鎖定位置，手機端雙層彈性適配) -->
@@ -1883,12 +2724,80 @@
     </div>
   </footer>
 
+
+  <!-- Product Detail & Real Machine Modal (Plan A: 產品實機規格圖鑑彈窗) -->
+  <div class="product-modal-backdrop" id="productModalBackdrop">
+    <div class="product-modal" id="productModal">
+      <div class="product-modal-header">
+        <div class="product-modal-header-left">
+          <span class="product-modal-badge" id="productModalBadge">原廠實機照</span>
+          <div class="product-modal-header-title" id="productModalTitle">RICOH IM C2510</div>
+        </div>
+        <button class="product-modal-close" id="productModalClose" title="關閉 (Esc)">&times;</button>
+      </div>
+
+      
+      <!-- 10 款機種快速切換頁籤 -->
+      <div class="pm-model-tabs" id="pmModelTabs"></div>
+      <div class="product-modal-body">
+        <div class="product-modal-media">
+          <div class="product-img-box">
+            <img id="productModalImg" src="" alt="事務機產品實機照" class="product-modal-img">
+          </div>
+          <div class="product-modal-family" id="productModalFamily">互盛彩色智慧型複合機旗艦系列</div>
+        </div>
+
+        <div class="product-modal-details">
+          <div class="product-modal-type" id="productModalType">彩色雷射數位多功能複合機</div>
+          
+          <div class="product-modal-chips" id="productModalChips"></div>
+
+          <div class="product-spec-table">
+            <div class="spec-row">
+              <span class="spec-label">⚡ 影印/列印速度</span>
+              <span class="spec-val" id="productModalSpeed"></span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">📱 智慧操作螢幕</span>
+              <span class="spec-val" id="productModalScreen"></span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">📜 共同契約案號</span>
+              <span class="spec-val" id="productModalContracts"></span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">🌟 核心亮點特色</span>
+              <span class="spec-val" id="productModalHighlight"></span>
+            </div>
+          </div>
+
+          <div class="product-modal-actions">
+            <button class="pm-btn pm-btn-jump" id="productModalJumpBtn">
+              📖 前往型錄對應頁面
+            </button>
+            <button class="pm-btn pm-btn-copy" id="productModalCopyBtn">
+              🔗 複製此機型直連分享連結
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Slide-out TOC Drawer -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="drawer-title">型錄章節快速索引</div>
       <button class="close-btn" id="closeDrawer">&times;</button>
+    </div>
+        <!-- Plan B: 事務機實機圖鑑橫向滾動條 -->
+    <div class="drawer-products-bar" id="drawerProductsBar">
+      <div class="drawer-products-title">
+        <span>🖨️ 主力事務機實機圖鑑</span>
+        <span style="font-size:11px;color:#64748b;font-weight:normal;">點擊查看實機照片</span>
+      </div>
+      <div class="drawer-products-scroll" id="drawerProductsScroll"></div>
     </div>
     <div style="padding:10px 14px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
       <input type="text" id="drawerSearchInput" placeholder="🔍 快速搜尋商品、案號或章節..." style="width:100%;height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;box-sizing:border-box;">
@@ -1951,12 +2860,23 @@
             </div>
           </div>
 
-          <!-- Card 5: 一鍵複製專屬連結 (業務採購必備) -->
-          <div class="guide-card full-width">
+          <!-- Card 5: 實機照圖鑑與點選查看 -->
+          <div class="guide-card">
+            <div class="guide-card-icon">📷</div>
+            <div class="guide-card-content">
+              <h3>實機圖鑑與點選</h3>
+              <p><strong>💻 頂部「📷 實機圖鑑」</strong>：隨時點選頂部金邊按鈕，即可瀏覽 10 款熱門推薦事務機原廠高畫質白底實機照與詳細規格。</p>
+              <p><strong>📄 頁面底端實機列</strong>：翻至影印機頁次時，底端自動升起該頁機種按鈕，點擊任一機型即可彈出原廠照片與規格說明！</p>
+            </div>
+          </div>
+
+          <!-- Card 6: 一鍵複製專屬連結 (業務採購必備) -->
+          <div class="guide-card">
             <div class="guide-card-icon">🔗</div>
             <div class="guide-card-content">
-              <h3>複製專屬分享連結 (採購/業務必備)</h3>
-              <p>點擊頂部目錄旁的<strong>「複製連結」</strong>（或目錄清單內每項右側的 🔗 按鈕），會自動複製當前頁面的專屬直連網址。傳送給採購承辦或同仁，點開立即直達該單頁滿版大圖！</p>
+              <h3>複製專屬分享連結</h3>
+              <p>點擊頂部目錄旁的<strong>「複製連結」</strong>（或目錄清單內每項右側的 🔗 按鈕），會自動複製當前頁面的專屬直連網址。</p>
+              <p>傳送給採購承辦或同仁，點開立即直達該單頁滿版大圖！</p>
             </div>
           </div>
         </div>
@@ -2722,6 +3642,156 @@
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
 
+    
+    /* ---------------- 型錄各頁面事務機機種關聯對照表 ---------------- */
+    const PAGE_PRODUCTS_MAP = {
+      2: ['RICOH IM C2510', 'RICOH IM 3500'],
+      3: ['RICOH IM C2510', 'RICOH IM 3500'],
+      4: ['RICOH IM C2510', 'RICOH IM 3500'],
+      5: ['RICOH IM C2510', 'RICOH IM 3500', 'RICOH IM 7000', 'Epson AM-C4000', 'Epson EM-C7100', 'brother MFC-L2770DW', 'HP LaserJet Pro MFP 3103fdn'],
+      6: ['RICOH IM 3500', 'RICOH IM 7000'],
+      7: ['RICOH IM C2510'],
+      8: ['RICOH IM 3500', 'RICOH IM C2510'],
+      9: ['Epson AM-C4000', 'Epson EM-C7100'],
+      10: ['RICOH MP 5055SP'],
+      11: ['RICOH MP 5055SP'],
+      14: ['RICOH IM 2702'],
+      15: ['RICOH IM 2702', 'brother MFC-L2770DW', 'HP LaserJet Pro MFP 3103fdn'],
+      16: ['brother MFC-L3760CDW']
+    };
+
+    function updateSpreadProductBadge(spreadIdx) {
+      let badge = document.getElementById('spreadProductBadge');
+      const stage = document.getElementById('sbStage');
+      if (!stage) return;
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'spreadProductBadge';
+        badge.className = 'spread-product-badge';
+        stage.appendChild(badge);
+      }
+      const curPages = PAGES[spreadIdx] ? PAGES[spreadIdx].pages : [1];
+      const keysSet = new Set();
+      curPages.forEach(p => {
+        (PAGE_PRODUCTS_MAP[p] || []).forEach(k => keysSet.add(k));
+      });
+
+      if (keysSet.size === 0) {
+        badge.style.display = 'none';
+        return;
+      }
+      badge.style.display = 'flex';
+      badge.innerHTML = `
+        <div class="sppb-header">
+          <span class="pulse-icon"></span>
+          <span>📷 本跨頁機種實機照（點選即看）：</span>
+        </div>
+        <div class="sppb-items-row"></div>
+      `;
+      const container = badge.querySelector('.sppb-items-row');
+      keysSet.forEach(k => {
+        const prod = PRODUCT_CATALOG[k];
+        if (!prod) return;
+        const btn = document.createElement('button');
+        btn.className = 'sppb-item-chip';
+        const displayName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+        btn.innerHTML = `
+          <img src="${prod.image}" class="sppb-thumb" alt="${displayName}">
+          <span class="sppb-name">${displayName}</span>
+          <span class="sppb-cta">🔍 看實機照</span>
+        `;
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          openProductModal(k);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function updatePageProducts(activePages) {
+      const bar = document.getElementById('pageActiveProductsBar');
+      const chipsBox = document.getElementById('pageActiveProductsChips');
+      if (!bar || !chipsBox) return;
+
+      const keysSet = new Set();
+      (activePages || []).forEach(p => {
+        const prods = PAGE_PRODUCTS_MAP[p] || [];
+        prods.forEach(k => keysSet.add(k));
+      });
+
+      if (keysSet.size === 0) {
+        bar.classList.remove('visible');
+        return;
+      }
+
+      chipsBox.innerHTML = '';
+      keysSet.forEach(k => {
+        const prod = PRODUCT_CATALOG[k];
+        if (!prod) return;
+        const chip = document.createElement('button');
+        chip.className = 'active-prod-chip';
+        const isColor = prod.family.includes('彩色') || prod.family.includes('微噴');
+        const displayName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+        chip.innerHTML = `
+          <img src="${prod.image}" alt="${displayName}" class="active-prod-img">
+          <span>${displayName}</span>
+          <span class="active-prod-tag">${isColor ? '🌈 彩色' : '⚡ 黑白'}</span>
+        `;
+        chip.onclick = (e) => {
+          e.stopPropagation();
+          openProductModal(k);
+        };
+        chipsBox.appendChild(chip);
+      });
+
+      bar.classList.add('visible');
+    }
+
+    function updateSinglePageProductBadge(pageIdx) {
+      const sheet = document.getElementById('singlePageSheet');
+      if (!sheet) return;
+      let badge = document.getElementById('singlePageProductBadge');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'singlePageProductBadge';
+        badge.className = 'single-page-product-badge';
+        sheet.appendChild(badge);
+      }
+
+      const prods = PAGE_PRODUCTS_MAP[pageIdx] || [];
+      if (prods.length === 0) {
+        badge.style.display = 'none';
+        return;
+      }
+
+      badge.style.display = 'flex';
+      badge.innerHTML = `
+        <div class="sppb-header">
+          <span class="pulse-icon"></span>
+          <span>📷 本頁事務機實機照片（點選即看）：</span>
+        </div>
+        <div class="sppb-items"></div>
+      `;
+      const container = badge.querySelector('.sppb-items');
+      prods.forEach(k => {
+        const prod = PRODUCT_CATALOG[k];
+        if (!prod) return;
+        const btn = document.createElement('button');
+        btn.className = 'sppb-item-btn';
+        const displayName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+        btn.innerHTML = `
+          <img src="${prod.image}" class="sppb-thumb" alt="${displayName}">
+          <span class="sppb-name">${displayName}</span>
+          <span class="sppb-arrow">🔍 實機照與規格 ›</span>
+        `;
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          openProductModal(k);
+        };
+        container.appendChild(btn);
+      });
+    }
+
     function updateMeta() {
       const currentIdx = turn ? turn.to : idx;
       const cur = PAGES[currentIdx];
@@ -2763,6 +3833,18 @@
 
       if (typeof syncUrlHash === 'function') {
         syncUrlHash();
+      }
+
+      // 【核心關鍵】同步更新當前頁面之實機圖鑑浮動列與頁面徽章
+      if (typeof updatePageProducts === 'function') {
+        if (isSingleMode) {
+          updatePageProducts([singlePageIdx]);
+          
+        } else {
+          const curPages = (cur && cur.pages) ? cur.pages : [1];
+          updatePageProducts(curPages);
+          
+        }
       }
     }
 
@@ -2811,6 +3893,10 @@
       if (e.key === 'ArrowRight' || e.key === 'PageDown') goNext();
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') goPrev();
       if (e.key === 'Escape') {
+        if (document.getElementById('productModalBackdrop') && document.getElementById('productModalBackdrop').classList.contains('open')) {
+          closeProductModal();
+          return;
+        }
         if (guideModalBackdrop && guideModalBackdrop.classList.contains('open')) {
           closeGuideModal();
           return;
@@ -2896,29 +3982,87 @@
         }
       });
 
-      if (matches.length > 0) {
+      // Plan B: 同步搜尋實機產品圖鑑
+      const productMatches = [];
+      for (const [k, prod] of Object.entries(PRODUCT_CATALOG)) {
+        const hay = (k + ' ' + prod.name + ' ' + prod.type + ' ' + prod.family + ' ' + prod.speed + ' ' + prod.highlight + ' ' + prod.contracts.join(' ')).toLowerCase();
+        if (hay.includes(q)) {
+          productMatches.push({ key: k, prod });
+        }
+      }
+
+      if (productMatches.length > 0 || matches.length > 0) {
         searchResults.innerHTML = '';
-        matches.slice(0, 10).forEach(m => {
-          const item = el('div', 'search-item');
-          const pLabel = m.page.pages.length === 1 ? `第 ${m.page.pages[0]} 頁` : `第 ${m.page.pages[0]}-${m.page.pages[1]} 頁`;
-          item.innerHTML = `
-            <div class="search-item-header">
-              <span class="search-item-title">${m.page.title} ${m.page.contract ? ' (' + m.page.contract + ')' : ''}</span>
-              <span class="search-item-page">${pLabel}</span>
-            </div>
-            <div class="search-item-snippet">${m.snippet}</div>
-          `;
-          item.onclick = () => {
-            if (isSingleMode) {
-              setSinglePage(m.page.pages[0]);
-            } else {
-              goTo(m.index);
-            }
-            searchResults.classList.remove('open');
-            searchInput.value = '';
-          };
-          searchResults.appendChild(item);
-        });
+
+        // 1. 事務機實機卡片 (Plan B + A 結合)
+        if (productMatches.length > 0) {
+          const secTitle = el('div', 'search-section-header');
+          secTitle.innerHTML = `🖨️ 推薦事務機實機 (${productMatches.length})`;
+          searchResults.appendChild(secTitle);
+
+          productMatches.slice(0, 4).forEach(({ key, prod }) => {
+            const card = el('div', 'search-product-card');
+            card.innerHTML = `
+              <img class="search-product-thumb" src="${prod.image}" alt="${prod.name}" loading="lazy">
+              <div class="search-product-info">
+                <div class="search-product-title">${prod.name}</div>
+                <div class="search-product-sub">${prod.type} · ${prod.speed}</div>
+                <div class="search-product-desc">${prod.highlight}</div>
+              </div>
+              <div class="search-product-actions">
+                <button class="search-btn-view" title="點擊查看實機照片與詳細規格">📷 實機</button>
+              </div>
+            `;
+            const btnView = card.querySelector('.search-btn-view');
+            btnView.onclick = (e) => {
+              e.stopPropagation();
+              searchResults.classList.remove('open');
+              searchInput.value = '';
+              openProductModal(key);
+            };
+            card.onclick = () => {
+              if (isSingleMode) {
+                setSinglePage(prod.samplePage);
+              } else {
+                goTo(prod.samplePage === 1 ? 0 : Math.floor(prod.samplePage / 2));
+              }
+              searchResults.classList.remove('open');
+              searchInput.value = '';
+            };
+            searchResults.appendChild(card);
+          });
+        }
+
+        // 2. 型錄內頁檢索
+        if (matches.length > 0) {
+          if (productMatches.length > 0) {
+            const secTitle = el('div', 'search-section-header');
+            secTitle.innerHTML = `📑 型錄頁面檢索 (${matches.length})`;
+            searchResults.appendChild(secTitle);
+          }
+          matches.slice(0, 7).forEach(m => {
+            const item = el('div', 'search-item');
+            const pLabel = m.page.pages.length === 1 ? `第 ${m.page.pages[0]} 頁` : `第 ${m.page.pages[0]}-${m.page.pages[1]} 頁`;
+            item.innerHTML = `
+              <div class="search-item-header">
+                <span class="search-item-title">${m.page.title} ${m.page.contract ? ' (' + m.page.contract + ')' : ''}</span>
+                <span class="search-item-page">${pLabel}</span>
+              </div>
+              <div class="search-item-snippet">${m.snippet}</div>
+            `;
+            item.onclick = () => {
+              if (isSingleMode) {
+                setSinglePage(m.page.pages[0]);
+              } else {
+                goTo(m.index);
+              }
+              searchResults.classList.remove('open');
+              searchInput.value = '';
+            };
+            searchResults.appendChild(item);
+          });
+        }
+
         searchResults.classList.add('open');
       } else {
         searchResults.innerHTML = '<div style="padding:12px;color:#94a3b8;font-size:12px;text-align:center;">無相符項目</div>';
@@ -3177,6 +4321,50 @@
       overlay.classList.add('fade');
       setTimeout(() => overlay.remove(), 450);
 
+
+      // Plan B: 初始化目錄抽屜中的主力事務機實機圖鑑
+      const drawerProductsScroll = document.getElementById('drawerProductsScroll');
+      if (drawerProductsScroll) {
+        drawerProductsScroll.innerHTML = '';
+        const featuredList = [
+          'RICOH IM C2510',
+          'RICOH IM 3500',
+          'RICOH IM 5000',
+          'RICOH IM 7000',
+          'RICOH MP 5055SP',
+          'RICOH IM 2702',
+          'Epson AM-C4000',
+          'Epson EM-C7100',
+          'brother MFC-L2770DW',
+          'HP LaserJet Pro MFP 3103fdn'
+        ];
+        featuredList.forEach(k => {
+          const prod = PRODUCT_CATALOG[k];
+          if (!prod) return;
+          const chip = el('div', 'drawer-product-chip');
+          const shortName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+          chip.innerHTML = `
+            <img class="drawer-product-img" src="${prod.image}" alt="${prod.name}" loading="lazy">
+            <div class="drawer-product-name" title="${prod.name}">${shortName}</div>
+            <div class="drawer-product-tag">${prod.family.includes('彩色') ? '🌈 彩色' : '⚡ 黑白'}</div>
+          `;
+          chip.onclick = () => {
+            toggleDrawer(false);
+            openProductModal(k);
+          };
+          drawerProductsScroll.appendChild(chip);
+        });
+      }
+
+      // Check if URL specifies a product: #product=...
+      try {
+        const hash = window.location.hash;
+        if (hash.startsWith('#product=')) {
+          const pKey = decodeURIComponent(hash.replace('#product=', ''));
+          setTimeout(() => openProductModal(pKey), 450);
+        }
+      } catch (e) {}
+
       // 網站進入時，主動提供各項操作說明指引
       try {
         const dismissed = localStorage.getItem('huxen_guide_dismissed_v2');
@@ -3187,6 +4375,338 @@
         setTimeout(openGuideModal, 350);
       }
     }
+
+
+    /* ---------------- Plan A + B: 事務機產品實機資料庫 ---------------- */
+    const PRODUCT_CATALOG = {
+      'RICOH IM C2510': {
+        name: 'RICOH IM C2510',
+        family: '互盛彩色主力旗艦',
+        type: '彩色雷射數位多功能複合機',
+        speed: '每分鐘 25 張 (彩色/黑白)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '搭載 Android 系統直覺滑動操控、雙面同步掃描、無針裝訂環保支援、直接加熱極速省電 (TEC 0.6W)',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM C2010': {
+        name: 'RICOH IM C2010',
+        family: '互盛彩色主力旗艦',
+        type: '彩色雷射數位多功能複合機',
+        speed: '每分鐘 20 張 (彩色/黑白)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '搭載 Android 系統、豐富 App 應用程式、雙面高速複印列印、能源之星 2.0 超低耗電',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM C3010': {
+        name: 'RICOH IM C3010 / C3010EX',
+        family: '互盛彩色高階旗艦',
+        type: '彩色雷射數位多功能複合機',
+        speed: '每分鐘 30 張 (彩色/黑白)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '公家部門最愛主力機款、支援 A3 內置自動折紙器、無針裝訂、高解析全彩輸出',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM C3510': {
+        name: 'RICOH IM C3510 / C3510EX',
+        family: '互盛彩色高階旗艦',
+        type: '彩色雷射數位多功能複合機',
+        speed: '每分鐘 35 張 (彩色/黑白)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '高速公文與大量報告輸出首選、支援 ID 卡片雙面掃描 App、大容量紙匣擴充',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM C4510': {
+        name: 'RICOH IM C4510',
+        family: '互盛彩色高速旗艦',
+        type: '彩色雷射數位多功能複合機 (高速旗艦)',
+        speed: '每分鐘 45 張 (彩色/黑白高速)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '大型部門與學校總務處首選、雙面高速同步掃描、專業裝訂後製設備支援',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM C6010': {
+        name: 'RICOH IM C6010',
+        family: '互盛彩色極速旗艦',
+        type: '彩色雷射數位多功能複合機 (極速旗艦)',
+        speed: '每分鐘 60 張 (極速彩色輸出)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '最高等級生產力、秒速輸出大文件、支援高階排程列印與全方位文件加密防護',
+        image: 'products/ricoh_im_c2510.webp',
+        contracts: ['LP5-114036 (買賣)'],
+        samplePage: 4
+      },
+      'RICOH IM 2500': {
+        name: 'RICOH IM 2500',
+        family: '互盛黑白主力旗艦',
+        type: '黑白雷射數位多功能複合機',
+        speed: '每分鐘 25 張',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '10.1 吋大螢幕直覺操控、物聯網智能主動客服 15 分鐘回覆、節能耐用經典首選',
+        image: 'products/ricoh_im_3500.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM 3500': {
+        name: 'RICOH IM 3500',
+        family: '互盛黑白主力旗艦',
+        type: '黑白雷射數位多功能複合機',
+        speed: '每分鐘 35 張',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '各級機關學校租賃最熱門機型、雙面高速自動送稿、極低故障率、省電節能',
+        image: 'products/ricoh_im_3500.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM 5000': {
+        name: 'RICOH IM 5000',
+        family: '互盛黑白高速旗艦',
+        type: '黑白雷射數位多功能複合機 (高速型)',
+        speed: '每分鐘 50 張高速輸出',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '公文大批印發專用機、超快首頁輸出、雙面同時掃描達 240 ipm、大量進紙容量',
+        image: 'products/ricoh_im_3500.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM 6000': {
+        name: 'RICOH IM 6000',
+        family: '互盛黑白極速旗艦',
+        type: '黑白雷射數位多功能複合機 (極速型)',
+        speed: '每分鐘 60 張極速輸出',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '高印量專屬旗艦、堅固耐用鋼製結構骨架、極速雙面同時進紙、最高可靠度',
+        image: 'products/ricoh_im_3500.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH IM 7000': {
+        name: 'RICOH IM 7000',
+        family: '互盛黑白量產重裝旗艦',
+        type: '黑白雷射數位多功能複合機 (日本原產量產級)',
+        speed: '每分鐘 70 張超重裝高速 (日本原裝)',
+        screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
+        highlight: '量產印刷級高階引擎、支援萬張連續不間斷印刷、極長壽命感光滾筒與專業裝訂配備',
+        image: 'products/ricoh_im_7000.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'RICOH MP 5055SP': {
+        name: 'RICOH MP 5055SP / MP 3555SP',
+        family: '互盛經典黑白複合機',
+        type: '黑白數位式多功能複合機 (長青經典款)',
+        speed: '每分鐘 35~50 張',
+        screen: '10.1 吋智慧操作面板',
+        highlight: '公家機關租賃成熟穩定之長青主力機、結構堅固、複印字體銳利清晰、維護簡便',
+        image: 'products/ricoh_mp_5055.webp',
+        contracts: ['LP5-114035 (二手租賃)'],
+        samplePage: 10
+      },
+      'RICOH IM 2702': {
+        name: 'RICOH IM 2702',
+        family: '互盛精巧型 A3 黑白系列',
+        type: 'A3 黑白多功能複合機 (桌面精巧型)',
+        speed: '每分鐘 27 張',
+        screen: '7 吋彩色中文觸控螢幕',
+        highlight: '小型空間與科室辦公首選、具備專業 A3 影印與自動雙面進紙、價格實惠經濟',
+        image: 'products/ricoh_im_2702.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
+        samplePage: 15
+      },
+      'Epson AM-C4000': {
+        name: 'Epson WorkForce Enterprise AM-C4000 / C5000 / C6000',
+        family: 'Epson 免加熱微噴彩色旗艦',
+        type: '陣列式微噴彩色多功能複合機',
+        speed: '每分鐘 40~60 張高速微噴',
+        screen: '10.1 吋彩色中文觸控螢幕',
+        highlight: 'Heat-Free 免加熱技術節能減碳達 85%、超低耗電量、極少耗材消耗零臭氧廢氣、高速首頁輸出',
+        image: 'products/epson_am_c4000.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'Epson EM-C7100': {
+        name: 'Epson WorkForce Pro EM-C7100 / EM-C8100',
+        family: 'Epson 商用微噴彩色系列',
+        type: 'A3+ 彩色微噴多功能複合機',
+        speed: '每分鐘 25 張 (彩色/黑白同速)',
+        screen: '5.0 吋彩色中文觸控螢幕',
+        highlight: 'PrecisionCore 四色防水墨水、免加熱省電達 94%、大容量墨袋可印 11,500 頁、耐用 30 萬頁',
+        image: 'products/epson_em_c7100.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114034 (租賃)'],
+        samplePage: 4
+      },
+      'brother MFC-L2770DW': {
+        name: 'brother MFC-L2770DW / MFC-L2805DW',
+        family: 'Brother 高速黑白雷射傳真機',
+        type: 'A4 黑白雷射雙面多功能傳真事務機',
+        speed: '每分鐘 34 張高速列印',
+        screen: '2.7 吋彩色中文觸控面板',
+        highlight: '列印/影印/掃描/傳真四合一、自動雙面列印與掃描、雙網 + Wi-Fi 行動列印、50 頁自動送稿',
+        image: 'products/brother_mfc_l2770dw.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
+        samplePage: 4
+      },
+      'brother MFC-L3760CDW': {
+        name: 'brother MFC-L3760CDW / MFC-L8900CDW',
+        family: 'Brother 彩色雷射傳真事務機',
+        type: 'A4 彩色雷射雙面多功能事務機',
+        speed: '每分鐘 26~31 張彩色列印',
+        screen: '3.5 吋彩色觸控螢幕',
+        highlight: 'LED 全彩高速輸出、低噪音設計、支援有線網路/無線雙網及雲端行動 App 直印',
+        image: 'products/brother_mfc_l3760cdw.webp',
+        contracts: ['LP5-114021 (週邊設備)'],
+        samplePage: 16
+      },
+      'HP LaserJet Pro MFP 3103fdn': {
+        name: 'HP LaserJet Pro MFP 3103fdn / 4103fdn',
+        family: 'HP 經典黑白雷射多功能事務機',
+        type: 'A4 黑白網路多功能傳真複合機',
+        speed: '每分鐘 33~40 張高速列印',
+        screen: '2.7 吋彩色圖形觸控螢幕',
+        highlight: 'HP Wolf Pro 專業安全防護、自動雙面高速列印、50 頁雙面自動送稿、Gigabit 高速網路',
+        image: 'products/hp_mfp_3103fdn.webp',
+        contracts: ['LP5-114036 (買賣)', 'LP5-114021 (週邊設備)'],
+        samplePage: 4
+      }
+    };
+
+    /* ---------------- Product Modal Functions (Plan A) ---------------- */
+    
+    function renderProductModalTabs(activeModelKey) {
+      const tabsBox = document.getElementById('pmModelTabs');
+      if (!tabsBox) return;
+      tabsBox.innerHTML = '';
+      
+      const allKeys = [
+        'RICOH IM C2510',
+        'RICOH IM 3500',
+        'RICOH IM 7000',
+        'RICOH MP 5055SP',
+        'RICOH IM 2702',
+        'Epson AM-C4000',
+        'Epson EM-C7100',
+        'brother MFC-L2770DW',
+        'brother MFC-L3760CDW',
+        'HP LaserJet Pro MFP 3103fdn'
+      ];
+
+      allKeys.forEach(k => {
+        const prod = PRODUCT_CATALOG[k];
+        if (!prod) return;
+        const btn = document.createElement('button');
+        btn.className = 'pm-model-tab' + (k === activeModelKey ? ' active' : '');
+        const shortName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+        btn.innerHTML = `
+          <img src="${prod.image}" class="pm-tab-thumb" alt="${shortName}">
+          <span>${shortName}</span>
+        `;
+        btn.onclick = () => openProductModal(k);
+        tabsBox.appendChild(btn);
+        if (k === activeModelKey) {
+          setTimeout(() => btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }), 50);
+        }
+      });
+    }
+
+    function openProductModal(modelKey) {
+      let prod = PRODUCT_CATALOG[modelKey];
+      if (!prod) {
+        // Fallback match
+        for (const [k, p] of Object.entries(PRODUCT_CATALOG)) {
+          if (modelKey.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(modelKey.toLowerCase())) {
+            prod = p;
+            modelKey = k;
+            break;
+          }
+        }
+      }
+      if (!prod) return;
+
+      renderProductModalTabs(modelKey);
+      document.getElementById('productModalTitle').textContent = prod.name;
+      document.getElementById('productModalImg').src = prod.image;
+      document.getElementById('productModalFamily').textContent = prod.family;
+      document.getElementById('productModalType').textContent = prod.type;
+      document.getElementById('productModalSpeed').textContent = prod.speed;
+      document.getElementById('productModalScreen').textContent = prod.screen;
+      document.getElementById('productModalContracts').textContent = prod.contracts.join('、');
+      document.getElementById('productModalHighlight').textContent = prod.highlight;
+
+      const chipsBox = document.getElementById('productModalChips');
+      chipsBox.innerHTML = '';
+      const tags = [
+        prod.speed.split(' ')[0] + ' ' + prod.speed.split(' ')[1],
+        prod.family.includes('彩色') ? '🌈 彩色雙面' : '⚡ 黑白高速',
+        '📜 臺銀共契標配',
+        '🛡️ 互盛智能客服支援',
+        '🌱 環保標章認證'
+      ];
+      tags.forEach(t => {
+        const chip = el('span', 'product-chip');
+        chip.textContent = t;
+        chipsBox.appendChild(chip);
+      });
+
+      document.getElementById('productModalJumpBtn').onclick = () => {
+        closeProductModal();
+        if (isSingleMode) {
+          setSinglePage(prod.samplePage);
+        } else {
+          goTo(prod.samplePage === 1 ? 0 : Math.floor(prod.samplePage / 2));
+        }
+      };
+
+      document.getElementById('productModalCopyBtn').onclick = () => {
+        const cleanUrl = window.location.href.split('#')[0].split('?')[0];
+        const shareUrl = `${cleanUrl}?v=10#product=${encodeURIComponent(modelKey)}`;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast(`✅ 已複製 ${prod.name} 專屬分享連結！`);
+          }).catch(() => {
+            showToast(`🔗 專屬連結：${shareUrl}`);
+          });
+        } else {
+          showToast(`🔗 專屬連結：${shareUrl}`);
+        }
+      };
+
+      document.getElementById('productModalBackdrop').classList.add('open');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModalBackdrop').classList.remove('open');
+    }
+
+    document.getElementById('productModalClose').onclick = closeProductModal;
+    document.getElementById('productModalBackdrop').onclick = e => {
+      if (e.target === document.getElementById('productModalBackdrop')) {
+        closeProductModal();
+      }
+    };
+
+    
+      const headerProductBtn = document.getElementById('headerProductBtn');
+      if (headerProductBtn) {
+        headerProductBtn.onclick = () => {
+          // 若當前頁面有推薦機型，直接開啟該機型；否則開啟熱門主力 IM C2510
+          const curP = isSingleMode ? singlePageIdx : (PAGES[idx] ? PAGES[idx].pages[0] : 1);
+          const prods = PAGE_PRODUCTS_MAP[curP] || [];
+          if (prods.length > 0) {
+            openProductModal(prods[0]);
+          } else {
+            openProductModal('RICOH IM C2510');
+          }
+        };
+      }
 
     window.addEventListener('DOMContentLoaded', init);
   </script>

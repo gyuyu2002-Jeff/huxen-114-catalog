@@ -713,7 +713,6 @@
       background: #ffffff;
       border-radius: 8px;
       box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
-      transition: width 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
     }
 
@@ -1675,7 +1674,6 @@
         border-radius: 6px !important;
         box-shadow: 0 4px 18px rgba(10, 31, 61, 0.16) !important;
         cursor: default !important;
-        transition: width 0.25s ease, max-width 0.25s ease !important;
       }
       .single-page-sheet.is-zoomed {
         width: 200% !important;
@@ -1839,7 +1837,7 @@
       </div>
 
       <div class="single-page-sheet" id="singlePageSheet">
-        <img class="single-page-img" id="singlePageImg" src="pages/page_01.webp" alt="型錄頁面">
+        <img class="single-page-img" id="singlePageImg" width="4961" height="7016" style="aspect-ratio: 4961 / 7016;" src="pages/page_01.webp" alt="型錄頁面">
       </div>
 
       <button class="single-side-btn right" id="singleSideNextBtn" title="下一頁 (→)">
@@ -2006,7 +2004,7 @@
     const viewModeSpread = document.getElementById('viewModeSpread');
     const viewModeSingle = document.getElementById('viewModeSingle');
     const singlePageSheet = document.getElementById('singlePageSheet');
-    const singlePageImg = document.getElementById('singlePageImg');
+    let singlePageImg = document.getElementById('singlePageImg');
 
     const segSpreadBtn = document.getElementById('segSpreadBtn');
     const segSingleBtn = document.getElementById('segSingleBtn');
@@ -2465,6 +2463,40 @@
     const btnWheelMode = document.getElementById('btnWheelMode');
     let wheelMode = 'zoom'; // 預設直接推動滾輪放大縮小！
 
+    let reRasterTimer = null;
+    function forceSingleImageReRaster() {
+      clearTimeout(reRasterTimer);
+      reRasterTimer = setTimeout(() => {
+        if (!singlePageImg || !singlePageSheet) return;
+        const currentSrc = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
+        const newImg = document.createElement('img');
+        newImg.className = 'single-page-img';
+        newImg.id = 'singlePageImg';
+        newImg.alt = '型錄頁面';
+        newImg.width = 4961;
+        newImg.height = 7016;
+        newImg.style.aspectRatio = '4961 / 7016';
+        newImg.src = currentSrc;
+
+        const doSwap = () => {
+          if (singlePageImg && singlePageImg.parentNode === singlePageSheet) {
+            const curTop = viewModeSingle.scrollTop;
+            const curLeft = viewModeSingle.scrollLeft;
+            singlePageSheet.replaceChild(newImg, singlePageImg);
+            singlePageImg = newImg;
+            viewModeSingle.scrollTop = curTop;
+            viewModeSingle.scrollLeft = curLeft;
+          }
+        };
+
+        if (newImg.complete) {
+          doSwap();
+        } else {
+          newImg.onload = doSwap;
+        }
+      }, 40);
+    }
+
     function applySingleWidth(w, modeLabel) {
       const minW = window.innerWidth <= 768 ? Math.min(window.innerWidth - 12, 380) : 600;
       singleWidth = Math.max(minW, Math.min(4900, Math.round(w)));
@@ -2475,9 +2507,11 @@
       btnZoomHuge.classList.toggle('active', singleWidth === 2450);
       btnZoomMax.classList.toggle('active', singleWidth >= 4800);
       btnFitPage.classList.toggle('active', modeLabel === '整頁');
+      forceSingleImageReRaster();
     }
 
     function setSinglePage(pageNumber) {
+      clearTimeout(reRasterTimer);
       singlePageIdx = Math.max(1, Math.min(TOTAL_PAGES, pageNumber));
       singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
       singlePageSheet.classList.remove('is-zoomed');
@@ -2493,6 +2527,14 @@
       const nextSideBtn = document.getElementById('singleSideNextBtn');
       if (prevSideBtn) prevSideBtn.disabled = singlePageIdx <= 1;
       if (nextSideBtn) nextSideBtn.disabled = singlePageIdx >= TOTAL_PAGES;
+
+      // Preload adjacent single pages
+      [singlePageIdx + 1, singlePageIdx - 1].forEach(p => {
+        if (p >= 1 && p <= TOTAL_PAGES) {
+          const pre = new Image();
+          pre.src = `pages/page_${String(p).padStart(2, '0')}.webp`;
+        }
+      });
     }
 
     document.getElementById('btnZoomIn').onclick = () => {
@@ -2551,6 +2593,7 @@
       if (diff > 40 && diff < 320) {
         e.preventDefault();
         singlePageSheet.classList.toggle('is-zoomed');
+        forceSingleImageReRaster();
         if (singlePageSheet.classList.contains('is-zoomed')) {
           showToast('🔍 已放大檢視 (再次雙擊還原)');
         } else {

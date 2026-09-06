@@ -352,6 +352,143 @@
       white-space: nowrap;
     }
 
+    #downloadCatalogBtn {
+      height: 32px;
+      padding: 0 11px;
+      gap: 5px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+      border: 1px solid rgba(16, 185, 129, 0.48);
+      border-radius: 6px;
+      font-weight: 600;
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: #34d399;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    #downloadCatalogBtn:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.38), rgba(5, 150, 105, 0.55));
+      border-color: #34d399;
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+    }
+    #downloadCatalogBtn:active {
+      background: #059669;
+      color: #ffffff;
+    }
+    .download-btn-text {
+      display: inline;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .download-btn-badge {
+      background: #059669;
+      color: #ffffff;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-left: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Drawer Download Box */
+    .drawer-download-card {
+      margin: 10px 14px 6px 14px;
+      background: linear-gradient(135deg, #0f2b54 0%, #0a1f3d 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      padding: 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    }
+    .ddc-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 3px;
+    }
+    .ddc-title {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .ddc-desc {
+      color: #94a3b8;
+      font-size: 11px;
+    }
+    .ddc-download-btn {
+      height: 32px;
+      background: linear-gradient(135deg, #005bac 0%, #0284c7 100%);
+      border: 1px solid #38bdf8;
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .ddc-download-btn:hover {
+      background: linear-gradient(135deg, #004b8e 0%, #0369a1 100%);
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+    }
+
+    .guide-download-link {
+      color: #34d399 !important;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid rgba(16, 185, 129, 0.38);
+      border-radius: 12px;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .guide-download-link:hover {
+      background: rgba(16, 185, 129, 0.35);
+      color: #ffffff !important;
+      border-color: #34d399;
+    }
+
+    .guide-modal-dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #005bac 0%, #0284c7 100%);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 12.5px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid #38bdf8;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0, 91, 172, 0.3);
+    }
+    .guide-modal-dl-btn:hover {
+      background: linear-gradient(135deg, #004b8e 0%, #0369a1 100%);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+    }
+
     .nav-btn {
       height: 32px;
       padding: 0 10px;
@@ -1440,6 +1577,15 @@
       .catalog-sub {
         display: none !important;
       }
+      .text-desktop {
+        display: none !important;
+      }
+      .text-mobile {
+        display: inline !important;
+      }
+      .header-product-btn {
+        display: none !important;
+      }
 
       /* 手機板完全不使用雙面模式，隱藏切換鈕，釋放空間 */
       .mode-segmented {
@@ -1519,6 +1665,29 @@
         font-size: 12px;
         font-weight: 600;
         white-space: nowrap !important;
+      }
+      #downloadCatalogBtn {
+        height: 32px;
+        padding: 0 7px;
+        font-size: 12px;
+        font-weight: 600;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(5, 150, 105, 0.35));
+        border: 1px solid rgba(16, 185, 129, 0.5);
+        color: #34d399;
+        border-radius: 6px;
+        gap: 3px;
+        display: inline-flex !important;
+        align-items: center;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+        text-decoration: none;
+      }
+      #downloadCatalogBtn:active {
+        background: #059669;
+        color: #ffffff;
+      }
+      .download-btn-badge {
+        display: none !important;
       }
       .header-actions {
         display: none !important;
@@ -2636,15 +2805,26 @@
         </button>
       </div>
 
-      <!-- 目錄、複製連結與操作說明工具組 (緊鄰排列做在目錄旁邊) -->
+      <!-- 目錄、下載型錄、複製連結與操作說明工具組 -->
       <div class="toc-share-group">
         <button class="nav-btn" id="tocBtn" title="型錄章節索引">
           <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           <span>目錄</span>
         </button>
+        <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="nav-btn catalog-download-link" id="downloadCatalogBtn" title="下載整本 57 頁完整型錄 (PDF 格式 · 6.7MB)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="download-btn-text">
+            <span class="text-desktop">下載型錄</span>
+            <span class="text-mobile">下載</span>
+          </span>
+          <span class="download-btn-badge">PDF</span>
+        </a>
         <button class="nav-btn" id="shareBtn" title="複製本頁專屬分享網址 (網址帶頁碼直連)">
           <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          <span class="share-btn-text">複製連結</span>
+          <span class="share-btn-text">
+            <span class="text-desktop">複製連結</span>
+            <span class="text-mobile">分享</span>
+          </span>
         </button>
         <button class="nav-btn" id="helpGuideBtn" title="查看各項操作說明">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -2682,6 +2862,12 @@
     <div class="guide-item">🖐️ <strong>拖曳畫面</strong>：平移瀏覽</div>
     <div class="guide-sep"></div>
     <div class="guide-item">⌨️ <strong>鍵盤左右鍵</strong>：翻頁 · <strong>Esc</strong>：還原</div>
+    <div class="guide-sep"></div>
+    <div class="guide-item">
+      <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="guide-download-link catalog-download-link" title="下載整本 57 頁型錄 PDF (6.7MB)">
+        📥 <strong>下載整本型錄 (PDF)</strong>
+      </a>
+    </div>
   </div>
 
   <!-- Main Viewport -->
@@ -2881,7 +3067,18 @@
       <div class="drawer-title">型錄章節快速索引</div>
       <button class="close-btn" id="closeDrawer">&times;</button>
     </div>
-        <!-- Plan B: 事務機實機圖鑑橫向滾動條 -->
+        <!-- 完整型錄 PDF 下載橫幅 -->
+    <div class="drawer-download-card">
+      <div class="ddc-badge">📄 全本 57 頁完整收錄</div>
+      <div class="ddc-title">臺灣銀行 114 共同供應契約型錄</div>
+      <div class="ddc-desc">PDF 格式 · 6.7 MB · 原廠高畫質檔案</div>
+      <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="ddc-download-btn catalog-download-link" id="drawerDownloadBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>立即下載整本型錄 (PDF)</span>
+      </a>
+    </div>
+
+    <!-- Plan B: 事務機實機圖鑑橫向滾動條 -->
     <div class="drawer-products-bar" id="drawerProductsBar">
       <div class="drawer-products-title">
         <span>🖨️ 主力事務機實機圖鑑</span>
@@ -2893,8 +3090,12 @@
       <input type="text" id="drawerSearchInput" placeholder="🔍 快速搜尋商品、案號或章節..." style="width:100%;height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;box-sizing:border-box;">
     </div>
     <ul class="drawer-list" id="drawerList"></ul>
-    <div style="padding:10px 14px;border-top:1px solid #e2e8f0;background:#f8fafc;margin-top:auto;">
-      <button id="drawerHelpBtn" style="width:100%;height:36px;border-radius:6px;background:#e0f2fe;border:1px solid #bae6fd;color:#0284c7;font-weight:600;font-size:12.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">❓ 查看各項操作說明</button>
+    <div style="padding:10px 14px;border-top:1px solid #e2e8f0;background:#f8fafc;margin-top:auto;display:flex;flex-direction:column;gap:8px;">
+      <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" id="drawerFooterDownloadBtn" class="catalog-download-link" style="width:100%;height:38px;border-radius:6px;background:linear-gradient(135deg, #005bac 0%, #0284c7 100%);color:#ffffff;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;box-shadow:0 2px 6px rgba(0,91,172,0.3);">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>📥 下載整本型錄 PDF (6.7MB)</span>
+      </a>
+      <button id="drawerHelpBtn" style="width:100%;height:34px;border-radius:6px;background:#e0f2fe;border:1px solid #bae6fd;color:#0284c7;font-weight:600;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">❓ 查看各項操作說明</button>
     </div>
   </div>
 
@@ -2967,6 +3168,21 @@
               <h3>複製專屬分享連結</h3>
               <p>點擊頂部目錄旁的<strong>「複製連結」</strong>（或目錄清單內每項右側的 🔗 按鈕），會自動複製當前頁面的專屬直連網址。</p>
               <p>傳送給採購承辦或同仁，點開立即直達該單頁滿版大圖！</p>
+            </div>
+          </div>
+
+          <!-- Card 7: 下載整本型錄 (PDF) -->
+          <div class="guide-card">
+            <div class="guide-card-icon">📥</div>
+            <div class="guide-card-content">
+              <h3>整本型錄下載 (PDF)</h3>
+              <p>點擊頂部或目錄內的<strong>「下載型錄」</strong>按鈕，即可將 114 年度臺灣銀行共同供應契約完整 57 頁型錄 PDF 檔（6.7MB）直接下載至手機或電腦，便於離線查閱與列印傳閱。</p>
+              <div style="margin-top:10px;">
+                <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="guide-modal-dl-btn catalog-download-link" id="modalGuideDownloadBtn">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>立即下載整本型錄 PDF (6.7MB)</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -4167,6 +4383,14 @@
     });
 
     /* ---------------- URL Deep Linking & Share (網址帶頁碼直連與一鍵分享) ---------------- */
+    // 綁定所有型錄下載按鈕的 Toast 提示
+    const dlLinks = document.querySelectorAll('.catalog-download-link');
+    dlLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        showToast('📥 正在下載「臺灣銀行114年度共同供應契約型錄 (完整57頁 PDF)」...');
+      });
+    });
+
     const shareBtn = document.getElementById('shareBtn');
     const shareToast = document.getElementById('shareToast');
 

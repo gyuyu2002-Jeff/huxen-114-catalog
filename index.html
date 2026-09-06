@@ -1047,26 +1047,31 @@
 
     @media (max-width: 768px) {
       .header {
-        padding: 0 8px;
-        height: 50px;
+        padding: 0 10px;
+        height: 52px;
+        display: flex;
+        align-items: center;
         justify-content: space-between;
       }
       .header-left {
-        flex-shrink: 0;
+        display: flex;
+        align-items: center;
         gap: 6px;
+        flex: 1;
+        min-width: 0;
       }
       .logo-icon {
         font-size: 13px;
         padding: 3px 6px;
       }
       .catalog-title {
-        font-size: 13px;
+        font-size: 13.5px;
         white-space: nowrap;
       }
       .title-desktop { display: none !important; }
       .title-mobile {
         display: inline !important;
-        font-size: 13px;
+        font-size: 13.5px;
         font-weight: 700;
         color: #ffffff;
         letter-spacing: 0.5px;
@@ -1075,48 +1080,65 @@
       .catalog-sub {
         display: none !important;
       }
+
+      /* 手機板完全不使用雙面模式，隱藏切換鈕，釋放空間 */
+      .mode-segmented {
+        display: none !important;
+      }
       .header-center {
-        gap: 5px;
-        margin: 0 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
         flex: 0 0 auto;
       }
-      .mode-segmented {
-        padding: 2px;
-        gap: 2px;
+      #tocBtn {
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        border-radius: 6px;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         flex-shrink: 0;
       }
-      .seg-btn {
-        height: 28px;
-        padding: 0 7px;
-        font-size: 11.5px;
-        gap: 3px;
+
+      /* 手機板完整附上「複製連結」按鈕 (醒目好點) */
+      #shareBtn {
+        height: 32px;
+        padding: 0 10px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(56, 189, 248, 0.2);
+        border: 1px solid rgba(56, 189, 248, 0.5);
+        color: #38bdf8;
+        border-radius: 6px;
+        gap: 5px;
+        display: inline-flex !important;
+        align-items: center;
         white-space: nowrap !important;
         flex-shrink: 0;
       }
-      .text-desktop { display: none !important; }
-      .text-mobile {
+      #shareBtn:active {
+        background: #0284c7;
+        color: #ffffff;
+      }
+      .share-btn-text {
         display: inline !important;
-        font-size: 11.5px;
+        font-size: 12px;
         font-weight: 600;
         white-space: nowrap !important;
       }
-      #tocBtn {
-        height: 28px;
-        padding: 0 7px;
-        font-size: 11.5px;
-        white-space: nowrap !important;
-        flex-shrink: 0;
-        gap: 4px;
-      }
-      .header-actions {
-        flex-shrink: 0;
-        gap: 4px;
-      }
-      .nav-btn {
-        height: 28px;
-        padding: 0 7px;
-      }
-      .share-btn-text {
+      #fullscreenBtn {
         display: none !important;
       }
 
@@ -1339,7 +1361,7 @@
     <div class="header-actions">
       <button class="nav-btn" id="shareBtn" title="複製本頁專屬分享網址 (網址帶頁碼直連)">
         <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <span class="share-btn-text">分享</span>
+        <span class="share-btn-text">複製連結</span>
       </button>
       <button class="nav-btn" id="fullscreenBtn" title="全螢幕">
         <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
@@ -2356,9 +2378,10 @@
     const shareToast = document.getElementById('shareToast');
 
     function getShareUrl() {
-      const curMode = isSingleMode ? 'single' : 'spread';
+      const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const curMode = isMobileDevice ? 'single' : (isSingleMode ? 'single' : 'spread');
       let curPage = 1;
-      if (isSingleMode) {
+      if (isSingleMode || isMobileDevice) {
         curPage = singlePageIdx;
       } else {
         const cur = PAGES[idx];

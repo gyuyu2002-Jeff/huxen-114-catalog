@@ -8,7 +8,22 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      document.documentElement.classList.add('is-mobile-view');
+    }
+  </script>
   <style>
+    html.is-mobile-view:not(.force-spread) .view-mode-spread {
+      display: none !important;
+    }
+    html.is-mobile-view:not(.force-spread) .view-mode-single {
+      display: flex !important;
+    }
+
     :root {
       --huxen-blue: #005bac;
       --huxen-blue-hover: #004b8e;
@@ -2022,21 +2037,24 @@
     function switchToSpread() {
       if (!isSingleMode) return;
       isSingleMode = false;
+      document.documentElement.classList.add('force-spread');
       segSpreadBtn.classList.add('active');
       segSingleBtn.classList.remove('active');
       viewModeSpread.style.display = 'flex';
       viewModeSingle.style.display = 'none';
       paint();
+      updateMeta();
     }
 
     function switchToSingle() {
       if (isSingleMode) return;
       isSingleMode = true;
+      document.documentElement.classList.remove('force-spread');
       segSingleBtn.classList.add('active');
       segSpreadBtn.classList.remove('active');
       viewModeSpread.style.display = 'none';
       viewModeSingle.style.display = 'flex';
-      const targetPage = PAGES[idx].pages[0];
+      const targetPage = (PAGES[idx] && PAGES[idx].pages) ? PAGES[idx].pages[0] : 1;
       setSinglePage(targetPage);
     }
 
@@ -2342,7 +2360,8 @@
     function syncUrlHash() {
       clearTimeout(hashSyncTimer);
       hashSyncTimer = setTimeout(() => {
-        const curMode = isSingleMode ? 'single' : 'spread';
+        const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const curMode = isSingleMode ? 'single' : (isMobileDevice ? 'single' : 'spread');
         let curPage = 1;
         if (isSingleMode) {
           curPage = singlePageIdx;
@@ -2373,13 +2392,17 @@
     }
 
     function applyHashRoute() {
+      const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const r = parseHashRoute();
       if (!r) return false;
 
-      if (r.mode === 'single' && !isSingleMode) {
-        switchToSingle();
-      } else if (r.mode === 'spread' && isSingleMode) {
-        switchToSpread();
+      // 手機端只有在使用者手動點擊切換時才改變模式，不因歷史 hash 誤跳回雙頁
+      if (!isMobileDevice) {
+        if (r.mode === 'single' && !isSingleMode) {
+          switchToSingle();
+        } else if (r.mode === 'spread' && isSingleMode) {
+          switchToSpread();
+        }
       }
 
       if (r.page && r.page >= 1 && r.page <= TOTAL_PAGES) {
@@ -2445,23 +2468,32 @@
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
 
-      if (route && route.page) {
-        if (route.mode === 'single' || (!route.mode && isMobileDevice)) {
-          switchToSingle();
-          setSinglePage(route.page);
+      // 行動裝置一律 100% 強制預設為「單頁滿版模式」（無論先前網址是否帶有 mode=spread）
+      if (isMobileDevice) {
+        document.documentElement.classList.add('is-mobile-view');
+        document.documentElement.classList.remove('force-spread');
+        isSingleMode = true;
+        segSingleBtn.classList.add('active');
+        segSpreadBtn.classList.remove('active');
+        viewModeSpread.style.display = 'none';
+        viewModeSingle.style.display = 'flex';
+        const p = (route && route.page && route.page >= 1 && route.page <= TOTAL_PAGES) ? route.page : 1;
+        setSinglePage(p);
+      } else {
+        if (route && route.page) {
+          if (route.mode === 'single') {
+            switchToSingle();
+            setSinglePage(route.page);
+          } else {
+            const targetSpread = route.page === 1 ? 0 : Math.floor(route.page / 2);
+            idx = targetSpread;
+            paint();
+            updateMeta();
+          }
         } else {
-          const targetSpread = route.page === 1 ? 0 : Math.floor(route.page / 2);
-          idx = targetSpread;
           paint();
           updateMeta();
         }
-      } else if (isMobileDevice) {
-        // 行動裝置一律預設為「單頁滿版模式」，字體巨大清晰，閱讀體驗最佳
-        switchToSingle();
-        setSinglePage(1);
-      } else {
-        paint();
-        updateMeta();
       }
 
       // Pre-decode initial spreads

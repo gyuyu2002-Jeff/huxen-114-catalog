@@ -693,11 +693,10 @@
     /* 3D Book Container (平滑寬度過渡，支援單面封面) */
     .sb-3d {
       position: relative;
-      width: min(92vw, calc((100vh - 124px) * 1.4139));
+      width: min(95vw, calc((100vh - 100px) * 1.4139));
       aspect-ratio: 1906 / 1348;
       perspective: 2200px;
       transform-style: preserve-3d;
-      will-change: transform, width, aspect-ratio;
       transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), aspect-ratio 0.32s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -773,7 +772,7 @@
       display: block;
       border-radius: 4px;
       image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
+      image-rendering: high-quality;
       filter: contrast(1.03) saturate(1.02);
     }
 
@@ -4001,6 +4000,7 @@
     function switchToSpread() {
       if (!isSingleMode) return;
       isSingleMode = false;
+      localStorage.setItem('huxen_catalog_view_mode', 'spread');
       document.documentElement.classList.add('force-spread');
       segSpreadBtn.classList.add('active');
       segSingleBtn.classList.remove('active');
@@ -4013,6 +4013,7 @@
     function switchToSingle() {
       if (isSingleMode) return;
       isSingleMode = true;
+      localStorage.setItem('huxen_catalog_view_mode', 'single');
       document.documentElement.classList.remove('force-spread');
       segSingleBtn.classList.add('active');
       segSpreadBtn.classList.remove('active');
@@ -4727,11 +4728,18 @@
     async function init() {
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
+      const savedMode = localStorage.getItem('huxen_catalog_view_mode');
 
-      // 行動裝置一律 100% 強制預設為「單頁滿版模式」（無論先前網址是否帶有 mode=spread）
-      if (isMobileDevice) {
-        document.documentElement.classList.add('is-mobile-view');
-        document.documentElement.classList.remove('force-spread');
+      // 依使用者指示：「一進入網站的字體不夠清晰」
+      // 桌機與行動端一律預設為「📄 單頁 高清大圖」模式（直出 600 DPI 極致清晰，不需手動放大瞇眼即可清晰查閱型錄）
+      // 若使用者明確偏好「雙頁 3D 擬真」或網址帶有 #mode=spread，則尊重其偏好切換至雙頁模式
+      const wantSpread = !isMobileDevice && ((route && route.mode === 'spread') || savedMode === 'spread');
+
+      if (!wantSpread) {
+        if (isMobileDevice) {
+          document.documentElement.classList.add('is-mobile-view');
+          document.documentElement.classList.remove('force-spread');
+        }
         isSingleMode = true;
         segSingleBtn.classList.add('active');
         segSpreadBtn.classList.remove('active');
@@ -4740,20 +4748,17 @@
         const p = (route && route.page && route.page >= 1 && route.page <= TOTAL_PAGES) ? route.page : 1;
         setSinglePage(p);
       } else {
+        isSingleMode = false;
+        segSpreadBtn.classList.add('active');
+        segSingleBtn.classList.remove('active');
+        viewModeSpread.style.display = 'flex';
+        viewModeSingle.style.display = 'none';
         if (route && route.page) {
-          if (route.mode === 'single') {
-            switchToSingle();
-            setSinglePage(route.page);
-          } else {
-            const targetSpread = route.page === 1 ? 0 : Math.floor(route.page / 2);
-            idx = targetSpread;
-            paint();
-            updateMeta();
-          }
-        } else {
-          paint();
-          updateMeta();
+          const targetSpread = route.page === 1 ? 0 : Math.floor(route.page / 2);
+          idx = targetSpread;
         }
+        paint();
+        updateMeta();
       }
 
       // Pre-decode initial spreads

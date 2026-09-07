@@ -23,19 +23,23 @@
     }
   </script>
   <style>
-    /* 依使用者指示：無論桌機或行動裝置，全平台預設「📄 單頁 高清大圖」模式（直出 600 DPI 極致清晰） */
-    html:not(.force-spread) .view-mode-spread {
-      display: none !important;
-    }
-    html:not(.force-spread) .view-mode-single {
-      display: flex !important;
-    }
-    html.force-spread .view-mode-spread {
-      display: flex !important;
-    }
-    html.force-spread .view-mode-single {
-      display: none !important;
-    }
+    /* 三模態架構：大字 DM 導讀 (震旦款大字體)、單頁合約大圖 (滿版大字)、雙頁 3D 擬真 */
+    html.mode-dm .view-mode-dm { display: block !important; }
+    html.mode-dm .view-mode-single { display: none !important; }
+        html.mode-dm .footer { display: none !important; }
+    html.mode-dm .quick-guide-bar { display: none !important; }
+    html.mode-dm #pageActiveProductsBar { display: none !important; }
+
+    html.mode-single .view-mode-dm { display: none !important; }
+    html.mode-single .view-mode-single { display: flex !important; }
+    
+            
+    /* 預設若未標記 class，預設啟用 mode-dm 大字導讀 */
+    html:not(.mode-single) .view-mode-dm { display: block !important; }
+    html:not(.mode-single) .view-mode-single { display: none !important; }
+        html:not(.mode-single) .footer { display: none !important; }
+    html:not(.mode-single) .quick-guide-bar { display: none !important; }
+    html:not(.mode-single) #pageActiveProductsBar { display: none !important; }
 
     :root {
       --huxen-blue: #005bac;
@@ -744,7 +748,7 @@
       position: absolute;
       inset: 0;
       transform-style: preserve-3d;
-      transform: scale(var(--zoom, 1)) translate3d(var(--pan-x, 0px), var(--pan-y, 0px), 0);
+      transform: scale(var(--zoom, 2.05)) translate3d(var(--pan-x, 0px), var(--pan-y, 0px), 0);
     }
 
     /* Layered Cast Shadows */
@@ -935,29 +939,45 @@
       cursor: not-allowed;
       box-shadow: none;
     }
-    .arrow-btn.left { left: -24px; }
-    .arrow-btn.right { right: -24px; }
+    .arrow-btn.left { left: 16px; position: fixed; }
+    .arrow-btn.right { right: 16px; position: fixed; }
     .arrow-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.6; }
 
     /* ---------------- Single Page High-Definition Mode (重構全幅大圖閱讀，支援 5x 縮放) ---------------- */
     .view-mode-single {
       display: none;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
       height: 100%;
       position: relative;
       overflow: auto;
       scroll-behavior: smooth;
       padding: 50px 0 80px 0;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .view-mode-single.is-dragging {
+      cursor: grabbing !important;
+      scroll-behavior: auto !important;
     }
 
     .single-page-sheet {
+      cursor: zoom-in;
       position: relative;
       margin: 0 auto 30px auto;
-      width: var(--single-w, 980px);
+      width: var(--single-w, 1020px);
       background: #ffffff;
       border-radius: 8px;
       box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
-      cursor: pointer;
+      cursor: grab;
+      transition: box-shadow 0.2s ease;
+    }
+    .view-mode-single.is-dragging .single-page-sheet {
+      cursor: zoom-in;
+      cursor: grabbing !important;
+      box-shadow: 0 20px 56px rgba(10, 31, 61, 0.35);
     }
 
     .single-page-img {
@@ -967,40 +987,55 @@
       border-radius: 8px;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: high-quality;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
-    /* Single page side navigation buttons (Fixed on viewport) */
+    /* Single page side navigation buttons (依指示：直接做在頁面上兩側，不論視窗多寬皆貼齊頁面) */
     .single-side-btn {
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 1px solid rgba(16, 42, 84, 0.2);
-      box-shadow: 0 8px 24px rgba(10, 31, 61, 0.25);
+      width: 48px;
+      height: 72px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(0, 91, 172, 0.35);
+      box-shadow: 0 8px 24px rgba(10, 31, 61, 0.22);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 90;
+      z-index: 95;
       color: var(--huxen-blue);
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 3px;
     }
     .single-side-btn:hover:not(:disabled) {
       background: #005bac;
-      color: #fff;
-      transform: translateY(-50%) scale(1.12);
-      box-shadow: 0 10px 28px rgba(0, 91, 172, 0.4);
+      color: #ffffff;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 12px 30px rgba(0, 91, 172, 0.42);
+      border-color: #005bac;
     }
     .single-side-btn:disabled {
-      opacity: 0.25;
+      opacity: 0.22;
       cursor: not-allowed;
+      box-shadow: none;
     }
-    .single-side-btn.left { left: 24px; }
-    .single-side-btn.right { right: 24px; }
-    .single-side-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+    /* 精準做在頁面上：緊貼單頁左右兩側邊緣內側 10px，懸浮於視窗垂直中央 */
+    .single-side-btn.left {
+      left: max(8px, calc(50vw - (var(--single-w, 1020px) / 2) + 10px));
+    }
+    .single-side-btn.right {
+      right: max(8px, calc(50vw - (var(--single-w, 1020px) / 2) + 10px));
+    }
+    .single-side-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.8; }
+    .single-side-btn-text { font-size: 10.5px; font-weight: 700; line-height: 1; letter-spacing: 0.5px; }
 
     /* Single Mode Floating Zoom Controller (支援至 5x 500%) */
     .single-zoom-pill {
@@ -1944,6 +1979,7 @@
         pointer-events: none;
       }
       .single-page-sheet {
+      cursor: zoom-in;
         width: 100% !important;
         max-width: calc(100vw - 10px) !important;
         margin: 0 auto 16px auto !important;
@@ -2897,127 +2933,360 @@
     }
 
   
-    /* ---------------- 0.5 頁高清光學放大鏡 ---------------- */
-    .sb-loupe {
-      position: fixed;
-      width: 330px;
-      height: 440px;
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.96);
-      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    /* ---------------- 震旦款大字 DM 導讀模式 (Aurora-Style DM Mode) ---------------- */
+    .view-mode-dm {
+      position: absolute;
+      inset: 56px 0 0 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #f8fafc;
+      padding: 24px 20px 80px 20px;
+      -webkit-overflow-scrolling: touch;
       display: none;
     }
-    .sb-loupe.active {
-      display: block;
+
+    .dm-container {
+      max-width: 1320px;
+      margin: 0 auto;
     }
-    .sb-loupe.visible {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .sb-loupe-frame {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
-      border: 3px solid #005bac;
-      box-shadow:
-        0 24px 60px rgba(10, 31, 61, 0.5),
-        0 0 0 2px #38bdf8,
-        0 0 0 5px rgba(255, 255, 255, 0.9),
-        inset 0 0 24px rgba(0, 0, 0, 0.12);
-      background: #ffffff;
-      overflow: hidden;
-    }
-    .sb-loupe-inner {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      background: #ffffff;
-    }
-    .sb-loupe-img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      max-width: none;
-      display: block;
-      will-change: transform;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: high-quality;
-    }
-    .sb-loupe-reflection {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 35%, transparent 65%);
-      pointer-events: none;
-    }
-    .sb-loupe-tag {
-      position: absolute;
-      top: 10px;
-      left: 12px;
-      background: rgba(10, 31, 61, 0.92);
+
+    /* DM Header Banner */
+    .dm-hero-banner {
+      background: linear-gradient(135deg, #0a1f3d 0%, #005bac 100%);
+      border-radius: 14px;
+      padding: 26px 32px;
       color: #ffffff;
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 11.5px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(10, 31, 61, 0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dm-hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .dm-hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      border: 1px solid rgba(56, 189, 248, 0.5);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .dm-hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .dm-hero-sub {
+      font-size: 14.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Category Filter Tabs */
+    .dm-filter-bar {
       display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 4px 2px 16px 2px;
+      margin-bottom: 20px;
+      scrollbar-width: none;
+    }
+    .dm-filter-bar::-webkit-scrollbar { display: none; }
+
+    .dm-tab-btn {
+      white-space: nowrap;
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .dm-tab-btn:hover {
+      border-color: #005bac;
+      color: #005bac;
+      background: #f0f7ff;
+    }
+    .dm-tab-btn.active {
+      background: #005bac;
+      color: #ffffff;
+      border-color: #005bac;
+      box-shadow: 0 4px 12px rgba(0, 91, 172, 0.3);
+    }
+
+    /* Machine Cards Grid */
+    .dm-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(620px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .view-mode-dm { padding: 14px 10px 80px 10px; }
+      .dm-hero-banner { padding: 18px 20px; }
+      .dm-hero-title { font-size: 20px; }
+      .dm-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+
+    /* Card Container */
+    .dm-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .dm-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+      border-color: #cbd5e1;
+    }
+
+    /* Card Header Ribbon */
+    .dm-card-header {
+      padding: 12px 18px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dm-card.theme-ricoh-color .dm-card-header { background: #f0f7ff; border-color: #dbeafe; }
+    .dm-card.theme-ricoh-mono .dm-card-header { background: #f1f5f9; border-color: #e2e8f0; }
+    .dm-card.theme-epson .dm-card-header { background: #f0fdf4; border-color: #dcfce7; }
+    .dm-card.theme-desktop .dm-card-header { background: #faf5ff; border-color: #f3e8ff; }
+
+    .dm-card-speed-badge {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
     }
-    .sb-loupe-crosshair {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 16px;
-      height: 16px;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+    .dm-card.theme-ricoh-color .dm-card-speed-badge { color: #0369a1; }
+    .dm-card.theme-epson .dm-card-speed-badge { color: #15803d; }
+
+    .dm-card-meta-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    .sb-loupe-crosshair::before,
-    .sb-loupe-crosshair::after {
-      content: "";
-      position: absolute;
-      background: rgba(0, 91, 172, 0.55);
+    .dm-card-green-badge {
+      background: #dcfce7;
+      color: #166534;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #bbf7d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
-    .sb-loupe-crosshair::before {
-      top: 7px; left: 0; right: 0; height: 2px;
-    }
-    .sb-loupe-crosshair::after {
-      left: 7px; top: 0; bottom: 0; width: 2px;
+    .dm-card-origin-badge {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
     }
 
-    .loupe-toggle-chip {
-      background: #005bac;
-      color: #ffffff;
-      border: 1px solid #38bdf8;
-      border-radius: 12px;
-      padding: 2px 9px;
-      font-size: 11px;
+    /* Card Body */
+    .dm-card-body {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 600px) {
+      .dm-card-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dm-card-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+    .dm-card-img-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 100%);
+      border-radius: 10px;
+      border: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .dm-card-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.12));
+    }
+    .dm-card-family-tag {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 4px 8px;
+      border-radius: 6px;
+      width: 100%;
+    }
+
+    .dm-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dm-card-model-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.3px;
+      line-height: 1.3;
+    }
+
+    .dm-card-type-desc {
+      font-size: 13.5px;
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* Pricing & Contract Table */
+    .dm-card-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .dm-card-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .dm-card-table th:last-child { border-right: none; }
+    .dm-card-table td {
+      padding: 8px 10px;
+      color: #1e293b;
+      border-bottom: 1px solid #f1f5f9;
+      border-right: 1px solid #f1f5f9;
+      vertical-align: middle;
+      font-size: 12.5px;
+    }
+    .dm-card-table td:last-child { border-right: none; }
+    .dm-card-table tr:last-child td { border-bottom: none; }
+    .dm-card-table tr:hover td { background: #f8fafc; }
+
+    .dm-price-val {
+      font-weight: 800;
+      color: #ea580c;
+      font-size: 14.5px;
+      white-space: nowrap;
+    }
+
+    /* Card Action Footer */
+    .dm-card-footer {
+      padding: 10px 18px 14px 18px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .dm-card-jump-btn {
+      background: #f0f7ff;
+      color: #005bac;
+      border: 1px solid #bae6fd;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(0, 91, 172, 0.25);
+      gap: 6px;
+      transition: all 0.2s ease;
     }
-    .loupe-toggle-chip:hover {
-      background: #0284c7;
-      transform: scale(1.04);
+    .dm-card-jump-btn:hover {
+      background: #005bac;
+      color: #ffffff;
+      border-color: #005bac;
     }
-    .loupe-toggle-chip.off {
-      background: #64748b;
+    .dm-card-detail-btn {
+      background: #ffffff;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dm-card-detail-btn:hover {
+      color: #0f172a;
       border-color: #94a3b8;
-      color: #f1f5f9;
+      background: #f8fafc;
     }
-</style>
+
+  </style>
 </head>
 <body>
 
@@ -3035,7 +3304,7 @@
         <div class="catalog-title">
           <span class="title-desktop">114年度 臺灣銀行共同供應契約型錄</span>
           <span class="title-mobile">114年型錄</span>
-          <span class="catalog-sub">HUXEN CORPORATION · 3D 互動型錄</span>
+          <span class="catalog-sub">HUXEN CORPORATION · 114年度共同供應契約型錄</span>
         </div>
       </div>
       <button class="header-product-btn" id="headerProductBtn" title="點擊查看互盛推薦 10 款事務機原廠實機圖鑑與規格">
@@ -3050,18 +3319,18 @@
     <div class="header-center">
       <!-- View Mode Segmented Control (清晰區分當前檢視模式) -->
       <div class="mode-segmented" id="modeSegmented">
-        <button class="seg-btn active" id="segSingleBtn" title="切換為 單頁超高清大圖閱讀模式 (字體極大極清)">
-          <span class="seg-icon">📄</span>
+        <button class="seg-btn active" id="segDmBtn" title="切換為 震旦款大字 DM 型錄模式 (大字體、規格價格直接看，完全免放大)">
+          <span class="seg-icon">📋</span>
           <span class="seg-text">
-            <span class="text-desktop">單頁 高清大圖</span>
-            <span class="text-mobile">單頁</span>
+            <span class="text-desktop">大字 DM 導讀</span>
+            <span class="text-mobile">大字DM</span>
           </span>
         </button>
-        <button class="seg-btn" id="segSpreadBtn" title="切換為 3D 雙頁擬真翻頁模式">
-          <span class="seg-icon">📖</span>
+        <button class="seg-btn" id="segSingleBtn" title="切換為 官方合約單頁滿版閱讀 (1360px 滿版清晰公文)">
+          <span class="seg-icon">📄</span>
           <span class="seg-text">
-            <span class="text-desktop">雙頁 3D 擬真</span>
-            <span class="text-mobile">雙頁</span>
+            <span class="text-desktop">單頁 合約大圖</span>
+            <span class="text-mobile">單頁</span>
           </span>
         </button>
       </div>
@@ -3114,83 +3383,62 @@
 
   <!-- 醒目常駐操作說明列 (Quick Guide Bar) -->
   <div class="quick-guide-bar" id="guideBar">
-    <div class="guide-item">👈 <strong>點擊左頁</strong>：上一頁</div>
+    <div class="guide-item">🔍 <strong>滑鼠左鍵點擊</strong>：逐級放大檢視</div>
     <div class="guide-sep"></div>
-    <div class="guide-item">👉 <strong>點擊右頁</strong>：下一頁</div>
+    <div class="guide-item">🖱️ <strong>推動滑鼠滾輪</strong>：頁面上下瀏覽</div>
     <div class="guide-sep"></div>
-    <div class="guide-item">🔍 <strong>滑鼠滾輪</strong>：平滑縮放 <span class="guide-badge">支援至 5x</span></div>
+    <div class="guide-item">🖐️ <strong>按住左鍵拖曳</strong>：平移畫面</div>
     <div class="guide-sep"></div>
-    <div class="guide-item">🖐️ <strong>拖曳畫面</strong>：平移瀏覽</div>
+    <div class="guide-item">◀▶ <strong>翻頁按鈕 / 鍵盤左右鍵</strong>：翻頁</div>
     <div class="guide-sep"></div>
-    <div class="guide-item">⌨️ <strong>鍵盤左右鍵</strong>：翻頁 · <strong>Esc</strong>：還原</div>
-    <div class="guide-sep"></div>
-    <div class="guide-item">
-      <button class="loupe-toggle-chip" id="loupeToggleBtn" title="點擊開關 0.5 頁高清放大鏡 (快速鍵: M)">
-        🔍 0.5頁放大鏡 (開)
-      </button>
-    </div>
+    <div class="guide-item">⌨️ <strong>Esc / 雙擊</strong>：還原預設大小</div>
   </div>
 
   <!-- Main Viewport -->
   <main class="main-viewport">
 
-    <!-- Mode 1: 3D Spread Mode (雙頁 3D 翻頁模式，首頁為精美單頁封面) -->
-    <div class="view-mode-spread" id="viewModeSpread">
-      <!-- 0.5 頁高清光學放大鏡 (2.2x · 600 DPI) -->
-      <div class="sb-loupe active" id="sbLoupe">
-        <div class="sb-loupe-frame">
-          <div class="sb-loupe-inner" id="sbLoupeInner">
-            <img class="sb-loupe-img" id="sbLoupeImg" src="" alt="0.5頁高清放大鏡">
+    <!-- Mode 0: Aurora-Style DM Large Font Cards Mode (震旦款大字 DM 導讀模式) -->
+    <div class="view-mode-dm" id="viewModeDm">
+      <div class="dm-container">
+        <!-- Hero Header -->
+        <div class="dm-hero-banner">
+          <div class="dm-hero-top">
+            <span class="dm-hero-pill">📋 震旦款大字導讀 · 快速查價</span>
+            <span class="dm-hero-pill">⚡ 114年度 臺灣銀行共同供應契約</span>
           </div>
-          <div class="sb-loupe-reflection"></div>
-          <div class="sb-loupe-tag">🔍 0.5頁 高清放大 (2.2x · 600 DPI)</div>
-          <div class="sb-loupe-crosshair"></div>
+          <h1 class="dm-hero-title">互盛 114 年度影印機採購型錄 (大字清晰版)</h1>
+          <p class="dm-desc">依震旦版面規格打造：大字體機種規格、實機彩照、組別項次與契約單價一目了然，免放大鏡即可輕鬆閱讀！</p>
         </div>
-      </div>
 
-      <div class="focus-badge" id="focusBadge">
-        <span>🔍 已放大聚焦 · 拖曳可平移 · 雙擊或點此還原全覽 (或按 Esc)</span> ✕
-      </div>
-
-      <div class="sb-wrap" id="sbWrap">
-        <div class="sb-stage" id="sbStage">
-
-          <div class="sb-3d is-cover" id="sb3d">
-            <!-- Snug nav buttons anchored directly on book outer edges -->
-            <button class="arrow-btn left" id="sbLeft" aria-label="上一頁" disabled title="上一頁">
-              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-
-            <div class="sb-tilt" id="sbTilt">
-              <div class="sb-cast ambient" aria-hidden="true"></div>
-              <div class="sb-cast contact" aria-hidden="true"></div>
-              <div class="sb-cast hair" aria-hidden="true"></div>
-              <div class="sb-book" id="sbBook"></div>
-            </div>
-
-            <button class="arrow-btn right" id="sbRight" aria-label="下一頁" title="下一頁">
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-
+        <!-- Filter Bar -->
+        <div class="dm-filter-bar" id="dmFilterBar">
+          <button class="dm-tab-btn active" data-filter="all">🌟 全部機種 (20款)</button>
+          <button class="dm-tab-btn" data-filter="ricoh-color">🌈 RICOH 彩色複合機</button>
+          <button class="dm-tab-btn" data-filter="ricoh-mono">🖤 RICOH 黑白複合機</button>
+          <button class="dm-tab-btn" data-filter="epson-ink">💧 Epson 節能微噴影印機</button>
+          <button class="dm-tab-btn" data-filter="desktop">📦 辦公桌上型事務機</button>
         </div>
+
+        <!-- Machine Cards Grid -->
+        <div class="dm-cards-grid" id="dmCardsGrid"></div>
       </div>
     </div>
 
     <!-- Mode 2: Single Page Mode (單頁超高清大圖閱讀模式，滾輪放大支援到 5x) -->
     <div class="view-mode-single" id="viewModeSingle">
-      <!-- Fixed floating side buttons -->
+      <!-- On-page floating side buttons (做在頁面上) -->
       <button class="single-side-btn left" id="singleSidePrevBtn" title="上一頁 (←)">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="single-side-btn-text">上一頁</span>
       </button>
 
       <!-- Zoom controller pill (最高 5x 500%) -->
       <div class="single-zoom-pill" id="singleZoomPill">
         <button class="pill-btn" id="btnZoomOut" title="縮小 (Ctrl + -)">−</button>
-        <span class="pill-val" id="zoomPercent">100% (980px)</span>
+        <span class="pill-val" id="zoomPercent">104% (1020px)</span>
         <button class="pill-btn" id="btnZoomIn" title="放大 (Ctrl + +)">+</button>
         <span class="pill-sep"></span>
-        <button class="pill-btn pill-text active" id="btnFitWidth" title="適合頁寬 (預設 100% 清晰大字)">頁寬 1x</button>
+        <button class="pill-btn pill-text active" id="btnFitWidth" title="適合頁寬 (預設固定 104% 清晰大字)">頁寬 104%</button>
         <button class="pill-btn pill-text" id="btnFitPage" title="適合全頁 (整頁不需捲動)">整頁</button>
         <button class="pill-btn pill-text" id="btnZoomHuge" title="超大巨幅 (250% 2450px)">巨幅 2.5x</button>
         <button class="pill-btn pill-text" id="btnZoomMax" title="最高 5 倍放大 (500% 4900px 極限顯微)">5x 極限</button>
@@ -3208,6 +3456,7 @@
 
       <button class="single-side-btn right" id="singleSideNextBtn" title="下一頁 (→)">
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="single-side-btn-text">下一頁</span>
       </button>
     </div>
 
@@ -3417,9 +3666,9 @@
           <div class="guide-card">
             <div class="guide-card-icon">📄</div>
             <div class="guide-card-content">
-              <h3>雙模閱讀體驗</h3>
-              <p><strong>📄 單頁模式</strong>（手機預設）：滿版大圖閱讀，字體超大超清晰。</p>
-              <p><strong>📖 雙頁 3D 模式</strong>（桌機推薦）：擬真紙本翻頁，如翻閱實體採購型錄。</p>
+              <h3>雙模態閱讀體驗</h3>
+              <p><strong>📋 大字 DM 導讀</strong>：依震旦版面規格打造，大字體機種規格、實機彩照、快速查價。</p>
+              <p><strong>📄 單頁 合約大圖</strong>：臺灣銀行正式 57 頁契約公文滿版大字閱讀，支援左鍵點擊逐級放大、拖曳平移、滾輪上下瀏覽。</p>
             </div>
           </div>
 
@@ -3504,485 +3753,19 @@
     const sb3d = document.getElementById('sb3d');
     const sbTilt = document.getElementById('sbTilt');
     const book = document.getElementById('sbBook');
-    const focusBadge = document.getElementById('focusBadge');
-
-    const viewModeSpread = document.getElementById('viewModeSpread');
-    const viewModeSingle = document.getElementById('viewModeSingle');
-    const singlePageSheet = document.getElementById('singlePageSheet');
-    let singlePageImg = document.getElementById('singlePageImg');
-
-    const segSpreadBtn = document.getElementById('segSpreadBtn');
-    const segSingleBtn = document.getElementById('segSingleBtn');
-
-    let isSingleMode = true;
-    let singlePageIdx = 1; // 1 to 57
-    let singleWidth = 980; // default comfortable width in pixels (1x)
-
-    const N = 18;
-    const SPAN = 0.50;
-    const BETA = 0.56;
-    let idx = 0, turn = null;
-    let strips = [];
-
-    // Focus Zoom State (3D Mode)
-    let isFocused = false;
-
-    function el(t, c) {
+            function el(t, c) {
       const e = document.createElement(t);
       if (c) e.className = c;
       return e;
     }
 
-    function halfEl(pos, i) {
-      const d = el('div', 'sb-half ' + pos);
-      const im = new Image();
-      im.className = 'sb-half-img ' + pos;
-      im.src = PAGES[i].url;
-      im.draggable = false;
-      d.appendChild(im);
-      d.appendChild(el('div', 'gutter-shade ' + pos));
-      return d;
-    }
+    let currentViewMode = 'dm'; // 'dm' | 'single'
+    let isSingleMode = false;
+    let singlePageIdx = 1; // 1 to 57
+    let singleWidth = window.innerWidth <= 768 ? Math.min(window.innerWidth - 12, 420) : 1020;
+    let idx = 0; // mapped spread index (0 to 28) for categories and meta
 
-    function buildCurl(dir, from, to) {
-      strips = [];
-      const c = el('div', 'curl ' + dir);
-      c.style.setProperty('--n', N);
-      c.style.setProperty('--span', SPAN);
-      let host = c;
-
-      for (let i = 0; i < N; i++) {
-        const s = el('div', 'strip');
-        s.style.setProperty('--i', i);
-
-        const gut = 'calc(var(--bw) * 0.5)';
-        const sw = 'calc(var(--bw) * ' + SPAN + ' / ' + N + ')';
-        const A = 'calc(-1 * (' + gut + ' + ' + i + ' * ' + sw + '))';
-        const B = 'calc(' + (i + 1) + ' * ' + sw + ' - ' + gut + ')';
-
-        const f = el('div', 'face front');
-        const b = el('div', 'face back');
-
-        f.style.backgroundImage = 'url(' + PAGES[from].url + ')';
-        f.style.backgroundPositionX = dir === 'next' ? A : B;
-
-        b.style.backgroundImage = 'url(' + PAGES[to].url + ')';
-        b.style.backgroundPositionX = dir === 'next' ? B : A;
-
-        f.innerHTML = '<div class="sh"></div><div class="gl"></div>';
-        b.innerHTML = '<div class="sh"></div><div class="gl"></div>';
-
-        s.appendChild(f);
-        s.appendChild(b);
-        host.appendChild(s);
-        host = s;
-        strips.push(s);
-      }
-      return c;
-    }
-
-    function applyTurn(t) {
-      const th = Math.PI * t;
-      const beta = BETA * Math.sin(Math.PI * t);
-      const D = 180 / Math.PI;
-      const tt = th + beta, td = 2 * beta / N;
-
-      sb3d.style.setProperty('--tt', (tt * D).toFixed(2) + 'deg');
-      sb3d.style.setProperty('--td', (td * D).toFixed(3) + 'deg');
-      sb3d.style.setProperty('--shade', Math.sin(Math.PI * t).toFixed(3));
-
-      for (let i = 0; i < strips.length; i++) {
-        const l1 = Math.abs(Math.cos(tt - i * td));
-        const l2 = Math.abs(Math.cos(tt - (i + 1) * td));
-        const st = strips[i].style;
-        st.setProperty('--lit', l1.toFixed(3));
-        st.setProperty('--a1', ((1 - l1) * 0.58).toFixed(3));
-        st.setProperty('--a2', ((1 - l2) * 0.58).toFixed(3));
-      }
-    }
-
-    function layout() {
-      sb3d.style.setProperty('--bw', book.clientWidth + 'px');
-    }
-
-    function paint() {
-      book.textContent = '';
-
-      // 首頁單面模式判定 (當在第 0 頁且非翻頁中時，採用單面置中封面)
-      if (idx === 0 && !turn) {
-        sb3d.classList.add('is-cover');
-      } else {
-        sb3d.classList.remove('is-cover');
-      }
-      layout();
-
-      if (!turn) {
-        lastRasterZ = view.z;
-        const f = el('div', 'sb-full' + (idx === 0 ? ' is-cover' : ''));
-        const im = new Image();
-        // 封面直接採用最高畫質單頁封面，絕對沒有任何多餘的藍色區塊！
-        im.src = idx === 0 ? 'pages/page_01.webp' : PAGES[idx].url;
-        im.draggable = false;
-        im.style.imageRendering = 'high-quality';
-        f.appendChild(im);
-        book.appendChild(f);
-        sb3d.style.setProperty('--shade', '0');
-      } else {
-        const next = turn.dir === 'next';
-        book.appendChild(halfEl('left', next ? turn.from : turn.to));
-        book.appendChild(halfEl('right', next ? turn.to : turn.from));
-        book.appendChild(buildCurl(turn.dir, turn.from, turn.to));
-        applyTurn(turn.t);
-      }
-
-      // 點擊判定區：封面整面點擊即可翻開，內頁左右分開點擊
-      if (idx === 0 && !turn) {
-        const b = el('button', 'sb-zone is-cover-zone');
-        b.style.cssText = 'position:absolute; inset:0; width:100%; border:0; background:transparent; cursor:pointer; z-index:50;';
-        b.title = "👉 點擊翻開型錄 (前往第 2-3 頁)";
-        book.appendChild(b);
-      } else {
-        const a = el('button', 'sb-zone sb-prev');
-        a.title = idx > 0 ? "點擊翻至上一頁 (👈 左頁)" : "";
-        const b = el('button', 'sb-zone sb-next');
-        b.title = idx < M - 1 ? "點擊翻至下一頁 (👉 右頁)" : "";
-        book.appendChild(a);
-        book.appendChild(b);
-      }
-
-      updateMeta();
-    }
-    window.addEventListener('resize', () => { layout(); });
-
-    /* ---------------- Spring Physics Engine ---------------- */
-    let spring = null, raf = null, last = 0;
-    function kick() {
-      if (raf === null) {
-        last = performance.now();
-        raf = requestAnimationFrame(tick);
-      }
-    }
-
-    function animateTo(target, onDone, stiff = 175, damp = 25) {
-      spring = { kind: 'spring', v: 0, target, done: onDone, k: stiff, c: damp };
-      kick();
-    }
-
-    function tick(now) {
-      raf = null;
-      const dt = Math.min(0.032, (now - last) / 1000 || 0.016);
-      last = now;
-
-      if (spring && turn) {
-        const s = spring;
-        const x = turn.t - s.target;
-        s.v += (-s.k * x - s.c * s.v) * dt;
-        turn.t += s.v * dt;
-        if (Math.abs(turn.t - s.target) < 0.002 && Math.abs(s.v) < 0.02) {
-          turn.t = s.target;
-          spring = null;
-          applyTurn(turn.t);
-          if (s.done) s.done();
-        } else {
-          applyTurn(turn.t);
-          kick();
-        }
-      }
-
-      if (viewEase()) kick();
-    }
-
-    function startTurn(dir, t0) {
-      if (turn) return false;
-      const next = dir === 'next';
-      if (next && idx >= M - 1) return false;
-      if (!next && idx <= 0) return false;
-
-      // 翻頁時立即恢復雙頁滿版尺寸
-      sb3d.classList.remove('is-cover');
-
-      turn = { dir, from: idx, to: next ? idx + 1 : idx - 1, t: t0 };
-      paint();
-      return true;
-    }
-
-    function commit() {
-      if (!turn) return;
-      animateTo(1, () => {
-        idx = turn.to;
-        turn = null;
-        paint();
-      }, 210, 26);
-    }
-
-    function cancel() {
-      if (!turn) return;
-      animateTo(0, () => {
-        turn = null;
-        paint();
-      }, 210, 26);
-    }
-
-    function step(dir) {
-      if (turn) return;
-      if (dir === 'prev' && idx <= 0) return;
-      if (dir === 'next' && idx >= M - 1) return;
-      if (startTurn(dir, 0)) commit();
-    }
-
-    function goTo(targetIdx) {
-      if (turn || targetIdx === idx || targetIdx < 0 || targetIdx >= M) return;
-      const dir = targetIdx > idx ? 'next' : 'prev';
-      sb3d.classList.remove('is-cover');
-      turn = { dir, from: idx, to: targetIdx, t: 0 };
-      paint();
-      commit();
-    }
-
-    /* ---------------- Viewport Tilt & Pan Engine (支援 5.0x 縮放) ---------------- */
-    const TILT_X = 0, TILT_Y = 0;
-    const view = { rx: 0, ry: 0, z: 1, panX: 0, panY: 0, trx: 0, try_: 0, tz: 1, tPanX: 0, tPanY: 0 };
-    let viewActive = false;
-
-    function applyView() {
-      sbTilt.style.setProperty('--rx', view.rx.toFixed(2) + 'deg');
-      sbTilt.style.setProperty('--ry', view.ry.toFixed(2) + 'deg');
-      sbTilt.style.setProperty('--zoom', view.z.toFixed(4));
-      sbTilt.style.setProperty('--pan-x', view.panX.toFixed(1) + 'px');
-      sbTilt.style.setProperty('--pan-y', view.panY.toFixed(1) + 'px');
-    }
-
-    let lastRasterZ = 1.0;
-    let spreadRasterTimer = null;
-
-    function scheduleSpreadReRaster() {
-      clearTimeout(spreadRasterTimer);
-      spreadRasterTimer = setTimeout(() => {
-        if (turn || isSingleMode) return;
-        if (Math.abs(view.z - lastRasterZ) > 0.05) {
-          lastRasterZ = view.z;
-          paint();
-        }
-      }, 70);
-    }
-
-    function viewEase() {
-      if (!viewActive) return false;
-      let moved = false;
-      const keys = ['rx', 'ry', 'z', 'panX', 'panY'];
-      const targets = ['trx', 'try_', 'tz', 'tPanX', 'tPanY'];
-      const speeds = [0.18, 0.18, 0.20, 0.20, 0.20];
-
-      for (let i = 0; i < keys.length; i++) {
-        const k = keys[i], t = targets[i];
-        const diff = view[t] - view[k];
-        if (Math.abs(diff) > 0.001) {
-          view[k] += diff * speeds[i];
-          moved = true;
-        } else {
-          view[k] = view[t];
-        }
-      }
-      if (moved) applyView();
-      viewActive = moved;
-
-      // 當縮放動畫平穩結束，且倍率有顯著差異時，立即執行重新光柵化
-      if (!moved && Math.abs(view.z - lastRasterZ) > 0.08) {
-        lastRasterZ = view.z;
-        if (!turn && !isSingleMode) {
-          paint();
-        }
-      }
-      return moved;
-    }
-
-    function tiltTo(cx, cy) {
-      // 依使用者指示：取消書本晃動功能，視角恆定保持水平正視
-      view.trx = 0;
-      view.try_ = 0;
-      view.rx = 0;
-      view.ry = 0;
-    }
-
-    window.addEventListener('pointermove', e => {
-      if (e.pointerType === 'touch' || isFocused) return;
-      tiltTo(e.clientX, e.clientY);
-    }, { passive: true });
-
-    window.addEventListener('pointerout', e => {
-      if (!e.relatedTarget && !isFocused) {
-        view.trx = 0; view.try_ = 0;
-        viewActive = true; kick();
-      }
-    });
-
-    /* ---------------- Tap-to-Zoom & Wheel Zoom (支援至 5.0x / 500%) ---------------- */
-    function zoomFocusPage(side) {
-      isFocused = true;
-      view.tz = 2.8; // 2.8x 聚焦
-      view.trx = 0;
-      view.try_ = 0;
-      const bw = book.clientWidth;
-      view.tPanX = side === 'left' ? bw * 0.38 : -bw * 0.38;
-      view.tPanY = 0;
-      viewActive = true;
-      kick();
-      focusBadge.innerHTML = '<span>🔍 已聚焦放大 2.8x (最高可滾輪放大至 5x) · 拖曳可平移 · 雙擊還原 (Esc)</span> ✕';
-      focusBadge.classList.add('show');
-      scheduleSpreadReRaster();
-    }
-
-    function resetFocus() {
-      isFocused = false;
-      view.tz = 1.0;
-      view.tPanX = 0;
-      view.tPanY = 0;
-      view.trx = 0;
-      view.try_ = 0;
-      viewActive = true;
-      kick();
-      focusBadge.classList.remove('show');
-      lastRasterZ = 1.0;
-    }
-
-    focusBadge.onclick = resetFocus;
-
-    stage.addEventListener('dblclick', e => {
-      if (isSingleMode) return;
-      if (isFocused) {
-        resetFocus();
-        return;
-      }
-      const r = book.getBoundingClientRect();
-      const isRight = (e.clientX - r.left) / r.width > 0.5;
-      zoomFocusPage(isRight ? 'right' : 'left');
-    });
-
-    // 3D 雙頁模式滑鼠滾輪放大 (支援至 5.0x / 500%)
-    stage.addEventListener('wheel', e => {
-      if (isSingleMode) return;
-      e.preventDefault();
-      const delta = e.deltaY < 0 ? 0.35 : -0.35;
-      const nextZ = Math.max(1.0, Math.min(5.0, view.tz + delta));
-      if (nextZ !== view.tz) {
-        view.tz = nextZ;
-        if (view.tz <= 1.02) {
-          resetFocus();
-        } else {
-          isFocused = true;
-          focusBadge.innerHTML = `<span>🔍 已放大 ${Math.round(view.tz * 100)}% (最高支援 500%) · 拖曳可平移 · 雙擊還原 (Esc)</span> ✕`;
-          focusBadge.classList.add('show');
-          view.trx = 0; view.try_ = 0;
-        }
-        viewActive = true;
-        kick();
-        scheduleSpreadReRaster();
-      }
-    }, { passive: false });
-
-    /* ---------------- 點擊左右頁翻頁 & 拖曳 (嚴密分離點擊與拖曳) ---------------- */
-    let drag = null;
-    let pointerStart = null;
-
-    stage.addEventListener('pointerdown', e => {
-      if (e.button !== 0 || e.target.closest('.arrow-btn')) return;
-      const zone = e.target.closest('.sb-zone');
-      if (!zone && !e.target.closest('.sb-3d')) return;
-
-      const r = book.getBoundingClientRect();
-      const isRight = (e.clientX - r.left) / r.width > 0.5;
-      const dir = isRight ? 'next' : 'prev';
-
-      pointerStart = {
-        x: e.clientX,
-        y: e.clientY,
-        time: performance.now(),
-        isRight
-      };
-
-      stage.setPointerCapture(e.pointerId);
-
-      drag = { dir, isRight, x0: e.clientX, y0: e.clientY, w: r.width, moved: 0, vel: 0, tPrev: performance.now(), started: false };
-    });
-
-    stage.addEventListener('pointermove', e => {
-      if (!drag) return;
-      const dx = e.clientX - drag.x0;
-      const dy = e.clientY - drag.y0;
-      drag.moved = Math.hypot(dx, dy);
-
-      // Panning when zoomed in
-      if (isFocused && drag.moved >= 5 && !drag.started) {
-        view.tPanX += dx * 0.45;
-        view.tPanY += dy * 0.45;
-        drag.x0 = e.clientX;
-        drag.y0 = e.clientY;
-        viewActive = true;
-        kick();
-        return;
-      }
-
-      // Only enter 3D curl drag once moved more than threshold
-      if (!drag.started && drag.moved >= 9 && !isFocused) {
-        if (drag.dir === 'prev' && idx <= 0) return;
-        if (drag.dir === 'next' && idx >= M - 1) return;
-
-        if (startTurn(drag.dir, 0)) {
-          drag.started = true;
-        }
-      }
-
-      if (drag.started && turn) {
-        const raw = (drag.dir === 'next' ? -dx : dx) / (drag.w * 0.55);
-        const t = Math.max(0, Math.min(1, raw));
-        const now = performance.now();
-        drag.vel = (t - turn.t) / Math.max(0.001, (now - drag.tPrev) / 1000);
-        drag.tPrev = now;
-
-        turn.t = t;
-        applyTurn(t);
-      }
-    });
-
-    function handlePointerUp(e) {
-      if (!pointerStart) return;
-      const p = pointerStart; pointerStart = null;
-      const dx = e.clientX - p.x;
-      const dy = e.clientY - p.y;
-      const dist = Math.hypot(dx, dy);
-      const elapsed = performance.now() - p.time;
-
-      // 純點擊判定 (移動小於 9px 且在 450ms 內釋放)：100% 觸發點擊左右翻頁！
-      if (dist < 9 && elapsed < 450) {
-        drag = null;
-        if (turn) return;
-
-        // 如果在封面點擊，直接翻開前往第 2-3 頁
-        if (idx === 0) {
-          step('next');
-          return;
-        }
-
-        if (p.isRight) {
-          step('next');
-        } else {
-          step('prev');
-        }
-        return;
-      }
-
-      // 拖曳結束結算
-      if (!drag) return;
-      const d = drag; drag = null;
-      if (!turn) return;
-      const go = turn.t > 0.40 || d.vel > 1.0;
-      if (go) commit(); else cancel();
-    }
-
-    stage.addEventListener('pointerup', handlePointerUp);
-    stage.addEventListener('pointercancel', handlePointerUp);
-
-    /* ---------------- Single Page Mode (高清巨幅閱讀重構，支援至 5x / 500%) ---------------- */
+/* ---------------- Single Page Mode (高清巨幅閱讀重構，支援至 5x / 500%) ---------------- */
     const zoomPercent = document.getElementById('zoomPercent');
     const btnFitWidth = document.getElementById('btnFitWidth');
     const btnFitPage = document.getElementById('btnFitPage');
@@ -4031,7 +3814,7 @@
       singlePageSheet.style.setProperty('--single-w', singleWidth + 'px');
       const pct = Math.round((singleWidth / 980) * 100);
       zoomPercent.textContent = modeLabel || `${pct}% (${singleWidth}px)`;
-      btnFitWidth.classList.toggle('active', singleWidth === 980);
+      btnFitWidth.classList.toggle('active', singleWidth === 1020);
       btnZoomHuge.classList.toggle('active', singleWidth === 2450);
       btnZoomMax.classList.toggle('active', singleWidth >= 4800);
       btnFitPage.classList.toggle('active', modeLabel === '整頁');
@@ -4071,7 +3854,7 @@
     document.getElementById('btnZoomOut').onclick = () => {
       applySingleWidth(singleWidth - 160);
     };
-    btnFitWidth.onclick = () => applySingleWidth(980, '100% (980px)');
+    btnFitWidth.onclick = () => applySingleWidth(1020, '104% (1020px)');
     btnZoomHuge.onclick = () => applySingleWidth(2450, '250% (2450px)');
     btnZoomMax.onclick = () => applySingleWidth(4900, '500% (5x 極限)');
     btnFitPage.onclick = () => {
@@ -4087,30 +3870,151 @@
       btnWheelMode.title = wheelMode === 'zoom' ? '當前：直接推動滾輪即可縮放 (點擊切換為捲動)' : '當前：滾輪捲動頁面 (點擊切換為縮放，亦可隨時按住 Ctrl 縮放)';
     };
 
-    // 單頁模式滑鼠滾輪縮放 (支援至 5x / 500%)
+    // 單頁模式滑鼠滾輪：依指示改為「頁面上下瀏覽」
     viewModeSingle.addEventListener('wheel', e => {
-      if (wheelMode === 'zoom' || e.ctrlKey) {
+      if (e.ctrlKey) {
         e.preventDefault();
         const delta = e.deltaY < 0 ? 140 : -140;
         applySingleWidth(singleWidth + delta);
       }
-    }, { passive: false });
+      // 純推動滾輪：瀏覽器原生流暢上下捲動頁面 (不呼叫 preventDefault)
+    }, { passive: true });
 
     // Single page side buttons
     document.getElementById('singleSidePrevBtn').onclick = () => setSinglePage(singlePageIdx - 1);
     document.getElementById('singleSideNextBtn').onclick = () => setSinglePage(singlePageIdx + 1);
 
-    // 單頁模式點擊左頁翻上一頁、點擊右頁翻下一頁 (僅限桌機；手機停用以防滑動誤觸)
-    singlePageSheet.onclick = e => {
-      if (window.innerWidth <= 768) return;
-      const r = singlePageSheet.getBoundingClientRect();
-      const isRight = (e.clientX - r.left) / r.width > 0.5;
-      if (isRight) {
-        setSinglePage(singlePageIdx + 1);
+    /* ---------------- 單頁模式滑鼠左鍵按住拖曳觀看 (Pan & Drag to View) ---------------- */
+        /* 單頁模式：左鍵每按一下 放大一級 (104% -> 153% -> 214% -> 286% -> 388% -> 循環回 104%) */
+    const SINGLE_ZOOM_LEVELS = [
+      { width: 1020, label: '104% (1020px)' },
+      { width: 1500, label: '153% (1500px)' },
+      { width: 2100, label: '214% (2100px)' },
+      { width: 2800, label: '286% (2800px)' },
+      { width: 3800, label: '388% (3800px)' }
+    ];
+
+        function showToast(msg) {
+      const t = document.getElementById('shareToast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    window.stepSingleZoomLevel = stepSingleZoomLevel;
+    function stepSingleZoomLevel(clientX, clientY) {
+      let nextIdx = 0;
+      if (singleWidth < 1350) nextIdx = 1;
+      else if (singleWidth < 1900) nextIdx = 2;
+      else if (singleWidth < 2600) nextIdx = 3;
+      else if (singleWidth < 3500) nextIdx = 4;
+      else nextIdx = 0;
+
+      const target = SINGLE_ZOOM_LEVELS[nextIdx];
+      const oldW = singleWidth;
+      const newW = target.width;
+
+      const rect = singlePageSheet.getBoundingClientRect();
+      const relX = rect.width > 0 ? (clientX - rect.left) / rect.width : 0.5;
+      const relY = rect.height > 0 ? (clientY - rect.top) / rect.height : 0.5;
+
+      applySingleWidth(newW, target.label);
+
+      if (nextIdx === 0) {
+        showToast(`🔍 已還原單頁預設 ${target.label}`);
+        viewModeSingle.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setSinglePage(singlePageIdx - 1);
+        showToast(`🔍 已放大至 ${target.label} (再按放大 / 達上限循環還原)`);
+        requestAnimationFrame(() => {
+          const newRect = singlePageSheet.getBoundingClientRect();
+          const viewportW = viewModeSingle.clientWidth;
+          const viewportH = viewModeSingle.clientHeight;
+          const targetScrollTop = (relY * newRect.height) - (viewportH / 2);
+          const targetScrollLeft = (relX * newRect.width) - (viewportW / 2);
+          viewModeSingle.scrollTo({
+            top: Math.max(0, targetScrollTop),
+            left: Math.max(0, targetScrollLeft),
+            behavior: 'smooth'
+          });
+        });
+      }
+    }
+let singlePan = {
+      active: false,
+      startX: 0,
+      startY: 0,
+      scrollLeft: 0,
+      scrollTop: 0,
+      hasMoved: false
+    };
+
+    viewModeSingle.addEventListener('pointerdown', e => {
+      // 僅限滑鼠左鍵 (button === 0) 或觸控，排除按鈕控制區
+      if (e.button !== 0) return;
+      if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn') || e.target.closest('.mobile-single-tip')) return;
+
+      singlePan.active = true;
+      singlePan.hasMoved = false;
+      singlePan.startTime = performance.now();
+      singlePan.startX = e.clientX;
+      singlePan.startY = e.clientY;
+      singlePan.scrollLeft = viewModeSingle.scrollLeft;
+      singlePan.scrollTop = viewModeSingle.scrollTop;
+
+      viewModeSingle.classList.add('is-dragging');
+      viewModeSingle.setPointerCapture(e.pointerId);
+    });
+
+    viewModeSingle.addEventListener('pointermove', e => {
+      if (!singlePan.active) return;
+      const dx = e.clientX - singlePan.startX;
+      const dy = e.clientY - singlePan.startY;
+
+      if (!singlePan.hasMoved && Math.hypot(dx, dy) > 5) {
+        singlePan.hasMoved = true;
+      }
+
+      if (singlePan.hasMoved) {
+        viewModeSingle.scrollLeft = singlePan.scrollLeft - dx;
+        viewModeSingle.scrollTop = singlePan.scrollTop - dy;
+      }
+    });
+
+    const finishSinglePan = e => {
+      if (!singlePan.active) return;
+      const wasMoved = singlePan.hasMoved;
+      const elapsed = performance.now() - (singlePan.startTime || 0);
+      singlePan.active = false;
+      viewModeSingle.classList.remove('is-dragging');
+
+      try {
+        if (viewModeSingle.hasPointerCapture(e.pointerId)) {
+          viewModeSingle.releasePointerCapture(e.pointerId);
+        }
+      } catch(err) {}
+
+      // 若滑鼠有產生拖曳位移，攔截後續點擊，避免誤觸放大
+      if (wasMoved) {
+        const blockClick = ev => {
+          ev.stopPropagation();
+          ev.preventDefault();
+          window.removeEventListener('click', blockClick, true);
+        };
+        window.addEventListener('click', blockClick, true);
+        return;
+      }
+
+      // 純點擊（無位移且點擊在紙張範圍內）：左鍵每按一下 放大一級
+      if (!wasMoved && elapsed < 400) {
+        if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn')) return;
+        stepSingleZoomLevel(e.clientX, e.clientY);
       }
     };
+
+    viewModeSingle.addEventListener('pointerup', finishSinglePan);
+    viewModeSingle.addEventListener('pointercancel', finishSinglePan);
 
     // 手機端雙擊 (Double Tap) 快速局部放大/還原
     let lastTapTime = 0;
@@ -4138,36 +4042,6 @@
       singlePageSheet.style.cursor = 'pointer';
       singlePageSheet.title = isRight ? '👉 點擊翻至下一頁' : '👈 點擊翻至上一頁';
     });
-
-    /* ---------------- View Mode Switcher (Segmented Control) ---------------- */
-    function switchToSpread() {
-      if (!isSingleMode) return;
-      isSingleMode = false;
-      localStorage.setItem('huxen_catalog_view_mode', 'spread');
-      document.documentElement.classList.add('force-spread');
-      segSpreadBtn.classList.add('active');
-      segSingleBtn.classList.remove('active');
-      viewModeSpread.style.display = 'flex';
-      viewModeSingle.style.display = 'none';
-      paint();
-      updateMeta();
-    }
-
-    function switchToSingle() {
-      if (isSingleMode) return;
-      isSingleMode = true;
-      localStorage.setItem('huxen_catalog_view_mode', 'single');
-      document.documentElement.classList.remove('force-spread');
-      segSingleBtn.classList.add('active');
-      segSpreadBtn.classList.remove('active');
-      viewModeSpread.style.display = 'none';
-      viewModeSingle.style.display = 'flex';
-      const targetPage = (PAGES[idx] && PAGES[idx].pages) ? PAGES[idx].pages[0] : 1;
-      setSinglePage(targetPage);
-    }
-
-    segSpreadBtn.onclick = switchToSpread;
-    segSingleBtn.onclick = switchToSingle;
 
     /* ---------------- Category Navigation (嚴格固定螢幕位置) ---------------- */
     const prevCategoryBtn = document.getElementById('prevCategoryBtn');
@@ -4378,346 +4252,45 @@
     }
 
     function updateMeta() {
-      const currentIdx = turn ? turn.to : idx;
-      const cur = PAGES[currentIdx];
-      contractBadge.textContent = cur.contract || cur.category;
-      spreadCaption.textContent = cur.title + ' — ' + cur.summary;
+      const p = singlePageIdx || 1;
+      const spreadIdx = p === 1 ? 0 : Math.floor(p / 2);
+      const cur = PAGES[spreadIdx] || PAGES[0];
 
-      if (isSingleMode) {
+      if (contractBadge) contractBadge.textContent = cur.contract || cur.category || '共同供應契約';
+      if (spreadCaption) spreadCaption.textContent = '第 ' + p + ' 頁 · ' + cur.title + ' - ' + cur.summary;
+
+      if (scrubber) {
         scrubber.min = 1;
         scrubber.max = TOTAL_PAGES;
-        scrubber.value = singlePageIdx;
-        const pText = `P. ${singlePageIdx} / 57`;
-        pageReadout.textContent = pText;
-        if (mobilePageReadout) mobilePageReadout.textContent = pText;
-        prevPageBtn.disabled = singlePageIdx <= 1;
-        nextPageBtn.disabled = singlePageIdx >= TOTAL_PAGES;
-      } else {
-        scrubber.min = 0;
-        scrubber.max = M - 1;
-        scrubber.value = currentIdx;
-        const pText = cur.pages.length === 1 ? `P. ${cur.pages[0]} / 57` : `P. ${cur.pages[0]}-${cur.pages[1]} / 57`;
-        pageReadout.textContent = pText;
-        if (mobilePageReadout) mobilePageReadout.textContent = pText;
-        sbLeft.disabled = currentIdx <= 0;
-        prevPageBtn.disabled = currentIdx <= 0;
-        sbRight.disabled = currentIdx >= M - 1;
-        nextPageBtn.disabled = currentIdx >= M - 1;
+        scrubber.value = p;
+      }
+      const pText = 'P. ' + p + ' / ' + TOTAL_PAGES;
+      if (pageReadout) pageReadout.textContent = pText;
+      if (mobilePageReadout) mobilePageReadout.textContent = pText;
+      if (prevPageBtn) prevPageBtn.disabled = p <= 1;
+      if (nextPageBtn) nextPageBtn.disabled = p >= TOTAL_PAGES;
+
+      const { prevCat, nextCat } = getAdjacentCategories();
+      if (prevCategoryBtn) {
+        prevCategoryBtn.disabled = !prevCat;
+        if (prevCat) prevCategoryBtn.title = '跳至上個類別：' + (prevCat ? prevCat.title : '');
+      }
+      if (nextCategoryBtn) {
+        nextCategoryBtn.disabled = !nextCat;
+        if (nextCat) nextCategoryBtn.title = '跳至下個類別：' + (nextCat ? nextCat.title : '');
       }
 
-      // Update category button titles & state
-      const { prevCat, nextCat } = getAdjacentCategories();
-      prevCategoryBtn.disabled = !prevCat;
-      nextCategoryBtn.disabled = !nextCat;
-      if (prevCat) prevCategoryBtn.title = `跳至上個類別：${prevCat.title}`;
-      if (nextCat) nextCategoryBtn.title = `跳至下個類別：${nextCat.title}`;
-
       document.querySelectorAll('.drawer-item').forEach((item, i) => {
-        item.classList.toggle('active', i === currentIdx);
+        item.classList.toggle('active', i === spreadIdx);
       });
 
       if (typeof syncUrlHash === 'function') {
         syncUrlHash();
       }
 
-      // 【核心關鍵】同步更新當前頁面之實機圖鑑浮動列與頁面徽章
       if (typeof updatePageProducts === 'function') {
-        if (isSingleMode) {
-          updatePageProducts([singlePageIdx]);
-          
-        } else {
-          const curPages = (cur && cur.pages) ? cur.pages : [1];
-          updatePageProducts(curPages);
-          
-        }
+        updatePageProducts([p]);
       }
-    }
-
-    scrubber.oninput = e => {
-      const s = parseInt(e.target.value, 10);
-      if (isSingleMode) {
-        setSinglePage(s);
-      } else {
-        goTo(s);
-      }
-    };
-
-    function goPrev() {
-      if (isSingleMode) setSinglePage(singlePageIdx - 1);
-      else step('prev');
-    }
-
-    function goNext() {
-      if (isSingleMode) setSinglePage(singlePageIdx + 1);
-      else step('next');
-    }
-
-    sbLeft.onclick = () => step('prev');
-    sbRight.onclick = () => step('next');
-    prevPageBtn.onclick = goPrev;
-    nextPageBtn.onclick = goNext;
-    document.getElementById('firstPageBtn').onclick = () => {
-      if (isSingleMode) setSinglePage(1);
-      else goTo(0);
-    };
-    document.getElementById('lastPageBtn').onclick = () => {
-      if (isSingleMode) setSinglePage(TOTAL_PAGES);
-      else goTo(M - 1);
-    };
-
-    document.getElementById('fullscreenBtn').onclick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    };
-
-    window.addEventListener('keydown', e => {
-      if (e.target.tagName === 'INPUT') return;
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') goNext();
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') goPrev();
-      if (e.key === 'Escape') {
-        if (document.getElementById('productModalBackdrop') && document.getElementById('productModalBackdrop').classList.contains('open')) {
-          closeProductModal();
-          return;
-        }
-        if (guideModalBackdrop && guideModalBackdrop.classList.contains('open')) {
-          closeGuideModal();
-          return;
-        }
-        if (isFocused) resetFocus();
-        if (isSingleMode) applySingleWidth(980, '100% (980px)');
-      }
-    });
-
-    /* ---------------- Slide-out TOC Drawer ---------------- */
-    const drawer = document.getElementById('drawer');
-    const drawerOverlay = document.getElementById('drawerOverlay');
-    const drawerList = document.getElementById('drawerList');
-
-    function toggleDrawer(open) {
-      drawer.classList.toggle('open', open);
-      drawerOverlay.classList.toggle('open', open);
-    }
-
-    document.getElementById('tocBtn').onclick = () => toggleDrawer(true);
-    document.getElementById('closeDrawer').onclick = () => toggleDrawer(false);
-    drawerOverlay.onclick = () => toggleDrawer(false);
-
-    PAGES.forEach((p, i) => {
-      const li = el('li', 'drawer-item' + (i === 0 ? ' active' : ''));
-      const pLabel = p.pages.length === 1 ? `P. ${p.pages[0]}` : `P. ${p.pages[0]}-${p.pages[1]}`;
-      const thumbUrl = i === 0 ? 'pages/page_01.webp' : p.url;
-      li.innerHTML = `
-        <img class="drawer-thumb" src="${thumbUrl}" alt="" loading="lazy">
-        <div class="drawer-info">
-          <div class="drawer-item-title">${p.title}</div>
-          <div class="drawer-item-sub">${p.summary}</div>
-          <div class="drawer-item-badge">${p.contract ? p.contract + ' · ' : ''}${pLabel}</div>
-        </div>
-        <button class="drawer-share-btn" title="複製此章節連結">
-          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        </button>
-      `;
-      const btnDrawerShare = li.querySelector('.drawer-share-btn');
-      if (btnDrawerShare) {
-        btnDrawerShare.onclick = (e) => {
-          e.stopPropagation();
-          const targetPage = p.pages[0];
-          const url = getShareUrl(targetPage);
-          const msg = `🔗 已複製「${p.title}」專屬分享網址！`;
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(url).then(() => showToast(msg)).catch(() => fallbackCopy(url, () => showToast(msg)));
-          } else {
-            fallbackCopy(url, () => showToast(msg));
-          }
-        };
-      }
-      li.onclick = () => {
-        if (isSingleMode) {
-          setSinglePage(p.pages[0]);
-        } else {
-          goTo(i);
-        }
-        toggleDrawer(false);
-      };
-      drawerList.appendChild(li);
-    });
-
-    /* ---------------- Instant Search Filter ---------------- */
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-
-    searchInput.addEventListener('input', e => {
-      const q = e.target.value.trim().toLowerCase();
-      if (!q) {
-        searchResults.classList.remove('open');
-        return;
-      }
-
-      const matches = [];
-      PAGES.forEach((p, i) => {
-        const fullText = (p.title + ' ' + p.category + ' ' + p.contract + ' ' + p.summary + ' ' + p.search_text).toLowerCase();
-        if (fullText.includes(q)) {
-          const idx = fullText.indexOf(q);
-          const start = Math.max(0, idx - 20);
-          const snippet = '...' + fullText.substring(start, start + 65) + '...';
-          matches.push({ index: i, page: p, snippet });
-        }
-      });
-
-      // Plan B: 同步搜尋實機產品圖鑑
-      const productMatches = [];
-      for (const [k, prod] of Object.entries(PRODUCT_CATALOG)) {
-        const hay = (k + ' ' + prod.name + ' ' + prod.type + ' ' + prod.family + ' ' + prod.speed + ' ' + prod.highlight + ' ' + prod.contracts.join(' ')).toLowerCase();
-        if (hay.includes(q)) {
-          productMatches.push({ key: k, prod });
-        }
-      }
-
-      if (productMatches.length > 0 || matches.length > 0) {
-        searchResults.innerHTML = '';
-
-        // 1. 事務機實機卡片 (Plan B + A 結合)
-        if (productMatches.length > 0) {
-          const secTitle = el('div', 'search-section-header');
-          secTitle.innerHTML = `🖨️ 推薦事務機實機 (${productMatches.length})`;
-          searchResults.appendChild(secTitle);
-
-          productMatches.slice(0, 4).forEach(({ key, prod }) => {
-            const card = el('div', 'search-product-card');
-            card.innerHTML = `
-              <img class="search-product-thumb" src="${prod.image}" alt="${prod.name}" loading="lazy">
-              <div class="search-product-info">
-                <div class="search-product-title">${prod.name}</div>
-                <div class="search-product-sub">${prod.type} · ${prod.speed}</div>
-                <div class="search-product-desc">${prod.highlight}</div>
-              </div>
-              <div class="search-product-actions">
-                <button class="search-btn-view" title="點擊查看實機照片與詳細規格">📷 實機</button>
-              </div>
-            `;
-            const btnView = card.querySelector('.search-btn-view');
-            btnView.onclick = (e) => {
-              e.stopPropagation();
-              searchResults.classList.remove('open');
-              searchInput.value = '';
-              openProductModal(key);
-            };
-            card.onclick = () => {
-              if (isSingleMode) {
-                setSinglePage(prod.samplePage);
-              } else {
-                goTo(prod.samplePage === 1 ? 0 : Math.floor(prod.samplePage / 2));
-              }
-              searchResults.classList.remove('open');
-              searchInput.value = '';
-            };
-            searchResults.appendChild(card);
-          });
-        }
-
-        // 2. 型錄內頁檢索
-        if (matches.length > 0) {
-          if (productMatches.length > 0) {
-            const secTitle = el('div', 'search-section-header');
-            secTitle.innerHTML = `📑 型錄頁面檢索 (${matches.length})`;
-            searchResults.appendChild(secTitle);
-          }
-          matches.slice(0, 7).forEach(m => {
-            const item = el('div', 'search-item');
-            const pLabel = m.page.pages.length === 1 ? `第 ${m.page.pages[0]} 頁` : `第 ${m.page.pages[0]}-${m.page.pages[1]} 頁`;
-            item.innerHTML = `
-              <div class="search-item-header">
-                <span class="search-item-title">${m.page.title} ${m.page.contract ? ' (' + m.page.contract + ')' : ''}</span>
-                <span class="search-item-page">${pLabel}</span>
-              </div>
-              <div class="search-item-snippet">${m.snippet}</div>
-            `;
-            item.onclick = () => {
-              if (isSingleMode) {
-                setSinglePage(m.page.pages[0]);
-              } else {
-                goTo(m.index);
-              }
-              searchResults.classList.remove('open');
-              searchInput.value = '';
-            };
-            searchResults.appendChild(item);
-          });
-        }
-
-        searchResults.classList.add('open');
-      } else {
-        searchResults.innerHTML = '<div style="padding:12px;color:#94a3b8;font-size:12px;text-align:center;">無相符項目</div>';
-        searchResults.classList.add('open');
-      }
-    });
-
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.header-search')) {
-        searchResults.classList.remove('open');
-      }
-    });
-
-    /* ---------------- URL Deep Linking & Share (網址帶頁碼直連與一鍵分享) ---------------- */
-    // 綁定所有型錄下載按鈕的 Toast 提示
-    const dlLinks = document.querySelectorAll('.catalog-download-link');
-    dlLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        showToast('📥 正在下載「臺灣銀行114年度共同供應契約型錄 (完整57頁 PDF)」...');
-      });
-    });
-
-    const shareBtn = document.getElementById('shareBtn');
-    const shareToast = document.getElementById('shareToast');
-
-    function getShareUrl(overridePage) {
-      const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const curMode = isMobileDevice ? 'single' : (isSingleMode ? 'single' : 'spread');
-      let curPage = 1;
-      if (overridePage) {
-        curPage = overridePage;
-      } else if (isSingleMode || isMobileDevice) {
-        curPage = singlePageIdx;
-      } else {
-        const cur = PAGES[idx];
-        curPage = cur && cur.pages ? cur.pages[0] : 1;
-      }
-      return `${window.location.origin}${window.location.pathname}#page=${curPage}&mode=${curMode}`;
-    }
-
-    function showToast(msg) {
-      if (!shareToast) return;
-      shareToast.textContent = msg;
-      shareToast.classList.add('show');
-      setTimeout(() => shareToast.classList.remove('show'), 2200);
-    }
-
-    function fallbackCopy(text, cb) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); if (cb) cb(); } catch (e) {}
-      document.body.removeChild(ta);
-    }
-
-    if (shareBtn) {
-      shareBtn.onclick = () => {
-        const url = getShareUrl();
-        const curPage = isSingleMode ? singlePageIdx : (PAGES[idx].pages[0] || 1);
-        const msg = `🔗 已複製第 ${curPage} 頁專屬分享網址！`;
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(() => showToast(msg)).catch(() => fallbackCopy(url, () => showToast(msg)));
-        } else {
-          fallbackCopy(url, () => showToast(msg));
-        }
-      };
     }
 
     let hashSyncTimer = null;
@@ -4875,29 +4448,17 @@
       // 依使用者指示：「為何網站我現在進去預設還是雙頁模式」
       // 100% 強制預設進入「📄 單頁 高清大圖」模式！不論先前瀏覽紀錄，一進站即為超清晰單頁模式！
       // 僅當網址明確帶有 #mode=spread 時才進入雙頁模式
-      const wantSpread = !isMobileDevice && (route && route.mode === 'spread');
+      // 預設採用震旦款大字 DM 導讀模式，直接展示大字體機種與契約價格；亦支援路由直接指定單頁或雙頁
+      let initialMode = 'dm';
+      if (route && route.mode && ['dm', 'single'].includes(route.mode)) {
+        initialMode = route.mode;
+      }
+      switchViewMode(initialMode);
 
-      if (!wantSpread) {
-        document.documentElement.classList.remove('force-spread');
-        isSingleMode = true;
-        segSingleBtn.classList.add('active');
-        segSpreadBtn.classList.remove('active');
-        viewModeSpread.style.display = 'none';
-        viewModeSingle.style.display = 'flex';
+      if (initialMode === 'single') {
         const p = (route && route.page && route.page >= 1 && route.page <= TOTAL_PAGES) ? route.page : 1;
         setSinglePage(p);
       } else {
-        isSingleMode = false;
-        document.documentElement.classList.add('force-spread');
-        segSpreadBtn.classList.add('active');
-        segSingleBtn.classList.remove('active');
-        viewModeSpread.style.display = 'flex';
-        viewModeSingle.style.display = 'none';
-        if (route && route.page) {
-          const targetSpread = route.page === 1 ? 0 : Math.floor(route.page / 2);
-          idx = targetSpread;
-        }
-        paint();
         updateMeta();
       }
 
@@ -5603,105 +5164,185 @@
       }
 
     
-    /* ---------------- 0.5 頁高清光學放大鏡控制器 ---------------- */
-    let loupeEnabled = true;
-    const sbLoupe = document.getElementById('sbLoupe');
-    const sbLoupeImg = document.getElementById('sbLoupeImg');
-    const loupeToggleBtn = document.getElementById('loupeToggleBtn');
+    /* ---------------- 震旦款大字 DM 渲染與切換邏輯 ---------------- */
+    const segDmBtn = document.getElementById('segDmBtn');
+    const viewModeDm = document.getElementById('viewModeDm');
+    const dmCardsGrid = document.getElementById('dmCardsGrid');
+    const dmFilterBar = document.getElementById('dmFilterBar');
 
-    function updateLoupeToggleUI() {
-      if (!loupeToggleBtn) return;
-      if (loupeEnabled) {
-        loupeToggleBtn.classList.remove('off');
-        loupeToggleBtn.innerHTML = '🔍 0.5頁放大鏡 (開)';
-      } else {
-        loupeToggleBtn.classList.add('off');
-        loupeToggleBtn.innerHTML = '🔍 0.5頁放大鏡 (關)';
-        if (sbLoupe) sbLoupe.classList.remove('visible');
-      }
+    function getProductTheme(prod) {
+      if (prod.seriesGroup === 'ricoh_im_c') return 'theme-ricoh-color';
+      if (prod.seriesGroup === 'ricoh_im_mono') return 'theme-ricoh-mono';
+      if (prod.seriesGroup === 'epson_am_c' || prod.name.includes('Epson')) return 'theme-epson';
+      return 'theme-desktop';
     }
 
-    if (loupeToggleBtn) {
-      loupeToggleBtn.onclick = (e) => {
-        e.stopPropagation();
-        loupeEnabled = !loupeEnabled;
-        updateLoupeToggleUI();
-        showToast(loupeEnabled ? '🔍 已開啟 0.5 頁高清放大鏡（滑鼠移至頁面即可檢視）' : '🔍 已關閉 0.5 頁放大鏡');
-      };
-    }
+    function renderDmCards(filter = 'all', searchQuery = '') {
+      if (!dmCardsGrid) return;
+      dmCardsGrid.innerHTML = '';
 
-    window.addEventListener('keydown', e => {
-      if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        // 排除在搜尋框內輸入
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-        loupeEnabled = !loupeEnabled;
-        updateLoupeToggleUI();
-        showToast(loupeEnabled ? '🔍 0.5 頁放大鏡已啟用' : '🔍 0.5 頁放大鏡已關閉');
-      }
-    });
+      let count = 0;
+      for (const [key, prod] of Object.entries(PRODUCT_CATALOG)) {
+        if (filter === 'ricoh-color' && prod.seriesGroup !== 'ricoh_im_c') continue;
+        if (filter === 'ricoh-mono' && prod.seriesGroup !== 'ricoh_im_mono') continue;
+        if (filter === 'epson-ink' && !prod.name.includes('Epson') && prod.seriesGroup !== 'epson_am_c') continue;
+        if (filter === 'desktop' && (prod.seriesGroup === 'ricoh_im_c' || prod.seriesGroup === 'ricoh_im_mono' || prod.name.includes('Epson'))) continue;
 
-    // 監聽滑鼠移動：在雙頁模式下，即時計算 0.5 頁視野並無延遲渲染 4962x3508 極致清晰原圖
-    window.addEventListener('pointermove', e => {
-      if (isSingleMode || !loupeEnabled || turn || !sbLoupe || !sbLoupeImg) {
-        if (sbLoupe) sbLoupe.classList.remove('visible');
-        return;
-      }
-
-      // 若滑鼠正點擊拖曳或開啟彈窗時暫停
-      if (drag || isFocused || document.getElementById('productModalBackdrop').classList.contains('open') || document.getElementById('drawer').classList.contains('open')) {
-        sbLoupe.classList.remove('visible');
-        return;
-      }
-
-      const rect = book.getBoundingClientRect();
-      if (!rect.width || !rect.height) {
-        sbLoupe.classList.remove('visible');
-        return;
-      }
-
-      const cx = e.clientX;
-      const cy = e.clientY;
-      const relX = cx - rect.left;
-      const relY = cy - rect.top;
-
-      // 判定是否在雙頁書本範圍內
-      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) {
-        // 設定放大鏡視窗跟隨游標
-        sbLoupe.style.left = cx + 'px';
-        sbLoupe.style.top = cy + 'px';
-
-        // 放大倍率 2.2x，正好呈現 0.5 頁 A4 範圍
-        const M_MAG = 2.2;
-        const mw = rect.width * M_MAG;
-        const mh = rect.height * M_MAG;
-
-        // 計算放大鏡中心點偏移（使游標所指之處恰好落在 330x440 放大鏡正中心）
-        const ox = -(relX * M_MAG) + 165;
-        const oy = -(relY * M_MAG) + 220;
-
-        sbLoupeImg.style.width = mw + 'px';
-        sbLoupeImg.style.height = mh + 'px';
-        sbLoupeImg.style.transform = 'translate(' + Math.round(ox) + 'px, ' + Math.round(oy) + 'px)';
-
-        // 確保加載該跨頁高解析原圖（4962x3508）
-        const targetSrc = (idx === 0) ? 'pages/page_01.webp' : PAGES[idx].url;
-        if (sbLoupeImg.getAttribute('data-src') !== targetSrc) {
-          sbLoupeImg.src = targetSrc;
-          sbLoupeImg.setAttribute('data-src', targetSrc);
+        if (searchQuery) {
+          const hay = (key + ' ' + prod.name + ' ' + prod.type + ' ' + prod.family + ' ' + (prod.speed || '') + ' ' + (prod.priceSummary || '')).toLowerCase();
+          if (!hay.includes(searchQuery.toLowerCase())) continue;
         }
 
-        sbLoupe.classList.add('visible');
-      } else {
-        sbLoupe.classList.remove('visible');
-      }
-    }, { passive: true });
+        count++;
+        const card = document.createElement('div');
+        const theme = getProductTheme(prod);
+        card.className = 'dm-card ' + theme;
+        card.dataset.model = key;
+        card.dataset.samplePage = prod.samplePage || 5;
 
-    window.addEventListener('pointerout', e => {
-      if (!e.relatedTarget && sbLoupe) {
-        sbLoupe.classList.remove('visible');
+        let tableRowsHtml = '';
+        if (prod.contractItems && prod.contractItems.length) {
+          prod.contractItems.slice(0, 4).forEach(item => {
+            tableRowsHtml += '<tr>' +
+              '<td><strong>' + item.contract + '</strong></td>' +
+              '<td>' + item.group + ' ' + item.item + '</td>' +
+              '<td><span class="dm-price-val">' + item.price + '</span></td>' +
+              '</tr>';
+          });
+        } else {
+          tableRowsHtml = '<tr><td colspan="3">' + (prod.priceSummary || '詳見臺銀合約標單') + '</td></tr>';
+        }
+
+        const origin = prod.name.includes('7000') ? '🇯🇵 日本' : (prod.name.includes('Epson') ? '🇮🇩 印尼' : '🇹🇭 泰國');
+        const pageNum = prod.samplePage || 5;
+
+        card.innerHTML = 
+          '<div class="dm-card-header">' +
+            '<span class="dm-card-speed-badge">⚡ ' + (prod.speed || '標準輸出') + '</span>' +
+            '<div class="dm-card-meta-badges">' +
+              '<span class="dm-card-green-badge">🌱 環標 ' + (prod.greenMark || '認證') + '</span>' +
+              '<span class="dm-card-origin-badge">產地：' + origin + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dm-card-body">' +
+            '<div class="dm-card-visual">' +
+              '<div class="dm-card-img-wrap btn-open-modal" title="點擊放大檢視實機圖鑑">' +
+                '<img class="dm-card-img" src="' + prod.image + '" alt="' + prod.name + '" loading="lazy">' +
+              '</div>' +
+              '<div class="dm-card-family-tag">' + (prod.family || '互盛嚴選') + '</div>' +
+            '</div>' +
+            '<div class="dm-card-info">' +
+              '<div class="dm-card-model-name">' + prod.name + '</div>' +
+              '<div class="dm-card-type-desc">' + prod.type + '</div>' +
+              '<table class="dm-card-table">' +
+                '<thead>' +
+                  '<tr>' +
+                    '<th>共同供應契約案號</th>' +
+                    '<th>組別 / 項次</th>' +
+                    '<th>契約單價</th>' +
+                  '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                  tableRowsHtml +
+                '</tbody>' +
+              '</table>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dm-card-footer">' +
+            '<button class="dm-card-jump-btn btn-jump-page">' +
+              '📄 查看臺銀原合約書 (第 ' + pageNum + ' 頁) →' +
+            '</button>' +
+            '<button class="dm-card-detail-btn btn-open-modal">' +
+              '📷 實機詳細規格圖鑑' +
+            '</button>' +
+          '</div>';
+        dmCardsGrid.appendChild(card);
       }
-    });
-window.addEventListener('DOMContentLoaded', init);
+
+      if (count === 0) {
+        dmCardsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b; font-size: 16px;">查無符合條件的機種</div>';
+      }
+    }
+    function goToOfficialContractPage(pageNum) {
+      switchViewMode('single');
+      setSinglePage(pageNum);
+    }
+
+    function switchViewMode(mode) {
+      if (mode !== 'dm' && mode !== 'single') mode = 'single';
+      currentViewMode = mode;
+      document.documentElement.classList.remove('mode-dm', 'mode-single');
+      document.documentElement.classList.add('mode-' + mode);
+
+      if (segDmBtn) segDmBtn.classList.toggle('active', mode === 'dm');
+      if (segSingleBtn) segSingleBtn.classList.toggle('active', mode === 'single');
+
+      isSingleMode = (mode === 'single');
+
+      if (viewModeDm) viewModeDm.style.display = (mode === 'dm' ? 'block' : 'none');
+      if (viewModeSingle) viewModeSingle.style.display = (mode === 'single' ? 'flex' : 'none');
+
+      const activeBar = document.getElementById('pageActiveProductsBar');
+      if (activeBar) activeBar.style.display = (mode === 'dm' ? 'none' : 'flex');
+
+      const footer = document.querySelector('.footer');
+      if (footer) footer.style.display = (mode === 'dm' ? 'none' : 'grid');
+
+      const guideBar = document.getElementById('guideBar');
+      if (guideBar) guideBar.style.display = (mode === 'dm' ? 'none' : 'flex');
+
+      try {
+        localStorage.setItem('huxen_catalog_view_mode', mode);
+      } catch(e) {}
+
+      if (mode === 'dm') {
+        renderDmCards();
+      } else if (mode === 'single') {
+        forceSingleImageReRaster();
+        updateMeta();
+      }
+    }
+if (segDmBtn) {
+      segDmBtn.addEventListener('click', () => switchViewMode('dm'));
+    }
+    if (segSingleBtn) {
+      segSingleBtn.addEventListener('click', () => switchViewMode('single'));
+    }
+    
+
+    if (dmFilterBar) {
+      dmFilterBar.addEventListener('click', e => {
+        const btn = e.target.closest('.dm-tab-btn');
+        if (!btn) return;
+        dmFilterBar.querySelectorAll('.dm-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderDmCards(btn.dataset.filter);
+      });
+    }
+
+    if (dmCardsGrid) {
+      dmCardsGrid.addEventListener('click', e => {
+        const jumpBtn = e.target.closest('.btn-jump-page');
+        if (jumpBtn) {
+          const card = jumpBtn.closest('.dm-card');
+          if (card && card.dataset.samplePage) {
+            goToOfficialContractPage(parseInt(card.dataset.samplePage, 10));
+          }
+          return;
+        }
+        const modalBtn = e.target.closest('.btn-open-modal');
+        if (modalBtn) {
+          const card = modalBtn.closest('.dm-card');
+          if (card && card.dataset.model) {
+            openProductModal(card.dataset.model);
+          }
+          return;
+        }
+      });
+    }
+
+
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>

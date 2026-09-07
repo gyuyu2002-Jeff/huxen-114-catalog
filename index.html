@@ -739,11 +739,12 @@
       border-radius: 2px 6px 6px 2px;
     }
 
+    /* 取消書本晃動：保持書本絕對平穩靜止 */
     .sb-tilt {
       position: absolute;
       inset: 0;
       transform-style: preserve-3d;
-      transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--zoom, 1)) translate3d(var(--pan-x, 0px), var(--pan-y, 0px), 0);
+      transform: scale(var(--zoom, 1)) translate3d(var(--pan-x, 0px), var(--pan-y, 0px), 0);
     }
 
     /* Layered Cast Shadows */
@@ -2895,7 +2896,128 @@
       color: #005bac;
     }
 
-  </style>
+  
+    /* ---------------- 0.5 頁高清光學放大鏡 ---------------- */
+    .sb-loupe {
+      position: fixed;
+      width: 330px;
+      height: 440px;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.96);
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+      display: none;
+    }
+    .sb-loupe.active {
+      display: block;
+    }
+    .sb-loupe.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .sb-loupe-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      border: 3px solid #005bac;
+      box-shadow:
+        0 24px 60px rgba(10, 31, 61, 0.5),
+        0 0 0 2px #38bdf8,
+        0 0 0 5px rgba(255, 255, 255, 0.9),
+        inset 0 0 24px rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .sb-loupe-inner {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .sb-loupe-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-width: none;
+      display: block;
+      will-change: transform;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: high-quality;
+    }
+    .sb-loupe-reflection {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 35%, transparent 65%);
+      pointer-events: none;
+    }
+    .sb-loupe-tag {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      background: rgba(10, 31, 61, 0.92);
+      color: #ffffff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .sb-loupe-crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .sb-loupe-crosshair::before,
+    .sb-loupe-crosshair::after {
+      content: "";
+      position: absolute;
+      background: rgba(0, 91, 172, 0.55);
+    }
+    .sb-loupe-crosshair::before {
+      top: 7px; left: 0; right: 0; height: 2px;
+    }
+    .sb-loupe-crosshair::after {
+      left: 7px; top: 0; bottom: 0; width: 2px;
+    }
+
+    .loupe-toggle-chip {
+      background: #005bac;
+      color: #ffffff;
+      border: 1px solid #38bdf8;
+      border-radius: 12px;
+      padding: 2px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0, 91, 172, 0.25);
+    }
+    .loupe-toggle-chip:hover {
+      background: #0284c7;
+      transform: scale(1.04);
+    }
+    .loupe-toggle-chip.off {
+      background: #64748b;
+      border-color: #94a3b8;
+      color: #f1f5f9;
+    }
+</style>
 </head>
 <body>
 
@@ -3001,6 +3123,12 @@
     <div class="guide-item">🖐️ <strong>拖曳畫面</strong>：平移瀏覽</div>
     <div class="guide-sep"></div>
     <div class="guide-item">⌨️ <strong>鍵盤左右鍵</strong>：翻頁 · <strong>Esc</strong>：還原</div>
+    <div class="guide-sep"></div>
+    <div class="guide-item">
+      <button class="loupe-toggle-chip" id="loupeToggleBtn" title="點擊開關 0.5 頁高清放大鏡 (快速鍵: M)">
+        🔍 0.5頁放大鏡 (開)
+      </button>
+    </div>
   </div>
 
   <!-- Main Viewport -->
@@ -3008,6 +3136,18 @@
 
     <!-- Mode 1: 3D Spread Mode (雙頁 3D 翻頁模式，首頁為精美單頁封面) -->
     <div class="view-mode-spread" id="viewModeSpread">
+      <!-- 0.5 頁高清光學放大鏡 (2.2x · 600 DPI) -->
+      <div class="sb-loupe active" id="sbLoupe">
+        <div class="sb-loupe-frame">
+          <div class="sb-loupe-inner" id="sbLoupeInner">
+            <img class="sb-loupe-img" id="sbLoupeImg" src="" alt="0.5頁高清放大鏡">
+          </div>
+          <div class="sb-loupe-reflection"></div>
+          <div class="sb-loupe-tag">🔍 0.5頁 高清放大 (2.2x · 600 DPI)</div>
+          <div class="sb-loupe-crosshair"></div>
+        </div>
+      </div>
+
       <div class="focus-badge" id="focusBadge">
         <span>🔍 已放大聚焦 · 拖曳可平移 · 雙擊或點此還原全覽 (或按 Esc)</span> ✕
       </div>
@@ -3600,7 +3740,7 @@
     }
 
     /* ---------------- Viewport Tilt & Pan Engine (支援 5.0x 縮放) ---------------- */
-    const TILT_X = 5.0, TILT_Y = 8.0;
+    const TILT_X = 0, TILT_Y = 0;
     const view = { rx: 0, ry: 0, z: 1, panX: 0, panY: 0, trx: 0, try_: 0, tz: 1, tPanX: 0, tPanY: 0 };
     let viewActive = false;
 
@@ -3657,15 +3797,11 @@
     }
 
     function tiltTo(cx, cy) {
-      if (drag || isFocused) return;
-      const r = book.getBoundingClientRect();
-      if (!r.width) return;
-      const nx = Math.max(-1, Math.min(1, (cx - (r.left + r.width / 2)) / (r.width * 0.6)));
-      const ny = Math.max(-1, Math.min(1, (cy - (r.top + r.height / 2)) / (r.height * 0.85)));
-      view.trx = -ny * TILT_X;
-      view.try_ = nx * TILT_Y;
-      viewActive = true;
-      kick();
+      // 依使用者指示：取消書本晃動功能，視角恆定保持水平正視
+      view.trx = 0;
+      view.try_ = 0;
+      view.rx = 0;
+      view.ry = 0;
     }
 
     window.addEventListener('pointermove', e => {
@@ -5466,7 +5602,106 @@
         };
       }
 
-    window.addEventListener('DOMContentLoaded', init);
+    
+    /* ---------------- 0.5 頁高清光學放大鏡控制器 ---------------- */
+    let loupeEnabled = true;
+    const sbLoupe = document.getElementById('sbLoupe');
+    const sbLoupeImg = document.getElementById('sbLoupeImg');
+    const loupeToggleBtn = document.getElementById('loupeToggleBtn');
+
+    function updateLoupeToggleUI() {
+      if (!loupeToggleBtn) return;
+      if (loupeEnabled) {
+        loupeToggleBtn.classList.remove('off');
+        loupeToggleBtn.innerHTML = '🔍 0.5頁放大鏡 (開)';
+      } else {
+        loupeToggleBtn.classList.add('off');
+        loupeToggleBtn.innerHTML = '🔍 0.5頁放大鏡 (關)';
+        if (sbLoupe) sbLoupe.classList.remove('visible');
+      }
+    }
+
+    if (loupeToggleBtn) {
+      loupeToggleBtn.onclick = (e) => {
+        e.stopPropagation();
+        loupeEnabled = !loupeEnabled;
+        updateLoupeToggleUI();
+        showToast(loupeEnabled ? '🔍 已開啟 0.5 頁高清放大鏡（滑鼠移至頁面即可檢視）' : '🔍 已關閉 0.5 頁放大鏡');
+      };
+    }
+
+    window.addEventListener('keydown', e => {
+      if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        // 排除在搜尋框內輸入
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+        loupeEnabled = !loupeEnabled;
+        updateLoupeToggleUI();
+        showToast(loupeEnabled ? '🔍 0.5 頁放大鏡已啟用' : '🔍 0.5 頁放大鏡已關閉');
+      }
+    });
+
+    // 監聽滑鼠移動：在雙頁模式下，即時計算 0.5 頁視野並無延遲渲染 4962x3508 極致清晰原圖
+    window.addEventListener('pointermove', e => {
+      if (isSingleMode || !loupeEnabled || turn || !sbLoupe || !sbLoupeImg) {
+        if (sbLoupe) sbLoupe.classList.remove('visible');
+        return;
+      }
+
+      // 若滑鼠正點擊拖曳或開啟彈窗時暫停
+      if (drag || isFocused || document.getElementById('productModalBackdrop').classList.contains('open') || document.getElementById('drawer').classList.contains('open')) {
+        sbLoupe.classList.remove('visible');
+        return;
+      }
+
+      const rect = book.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        sbLoupe.classList.remove('visible');
+        return;
+      }
+
+      const cx = e.clientX;
+      const cy = e.clientY;
+      const relX = cx - rect.left;
+      const relY = cy - rect.top;
+
+      // 判定是否在雙頁書本範圍內
+      if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) {
+        // 設定放大鏡視窗跟隨游標
+        sbLoupe.style.left = cx + 'px';
+        sbLoupe.style.top = cy + 'px';
+
+        // 放大倍率 2.2x，正好呈現 0.5 頁 A4 範圍
+        const M_MAG = 2.2;
+        const mw = rect.width * M_MAG;
+        const mh = rect.height * M_MAG;
+
+        // 計算放大鏡中心點偏移（使游標所指之處恰好落在 330x440 放大鏡正中心）
+        const ox = -(relX * M_MAG) + 165;
+        const oy = -(relY * M_MAG) + 220;
+
+        sbLoupeImg.style.width = mw + 'px';
+        sbLoupeImg.style.height = mh + 'px';
+        sbLoupeImg.style.transform = 'translate(' + Math.round(ox) + 'px, ' + Math.round(oy) + 'px)';
+
+        // 確保加載該跨頁高解析原圖（4962x3508）
+        const targetSrc = (idx === 0) ? 'pages/page_01.webp' : PAGES[idx].url;
+        if (sbLoupeImg.getAttribute('data-src') !== targetSrc) {
+          sbLoupeImg.src = targetSrc;
+          sbLoupeImg.setAttribute('data-src', targetSrc);
+        }
+
+        sbLoupe.classList.add('visible');
+      } else {
+        sbLoupe.classList.remove('visible');
+      }
+    }, { passive: true });
+
+    window.addEventListener('pointerout', e => {
+      if (!e.relatedTarget && sbLoupe) {
+        sbLoupe.classList.remove('visible');
+      }
+    });
+window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>

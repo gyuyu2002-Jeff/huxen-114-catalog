@@ -12,16 +12,29 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <script>
+    // 清除可能殘留的舊版雙頁快取設定
+    try {
+      if (localStorage.getItem('huxen_catalog_view_mode') === 'spread') {
+        localStorage.removeItem('huxen_catalog_view_mode');
+      }
+    } catch(e) {}
     if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       document.documentElement.classList.add('is-mobile-view');
     }
   </script>
   <style>
-    html.is-mobile-view:not(.force-spread) .view-mode-spread {
+    /* 依使用者指示：無論桌機或行動裝置，全平台預設「📄 單頁 高清大圖」模式（直出 600 DPI 極致清晰） */
+    html:not(.force-spread) .view-mode-spread {
       display: none !important;
     }
-    html.is-mobile-view:not(.force-spread) .view-mode-single {
+    html:not(.force-spread) .view-mode-single {
       display: flex !important;
+    }
+    html.force-spread .view-mode-spread {
+      display: flex !important;
+    }
+    html.force-spread .view-mode-single {
+      display: none !important;
     }
 
     :root {
@@ -2915,18 +2928,18 @@
     <div class="header-center">
       <!-- View Mode Segmented Control (清晰區分當前檢視模式) -->
       <div class="mode-segmented" id="modeSegmented">
-        <button class="seg-btn active" id="segSpreadBtn" title="切換為 3D 雙頁擬真翻頁模式">
-          <span class="seg-icon">📖</span>
-          <span class="seg-text">
-            <span class="text-desktop">雙頁 3D 擬真</span>
-            <span class="text-mobile">雙頁</span>
-          </span>
-        </button>
-        <button class="seg-btn" id="segSingleBtn" title="切換為 單頁超高清大圖閱讀模式 (字體極大極清)">
+        <button class="seg-btn active" id="segSingleBtn" title="切換為 單頁超高清大圖閱讀模式 (字體極大極清)">
           <span class="seg-icon">📄</span>
           <span class="seg-text">
             <span class="text-desktop">單頁 高清大圖</span>
             <span class="text-mobile">單頁</span>
+          </span>
+        </button>
+        <button class="seg-btn" id="segSpreadBtn" title="切換為 3D 雙頁擬真翻頁模式">
+          <span class="seg-icon">📖</span>
+          <span class="seg-text">
+            <span class="text-desktop">雙頁 3D 擬真</span>
+            <span class="text-mobile">雙頁</span>
           </span>
         </button>
       </div>
@@ -3361,7 +3374,7 @@
     const segSpreadBtn = document.getElementById('segSpreadBtn');
     const segSingleBtn = document.getElementById('segSingleBtn');
 
-    let isSingleMode = false;
+    let isSingleMode = true;
     let singlePageIdx = 1; // 1 to 57
     let singleWidth = 980; // default comfortable width in pixels (1x)
 
@@ -4722,18 +4735,14 @@
     async function init() {
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
-      const savedMode = localStorage.getItem('huxen_catalog_view_mode');
 
-      // 依使用者指示：「一進入網站的字體不夠清晰」
-      // 桌機與行動端一律預設為「📄 單頁 高清大圖」模式（直出 600 DPI 極致清晰，不需手動放大瞇眼即可清晰查閱型錄）
-      // 若使用者明確偏好「雙頁 3D 擬真」或網址帶有 #mode=spread，則尊重其偏好切換至雙頁模式
-      const wantSpread = !isMobileDevice && ((route && route.mode === 'spread') || savedMode === 'spread');
+      // 依使用者指示：「為何網站我現在進去預設還是雙頁模式」
+      // 100% 強制預設進入「📄 單頁 高清大圖」模式！不論先前瀏覽紀錄，一進站即為超清晰單頁模式！
+      // 僅當網址明確帶有 #mode=spread 時才進入雙頁模式
+      const wantSpread = !isMobileDevice && (route && route.mode === 'spread');
 
       if (!wantSpread) {
-        if (isMobileDevice) {
-          document.documentElement.classList.add('is-mobile-view');
-          document.documentElement.classList.remove('force-spread');
-        }
+        document.documentElement.classList.remove('force-spread');
         isSingleMode = true;
         segSingleBtn.classList.add('active');
         segSpreadBtn.classList.remove('active');
@@ -4743,6 +4752,7 @@
         setSinglePage(p);
       } else {
         isSingleMode = false;
+        document.documentElement.classList.add('force-spread');
         segSpreadBtn.classList.add('active');
         segSingleBtn.classList.remove('active');
         viewModeSpread.style.display = 'flex';

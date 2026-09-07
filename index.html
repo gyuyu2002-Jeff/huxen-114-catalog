@@ -431,69 +431,62 @@
     .contract-details-container {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       width: 100%;
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .contract-detail-card {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-left: 3.5px solid #005bac;
-      border-radius: 6px;
-      padding: 7px 11px;
-      font-size: 12px;
+      border-left: 3px solid #005bac;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
       display: flex;
-      flex-direction: column;
-      gap: 3px;
-      transition: all 0.2s;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      line-height: 1.3;
+      transition: all 0.15s;
     }
     .contract-detail-card:hover {
       background: #f0f7ff;
       border-color: #bae6fd;
-      border-left-color: #0284c7;
-    }
-    .cdc-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
     }
     .cdc-tag-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+      flex: 1;
     }
     .cdc-contract {
       font-weight: 700;
       color: #005bac;
-      font-size: 12px;
+      font-size: 11.5px;
     }
     .cdc-item-badge {
       background: #e0f2fe;
       color: #0369a1;
       font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 4px;
+      padding: 1px 5px;
+      border-radius: 3px;
       font-size: 11px;
     }
     .cdc-greenmark {
       background: #ecfdf5;
       color: #059669;
       font-weight: 600;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 11px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10.5px;
       border: 1px solid #a7f3d0;
     }
     .cdc-price-row {
       color: #b45309;
-      font-weight: 600;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      font-weight: 700;
+      font-size: 11.5px;
+      white-space: nowrap;
     }
 
     /* Drawer Download Box */
@@ -779,6 +772,9 @@
       height: 100%;
       display: block;
       border-radius: 4px;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      filter: contrast(1.03) saturate(1.02);
     }
 
     /* Halves during turning */
@@ -2120,15 +2116,14 @@
     .product-modal {
       background: #ffffff;
       width: 100%;
-      max-width: 760px;
-      max-height: 90vh;
-      border-radius: 16px;
+      max-width: 840px;
+      border-radius: 12px;
       box-shadow: 0 24px 64px rgba(10, 31, 61, 0.45);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transform: scale(0.92) translateY(16px);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.96) translateY(8px);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
     .product-modal-backdrop.open .product-modal {
@@ -2137,7 +2132,7 @@
     .product-modal-header {
       background: linear-gradient(135deg, #0a1f3d 0%, #102a54 100%);
       color: #ffffff;
-      padding: 14px 20px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -2183,9 +2178,19 @@
     }
     .product-modal-body {
       display: flex;
-      gap: 24px;
-      padding: 22px;
-      overflow-y: auto;
+      gap: 14px;
+      padding: 10px 16px;
+      overflow-y: hidden;
+      align-items: flex-start;
+    }
+    @media (max-width: 720px) {
+      .product-modal-body {
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: 76vh;
+        gap: 12px;
+        padding: 12px 14px;
+      }
     }
     .product-modal-media {
       flex: 0 0 280px;
@@ -2194,17 +2199,24 @@
       align-items: center;
       gap: 10px;
     }
+    .product-modal-media {
+      flex: 0 0 190px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
     .product-img-box {
       width: 100%;
-      height: 260px;
+      height: 145px;
       background: radial-gradient(circle at center, #ffffff 60%, #f1f5f9 100%);
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px;
-      box-shadow: 0 4px 16px rgba(10, 31, 61, 0.06);
+      padding: 6px;
+      box-shadow: 0 3px 10px rgba(10, 31, 61, 0.04);
     }
     .product-modal-img {
       max-width: 100%;
@@ -2222,7 +2234,8 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 6px;
+      min-width: 0;
     }
     .product-modal-type {
       font-size: 14px;
@@ -2245,20 +2258,21 @@
     }
     .product-spec-table {
       background: #f8fafc;
-      border-radius: 10px;
+      border-radius: 8px;
       border: 1px solid #e2e8f0;
-      padding: 12px 14px;
+      padding: 8px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 5px;
     }
     .spec-row {
       display: flex;
-      font-size: 12px;
-      line-height: 1.45;
+      align-items: center;
+      font-size: 11px;
+      line-height: 1.3;
     }
     .spec-label {
-      flex: 0 0 110px;
+      flex: 0 0 95px;
       color: #64748b;
       font-weight: 600;
     }
@@ -2273,16 +2287,22 @@
       margin-top: auto;
       padding-top: 6px;
     }
+    .product-modal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      padding-top: 2px;
+    }
     .pm-btn {
       flex: 1;
-      height: 40px;
-      border-radius: 8px;
-      font-size: 13px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -2737,12 +2757,16 @@
     .pm-model-tabs {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 16px;
+      gap: 4px;
+      padding: 4px 12px;
       background: #f1f5f9;
       border-bottom: 1px solid #e2e8f0;
       overflow-x: auto;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .pm-model-tabs::-webkit-scrollbar {
+      display: none;
     }
     .pm-model-tab {
       display: inline-flex;
@@ -2781,12 +2805,14 @@
   
     /* ---------------- 同款外觀・速度與型號切換選單 ---------------- */
     .pm-series-selector-wrap {
-      background: linear-gradient(135deg, rgba(240, 249, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
-      border: 1.5px solid #bae6fd;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.06);
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .pm-series-selector-title {
       display: flex;
@@ -2806,16 +2832,17 @@
     .pm-speed-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      border-radius: 20px;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 4px;
       background: #ffffff;
-      border: 1.5px solid #cbd5e1;
+      border: 1px solid #cbd5e1;
       color: #334155;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 22px;
+      transition: all 0.15s;
     }
     .pm-speed-btn:hover {
       border-color: #0284c7;
@@ -3133,11 +3160,11 @@
               <span class="spec-label">⚡ 影印/列印速度</span>
               <span class="spec-val" id="productModalSpeed"></span>
             </div>
-            <div class="spec-row">
+            <div class="spec-row" id="specRowGreenMark">
               <span class="spec-label">🌿 環標標章證號</span>
               <span class="spec-val" id="productModalGreenMark"></span>
             </div>
-            <div class="spec-row spec-row-price">
+            <div class="spec-row spec-row-price" id="specRowPrice">
               <span class="spec-label">💰 決標契約金額</span>
               <span class="spec-val" id="productModalPrice"></span>
             </div>
@@ -4764,7 +4791,7 @@
           const prod = PRODUCT_CATALOG[k];
           if (!prod) return;
           const chip = el('div', 'drawer-product-chip');
-          const shortName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+          const shortName = prod.name.replace('RICOH ', '').replace('Epson ', '').replace('brother ', '').replace('HP LaserJet Pro ', '');
           chip.innerHTML = `
             <img class="drawer-product-img" src="${prod.image}" alt="${prod.name}" loading="lazy">
             <div class="drawer-product-name" title="${prod.name}">${shortName}</div>
@@ -4811,10 +4838,10 @@
         greenMark: '22052',
         priceSummary: '買賣單價 NT$ 94,939 ｜ 租賃每張 3.135 元起 (月租 $3,219 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 1 項', price: '契約單價 NT$ 94,939 (含稅)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 17、18', price: '2年期 3.340元/張 · 3年期 3.135元/張 (基本計費 3,000張/月)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 3、4', price: '2年期 NT$ 3,472/月 · 3年期 NT$ 3,219/月', greenMark: '環標 22052' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 1、2', price: '2年期 2.682元/張 · 3年期 2.632元/張 (基本3,000張/月)', greenMark: '環標 22052' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 1 項', price: 'NT$ 94,939', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 17、18', price: '3.135 元/張起 (月租 $3,219起)', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 3、4', price: '月租 NT$ 3,219 起', greenMark: '環標 22052' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 1、2', price: '2.632 元/張起', greenMark: '環標 22052' }
         ],
         targetDept: '【常規主力首選】適合各級機關公文彩色列印、一般科室（10~25人）、TEC 超低耗電節能第一',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4833,10 +4860,10 @@
         greenMark: '22052',
         priceSummary: '買賣單價 NT$ 94,939 ｜ 租賃每張 3.135 元起 (月租 $3,219 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 1 項', price: '契約單價 NT$ 94,939 (含稅)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 17、18', price: '2年期 3.340元/張 · 3年期 3.135元/張 (基本計費 3,000張/月)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 3、4', price: '2年期 NT$ 3,472/月 · 3年期 NT$ 3,219/月', greenMark: '環標 22052' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 1、2', price: '2年期 2.682元/張 · 3年期 2.632元/張 (基本3,000張/月)', greenMark: '環標 22052' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 1 項', price: 'NT$ 94,939', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 17、18', price: '3.135 元/張起 (月租 $3,219起)', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 3、4', price: '月租 NT$ 3,219 起', greenMark: '環標 22052' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 1、2', price: '2.632 元/張起', greenMark: '環標 22052' }
         ],
         targetDept: '【小型單位/基層處室】低印量但需 A3 全彩輸出、雙面掃描與安全傳真功能',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4855,10 +4882,10 @@
         greenMark: '22052',
         priceSummary: '買賣單價 NT$ 110,931 ｜ 租賃每張 3.193 元起 (月租 $4,818 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 2 項 (C3010EX)', price: '契約單價 NT$ 110,931 (含稅)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 19~22', price: '2年期 3.441元/張 (含傳真3.968元) · 3年期 3.193元/張 (含傳真3.694元)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 5~8', price: '2年期 NT$ 5,192/月 (含傳真$5,870) · 3年期 NT$ 4,818/月 (含傳真$5,435)', greenMark: '環標 22052' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 3~6', price: '2年期 2.763元/張 (含傳真3.016元) · 3年期 2.682元/張 (含傳真2.925元)', greenMark: '環標 22052' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 2 項 (C3010EX)', price: 'NT$ 110,931', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 19~22', price: '3.193 元/張起', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 5~8', price: '月租 NT$ 4,818 起', greenMark: '環標 22052' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 3~6', price: '2.682 元/張起', greenMark: '環標 22052' }
         ],
         targetDept: '【主流平衡旗艦】公家機關最受歡迎速度段、適合中型科室（15~35人）、兼顧效率與經濟性',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4877,10 +4904,10 @@
         greenMark: '22052',
         priceSummary: '買賣單價 NT$ 110,931 ｜ 租賃每張 3.193 元起 (月租 $4,818 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 2 項 (C3510EX)', price: '契約單價 NT$ 110,931 (含稅)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 19~22', price: '2年期 3.441元/張 (含傳真3.968元) · 3年期 3.193元/張 (含傳真3.694元)', greenMark: '環標 22052' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 5~8', price: '2年期 NT$ 5,192/月 (含傳真$5,870) · 3年期 NT$ 4,818/月 (含傳真$5,435)', greenMark: '環標 22052' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 3~6', price: '2年期 2.763元/張 (含傳真3.016元) · 3年期 2.682元/張 (含傳真2.925元)', greenMark: '環標 22052' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 2 項 (C3510EX)', price: 'NT$ 110,931', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 19~22', price: '3.193 元/張起', greenMark: '環標 22052' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 5~8', price: '月租 NT$ 4,818 起', greenMark: '環標 22052' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 2 組', item: '項次 3~6', price: '2.682 元/張起', greenMark: '環標 22052' }
         ],
         targetDept: '【高印量核心處室】業務科室、會議頻繁、大量研考公文與定期彩色報表印發專用',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4899,9 +4926,9 @@
         greenMark: '22051',
         priceSummary: '買賣單價 NT$ 169,433 ｜ 租賃每張 3.350 元起 (月租 $6,579 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 3 項', price: '契約單價 NT$ 169,433 (含稅)', greenMark: '環標 22051' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 23、24', price: '2年期 3.649元/張 · 3年期 3.350元/張 (基本計費 3,500張/月)', greenMark: '環標 22051' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 9、10', price: '2年期 NT$ 6,908/月 · 3年期 NT$ 6,579/月', greenMark: '環標 22051' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 3 項', price: 'NT$ 169,433', greenMark: '環標 22051' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 23、24', price: '3.35 元/張起', greenMark: '環標 22051' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 9、10', price: '月租 NT$ 6,579 起', greenMark: '環標 22051' }
         ],
         targetDept: '【大型處室/總務發文】秘書室、發文中心、大量報告快速印發、完全不排隊等待',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4920,9 +4947,9 @@
         greenMark: '22051',
         priceSummary: '買賣單價 NT$ 229,251 ｜ 租賃每張 3.482 元起 (月租 $7,996 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 4 項', price: '契約單價 NT$ 229,251 (含稅)', greenMark: '環標 22051' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 25、26', price: '2年期 4.135元/張 · 3年期 3.482元/張 (基本計費 3,500張/月)', greenMark: '環標 22051' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 11、12', price: '2年期 NT$ 7,996/月 · 3年期 NT$ 8,300/月', greenMark: '環標 22051' }
+          { contract: 'LP5-114036 (買賣)', group: '第 2 組', item: '第 4 項', price: 'NT$ 229,251', greenMark: '環標 22051' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 25、26', price: '3.482 元/張起', greenMark: '環標 22051' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 11、12', price: '月租 NT$ 8,300 起', greenMark: '環標 22051' }
         ],
         targetDept: '【頂級極速旗艦】機關大印量輸出核心、極速大量秒印、支援高階文件加密保密控管',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4941,10 +4968,10 @@
         greenMark: '23708',
         priceSummary: '買賣單價 NT$ 70,850 ｜ 租賃每張 0.466 元起 (月租 $2,024 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 2 項', price: '契約單價 NT$ 70,850 (含稅)', greenMark: '環標 23708' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 1、2', price: '2年期 0.501元/張 · 3年期 0.466元/張 (基本計費 7,000張/月)', greenMark: '環標 23708' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 1、2', price: '2年期 NT$ 2,156/月 · 3年期 NT$ 2,024/月', greenMark: '環標 23708' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 1~4', price: '2年期 0.298元/0.265元 · 3年期 0.288元/0.253元 (基本5,000/7,000張)', greenMark: '環標 23708' }
+          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 2 項', price: 'NT$ 70,850', greenMark: '環標 23708' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 1、2', price: '0.466 元/張起', greenMark: '環標 23708' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 2 組', item: '項次 1、2', price: '月租 NT$ 2,024 起', greenMark: '環標 23708' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 1~4', price: '0.253 ~ 0.298 元/張', greenMark: '環標 23708' }
         ],
         targetDept: '【標準科室首選】各級機關日常黑白公文複印、極低故障率與高耐久度',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -4956,18 +4983,18 @@
       'RICOH IM 3500': {
         name: 'RICOH IM 3500',
         family: '互盛黑白主力旗艦',
-        type: '黑白雷射數位多功能複合機 (租賃人氣冠軍)',
+        type: '黑白雷射數位多功能複合機',
         speed: '每分鐘 35 張',
         speedLabel: '35張 (IM 3500)',
         seriesGroup: 'ricoh_im_mono',
         greenMark: '23708',
-        priceSummary: '買賣單價 NT$ 81,781 ｜ 租賃每張 0.412 元起 (租賃第一名)',
+        priceSummary: '買賣單價 NT$ 81,781 ｜ 租賃每張 0.412 元起',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 3 項', price: '契約單價 NT$ 81,781 (含稅)', greenMark: '環標 23708' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 3~8', price: '2年期 0.476元 (大批0.441元/傳真0.568元) · 3年期 0.448元 (大批0.412元/傳真0.516元)', greenMark: '環標 23708' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 5、6、9、10', price: '2年期 0.294元/0.255元 · 3年期 0.285元/0.248元', greenMark: '環標 23708' }
+          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 3 項', price: 'NT$ 81,781', greenMark: '環標 23708' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 3~8', price: '0.412 元/張起', greenMark: '環標 23708' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 5、6、9、10', price: '0.248 元/張起', greenMark: '環標 23708' }
         ],
-        targetDept: '【租賃最受歡迎第一名】公務機關租賃首選機型、高可靠度、穩定耐操',
+        targetDept: '【公務機關常用黑白主力】高印量科室首選、高可靠度、穩定耐操',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
         highlight: '各級機關學校租賃最熱門機型、雙面高速自動送稿、極低故障率、省電節能',
         image: 'products/ricoh_im_3500.webp',
@@ -4984,9 +5011,9 @@
         greenMark: '23708',
         priceSummary: '買賣單價 NT$ 146,761 ｜ 租賃每張 0.399 元起 (高速發文專用)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 4 項', price: '契約單價 NT$ 146,761 (含稅)', greenMark: '環標 23708' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 11~14', price: '2年期 0.420元 (含傳真0.496元) · 3年期 0.399元 (含傳真0.463元，基本20,000張/月)', greenMark: '環標 23708' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 19、20、23、24、27、28', price: '2年期 0.345元/0.253元 · 3年期 0.329元/0.238元', greenMark: '環標 23708' }
+          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 4 項', price: 'NT$ 146,761', greenMark: '環標 23708' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 11~14', price: '0.399 元/張起', greenMark: '環標 23708' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 19、20、23、24、27、28', price: '0.238 元/張起', greenMark: '環標 23708' }
         ],
         targetDept: '【大批發文專用】總務處、文書科、大量進紙容量與極速雙面同時掃描',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -5005,9 +5032,9 @@
         greenMark: '23708',
         priceSummary: '買賣單價 NT$ 212,551 ｜ 租賃每張 0.399 元起 (極速重裝秒印)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 5 項', price: '契約單價 NT$ 212,551 (含稅)', greenMark: '環標 23708' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 15、16', price: '2年期 0.416元/張 · 3年期 0.399元/張 (基本計費 25,000張/月)', greenMark: '環標 23708' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 31~36', price: '2年期 0.429元/0.247元 · 3年期 0.415元/0.233元 (基本18,500/25,000張)', greenMark: '環標 23708' }
+          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 5 項', price: 'NT$ 212,551', greenMark: '環標 23708' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 15、16', price: '0.399 元/張起', greenMark: '環標 23708' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 31~36', price: '0.233 元/張起', greenMark: '環標 23708' }
         ],
         targetDept: '【高印量重裝處室】極速秒印、堅固鋼製機身結構、高負荷連續運轉',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -5024,9 +5051,9 @@
         greenMark: '22709',
         priceSummary: '買賣單價 NT$ 271,255 ｜ 租賃每張 0.399 元起 (量產印刷旗艦)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 6 項', price: '契約單價 NT$ 271,255 (含稅)', greenMark: '環標 22709' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 15、16', price: '2年期 0.416元/張 · 3年期 0.399元/張 (基本計費 25,000張/月)', greenMark: '環標 22709' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 31~36', price: '2年期 0.429元/0.247元 · 3年期 0.415元/0.233元 (基本18,500/25,000張)', greenMark: '環標 22709' }
+          { contract: 'LP5-114036 (買賣)', group: '第 1 組', item: '第 6 項', price: 'NT$ 271,255', greenMark: '環標 22709' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 1 組', item: '項次 15、16', price: '0.399 元/張起', greenMark: '環標 22709' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 31~36', price: '0.233 元/張起', greenMark: '環標 22709' }
         ],
         targetDept: '【印刷大量輸出中心】支援萬張連續印刷、極長壽命光鼓、高階裝訂配備',
         screen: '10.1 吋 Smart Operation Panel 智慧觸控面板',
@@ -5043,9 +5070,9 @@
         greenMark: '26166 (50張) / 26165 (35張)',
         priceSummary: '二手租賃每張 0.238 ~ 0.345 元 (經典實惠耐操神機)',
         contractItems: [
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 5、6 (35張)', price: '2年期 0.294元/張 · 3年期 0.285元/張 (基本7,000張/月)', greenMark: '環標 26165' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 19、20 (50張)', price: '2年期 0.345元/張 · 3年期 0.329元/張 (基本10,000張/月)', greenMark: '環標 26166' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 27、28 (50張大批)', price: '2年期 0.253元/張 · 3年期 0.238元/張 (基本20,000張/月)', greenMark: '環標 26166' }
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 5、6 (35張)', price: '0.285 元/張起', greenMark: '環標 26165' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 19、20 (50張)', price: '0.329 元/張起', greenMark: '環標 26166' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 27、28 (50張大批)', price: '0.238 元/張起', greenMark: '環標 26166' }
         ],
         screen: '10.1 吋智慧操作面板',
         highlight: '長青耐操耐印經典神機、高性價比、租賃買賣實惠之選',
@@ -5059,10 +5086,10 @@
         type: 'A3 黑白雷射數位複合機 (精巧桌面/落地兩用)',
         speed: '每分鐘 27 張',
         greenMark: '21456',
-        priceSummary: '二手租賃每張 0.253 ~ 0.298 元 (精巧桌面型空間首選)',
+        priceSummary: '二手租賃每張 0.253 ~ 0.298 元 (精巧桌面型)',
         contractItems: [
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 1、2 (基本5,000張)', price: '2年期 0.298元/張 · 3年期 0.288元/張', greenMark: '環標 21456' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 3、4 (基本7,000張)', price: '2年期 0.265元/張 · 3年期 0.253元/張', greenMark: '環標 21456' }
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 1、2 (基本5,000張)', price: '0.288 元/張起', greenMark: '環標 21456' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 1 組', item: '項次 3、4 (基本7,000張)', price: '0.253 元/張起', greenMark: '環標 21456' }
         ],
         screen: '7 吋彩色智慧觸控面板 (可調角度)',
         highlight: '體積超緊湊精巧、佔地空間極小、標配 7 吋大螢幕智慧連網與雙面自動送稿',
@@ -5080,10 +5107,10 @@
         greenMark: '21912',
         priceSummary: '買賣單價 NT$ 231,579 ｜ 租賃每張 2.763 元起 (月租 $5,128 起)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 3 組', item: '第 2 項', price: '契約單價 NT$ 231,579 (含稅)', greenMark: '環標 21912' },
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 3、4', price: '2年期 2.954元/張 · 3年期 2.763元/張 (基本計費 3,500張/月)', greenMark: '環標 21912' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 3、4', price: '2年期 NT$ 5,480/月 · 3年期 NT$ 5,128/月', greenMark: '環標 21912' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 3、4', price: '2年期 2.227元/張 · 3年期 2.024元/張 (基本3,500張/月)', greenMark: '環標 21912' }
+          { contract: 'LP5-114036 (買賣)', group: '第 3 組', item: '第 2 項', price: 'NT$ 231,579', greenMark: '環標 21912' },
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 3、4', price: '2.763 元/張起', greenMark: '環標 21912' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 3、4', price: '月租 NT$ 5,128 起', greenMark: '環標 21912' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 3、4', price: '2.024 元/張起', greenMark: '環標 21912' }
         ],
         targetDept: '【主流高速微噴】適合中大型科室（20~50人）、節能減碳綠色採購、無暖機時間、低耗電省電 85%',
         screen: '10.1 吋彩色智慧觸控螢幕',
@@ -5102,9 +5129,9 @@
         greenMark: '21912',
         priceSummary: '租賃每張 2.894 元起 ｜ 基本月租 NT$ 7,239 起',
         contractItems: [
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 5、6', price: '2年期 3.093元/張 · 3年期 2.894元/張 (基本計費 3,500張/月)', greenMark: '環標 21912' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 5、6', price: '2年期 NT$ 7,729/月 · 3年期 NT$ 7,239/月', greenMark: '環標 21912' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 5、6', price: '2年期 2.379元/張 · 3年期 2.126元/張 (基本3,500張/月)', greenMark: '環標 21912' }
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 5、6', price: '2.894 元/張起', greenMark: '環標 21912' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 5、6', price: '月租 NT$ 7,239 起', greenMark: '環標 21912' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 5、6', price: '2.126 元/張起', greenMark: '環標 21912' }
         ],
         targetDept: '【大印量處室專用】適合會議頻繁、大量彩色列印、極速不等待、雙面同時掃描達 280 ipm',
         screen: '10.1 吋彩色智慧觸控螢幕',
@@ -5121,7 +5148,7 @@
         greenMark: '24085',
         priceSummary: '買賣契約單價：NT$ 75,667 (含稅)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 3 組', item: '第 1 項', price: '契約單價 NT$ 75,667 (含稅)', greenMark: '環標 24085' }
+          { contract: 'LP5-114036 (買賣)', group: '第 3 組', item: '第 1 項', price: 'NT$ 75,667', greenMark: '環標 24085' }
         ],
         targetDept: '【買賣常規採購】適合辦公桌放置、A3+全彩微噴輸出、首頁輸出僅 5.5 秒、免加熱極速喚醒',
         screen: '4.3 吋彩色觸控液晶螢幕',
@@ -5138,9 +5165,9 @@
         greenMark: '24304',
         priceSummary: '租賃基本每張 2.570 元起 ｜ 基本月租 NT$ 2,525 起',
         contractItems: [
-          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 1、2', price: '2年期 2.706元/張 · 3年期 2.570元/張 (基本計費 3,000張/月)', greenMark: '環標 24304' },
-          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 1、2', price: '2年期 NT$ 2,699/月 · 3年期 NT$ 2,525/月', greenMark: '環標 24304' },
-          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 1、2', price: '2年期 1.974元/張 · 3年期 1.953元/張 (基本3,000張/月)', greenMark: '環標 24304' }
+          { contract: 'LP5-114034 (租賃-基本張數型)', group: '第 3 組', item: '項次 1、2', price: '2.57 元/張起', greenMark: '環標 24304' },
+          { contract: 'LP5-114034 (租賃-基本月租型)', group: '第 4 組', item: '項次 1、2', price: '月租 NT$ 2,525 起', greenMark: '環標 24304' },
+          { contract: 'LP5-114035 (二手影印機租賃)', group: '第 3 組', item: '項次 1、2', price: '1.953 元/張起', greenMark: '環標 24304' }
         ],
         targetDept: '【租賃節能熱門款】適合各級機關辦公室長約租賃、超大容量墨袋（黑 86,000 頁/彩 50,000 頁）、ISO 無塵室認證',
         screen: '4.3 吋彩色觸控液晶螢幕',
@@ -5157,8 +5184,8 @@
         greenMark: '18963 (L2770DW) / 23160 (L2805DW)',
         priceSummary: '買賣單價 NT$ 7,460 (L2770DW) ｜ NT$ 5,397 (L2805DW)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 1 項 (MFC-L2770DW)', price: '契約單價 NT$ 7,460 (含稅)', greenMark: '環標 18963' },
-          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 3 項 (MFC-L2805DW)', price: '契約單價 NT$ 5,397 (含稅)', greenMark: '環標 23160' }
+          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 1 項 (MFC-L2770DW)', price: 'NT$ 7,460', greenMark: '環標 18963' },
+          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 3 項 (MFC-L2805DW)', price: 'NT$ 5,397', greenMark: '環標 23160' }
         ],
         screen: '2.7 吋彩色液晶觸控螢幕',
         highlight: '支援自動雙面列印/複印/掃描/傳真、50 頁雙面自動送稿、極速高效、機身精巧',
@@ -5190,8 +5217,8 @@
         greenMark: '22163 (3103fdn) / 24753 (4103fdn)',
         priceSummary: '買賣單價 NT$ 5,397 (3103fdn) ｜ NT$ 7,308 (4103fdn)',
         contractItems: [
-          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 3 項 (MFP 3103fdn)', price: '契約單價 NT$ 5,397 (含稅)', greenMark: '環標 22163' },
-          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 4 項 (MFP 4103fdn)', price: '契約單價 NT$ 7,308 (含稅)', greenMark: '環標 24753' }
+          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 3 項 (MFP 3103fdn)', price: 'NT$ 5,397', greenMark: '環標 22163' },
+          { contract: 'LP5-114036 (買賣)', group: '第 4 組', item: '第 4 項 (MFP 4103fdn)', price: 'NT$ 7,308', greenMark: '環標 24753' }
         ],
         screen: '2.7 吋彩色圖形觸控螢幕',
         highlight: 'HP Wolf Pro 專業安全防護、自動雙面高速列印、50 頁雙面自動送稿、Gigabit 高速網路',
@@ -5227,7 +5254,7 @@
         if (!prod) return;
         const btn = document.createElement('button');
         btn.className = 'pm-model-tab' + (k === activeModelKey ? ' active' : '');
-        const shortName = prod.name.replace('RICOH ', '互盛 ').replace('Epson ', '互盛微噴 ').replace('brother ', 'Brother ').replace('HP LaserJet Pro ', 'HP ');
+        const shortName = prod.name.replace('RICOH ', '').replace('Epson ', '').replace('brother ', '').replace('HP LaserJet Pro ', '');
         btn.innerHTML = `
           <img src="${prod.image}" class="pm-tab-thumb" alt="${shortName}">
           <span>${shortName}</span>
@@ -5262,23 +5289,32 @@
       document.getElementById('productModalScreen').textContent = prod.screen;
       document.getElementById('productModalHighlight').textContent = prod.highlight;
 
-      // 🌿 環保標章證號
+      // 🌿 環保標章證號與決標金額（若已有契約明細則精簡顯示，維持單頁無滑桿）
+      const gmRow = document.getElementById('specRowGreenMark');
       const gmEl = document.getElementById('productModalGreenMark');
+      if (gmRow) {
+        // 契約明細內已包含環標與價格，隱藏重複列以確保單頁無滑桿
+        gmRow.style.display = (prod.contractItems && prod.contractItems.length > 0) ? 'none' : 'flex';
+      }
       if (gmEl) {
         if (prod.greenMark) {
-          gmEl.innerHTML = `<span class="green-mark-pill">🌿 第 ${prod.greenMark} 號</span><span class="green-mark-sub">符合政府綠色採購環保標章標準</span>`;
+          gmEl.innerHTML = `<span class="green-mark-pill">🌿 第 ${prod.greenMark} 號</span>`;
         } else {
-          gmEl.innerHTML = `<span class="green-mark-pill" style="background:#f1f5f9;color:#64748b;border-color:#cbd5e1;">認證申辦中 / 符合環保規範</span>`;
+          gmEl.innerHTML = `<span class="green-mark-pill" style="background:#f1f5f9;color:#64748b;border-color:#cbd5e1;">符合環保規範</span>`;
         }
       }
 
-      // 💰 決標契約金額
+      const priceRow = document.getElementById('specRowPrice');
       const priceEl = document.getElementById('productModalPrice');
+      if (priceRow) {
+        // 契約明細內已有明確單價與費率，隱藏重複列
+        priceRow.style.display = (prod.contractItems && prod.contractItems.length > 0) ? 'none' : 'flex';
+      }
       if (priceEl) {
         if (prod.priceSummary) {
           priceEl.innerHTML = `<span class="price-highlight-box">💰 ${prod.priceSummary}</span>`;
         } else {
-          priceEl.textContent = '洽詢互盛業務專員享專案優惠價';
+          priceEl.textContent = '洽詢互盛業務專員';
         }
       }
 
@@ -5293,15 +5329,13 @@
             const cCard = document.createElement('div');
             cCard.className = 'contract-detail-card';
             cCard.innerHTML = `
-              <div class="cdc-header">
-                <div class="cdc-tag-group">
-                  <span class="cdc-contract">🏛️ ${ci.contract}</span>
-                  <span class="cdc-item-badge">📌 ${ci.group} · ${ci.item}</span>
-                  ${ci.greenMark ? `<span class="cdc-greenmark">🌿 ${ci.greenMark}</span>` : ''}
-                </div>
+              <div class="cdc-tag-group">
+                <span class="cdc-contract">🏛️ ${ci.contract}</span>
+                <span class="cdc-item-badge">📌 ${ci.group} · ${ci.item}</span>
+                ${ci.greenMark ? `<span class="cdc-greenmark">🌿 ${ci.greenMark}</span>` : ''}
               </div>
               <div class="cdc-price-row">
-                <span>💵 ${ci.price}</span>
+                <span>💰 ${ci.price}</span>
               </div>
             `;
             listWrap.appendChild(cCard);
@@ -5333,9 +5367,9 @@
         if (chassisNote) {
           chassisNote.style.display = 'block';
           if (prod.seriesGroup === 'ricoh_im_c') {
-            chassisNote.innerHTML = '📷 <strong>同外觀平台說明</strong>：互盛 IM C 全家族共用日本原廠同款旗艦機身，外觀與觸控面板一致；差異在於內部引擎速度、耐印量與適用臺銀契約項次。';
+            chassisNote.innerHTML = '📷 <strong>同外觀機身</strong>：同系列共用日本原廠旗艦外觀，引擎速度與契約項次不同。';
           } else if (prod.seriesGroup === 'ricoh_im_mono') {
-            chassisNote.innerHTML = '📷 <strong>同外觀平台說明</strong>：互盛 IM 黑白系列共用鋼製結構旗艦機身，外觀一致；差異在於黑白極速與大量公文印發耐印量。';
+            chassisNote.innerHTML = '📷 <strong>同外觀機身</strong>：同系列共用鋼製旗艦機身，黑白極速與耐印量不同。';
           }
         }
 
@@ -5367,11 +5401,8 @@
       const chipsBox = document.getElementById('productModalChips');
       chipsBox.innerHTML = '';
       const tags = [
-        prod.speed.split(' ')[0] + ' ' + prod.speed.split(' ')[1],
-        prod.family.includes('彩色') || prod.family.includes('微噴') ? '🌈 彩色雙面' : '⚡ 黑白高速',
-        '📜 臺銀共契標配',
-        '🛡️ 互盛智能客服支援',
-        prod.greenMark ? `🌱 環標證號 ${prod.greenMark}` : '🌱 環保標章認證'
+        '⚡ ' + prod.speed.split(' ')[0],
+        prod.family.includes('彩色') || prod.family.includes('微噴') ? '🌈 雙面全彩' : '⚡ 黑白高速'
       ];
       tags.forEach(t => {
         const chip = el('span', 'product-chip');

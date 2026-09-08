@@ -3519,7 +3519,99 @@
       background: #f8fafc;
     }
 
-  </style>
+  
+    /* ---------------- 分區智慧互動流（熱區感知） ---------------- */
+    .view-mode-single {
+      position: relative;
+    }
+    .view-mode-single[data-hotspot="center"] {
+      cursor: grab;
+    }
+    .view-mode-single[data-hotspot="center"]:active,
+    .view-mode-single.is-dragging {
+      cursor: grabbing !important;
+    }
+    .view-mode-single[data-hotspot="prev"]:not(.is-dragging) {
+      cursor: pointer;
+    }
+    .view-mode-single[data-hotspot="next"]:not(.is-dragging) {
+      cursor: pointer;
+    }
+
+    /* 左右熱區感知導引光暈與指示標籤 */
+    .hotspot-zone-cue {
+      position: fixed;
+      top: 56px;
+      bottom: 56px;
+      width: clamp(120px, 16vw, 280px);
+      pointer-events: none;
+      z-index: 85;
+      opacity: 0;
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+    }
+    .hotspot-zone-cue.left {
+      left: 0;
+      background: linear-gradient(90deg, rgba(0, 91, 172, 0.12) 0%, rgba(0, 91, 172, 0.03) 60%, transparent 100%);
+      justify-content: flex-start;
+      padding-left: 18px;
+    }
+    .hotspot-zone-cue.right {
+      right: 0;
+      background: linear-gradient(270deg, rgba(0, 91, 172, 0.12) 0%, rgba(0, 91, 172, 0.03) 60%, transparent 100%);
+      justify-content: flex-end;
+      padding-right: 18px;
+    }
+    .hotspot-zone-cue .hotspot-cue-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      background: rgba(10, 31, 61, 0.90);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transform: translateX(-10px);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .hotspot-zone-cue.right .hotspot-cue-badge {
+      transform: translateX(10px);
+    }
+    .view-mode-single[data-hotspot="prev"]:not(.is-dragging) .hotspot-zone-cue.left {
+      opacity: 1;
+    }
+    .view-mode-single[data-hotspot="prev"]:not(.is-dragging) .hotspot-zone-cue.left .hotspot-cue-badge {
+      transform: translateX(0);
+    }
+    .view-mode-single[data-hotspot="next"]:not(.is-dragging) .hotspot-zone-cue.right {
+      opacity: 1;
+    }
+    .view-mode-single[data-hotspot="next"]:not(.is-dragging) .hotspot-zone-cue.right .hotspot-cue-badge {
+      transform: translateX(0);
+    }
+
+    /* 側邊翻頁按鈕在熱區感知時的聯動效果 */
+    .single-side-btn.hotspot-highlight {
+      background: #005bac !important;
+      color: #ffffff !important;
+      transform: translateY(-50%) scale(1.12) !important;
+      box-shadow: 0 12px 32px rgba(0, 91, 172, 0.45) !important;
+      border-color: #38bdf8 !important;
+    }
+
+    @media (max-width: 768px) {
+      .hotspot-zone-cue { display: none !important; }
+    }
+
+</style>
 </head>
 <body>
 
@@ -4159,7 +4251,8 @@
         });
       }
     }
-let singlePan = {
+/* ---------------- 分區智慧互動流（熱區感知）互動邏輯 ---------------- */
+    let singlePan = {
       active: false,
       startX: 0,
       startY: 0,
@@ -4168,10 +4261,68 @@ let singlePan = {
       hasMoved: false
     };
 
+    function getSingleHotspot(clientX) {
+      if (window.innerWidth <= 768) return 'center';
+      const edgeW = Math.max(120, Math.min(280, window.innerWidth * 0.16));
+      if (clientX < edgeW) return 'prev';
+      if (clientX > window.innerWidth - edgeW) return 'next';
+      return 'center';
+    }
+
+    function updateHotspotPerception(clientX) {
+      const prevSideBtn = document.getElementById('singleSidePrevBtn');
+      const nextSideBtn = document.getElementById('singleSideNextBtn');
+      if (!viewModeSingle) return;
+
+      if (singlePan.active) {
+        viewModeSingle.dataset.hotspot = 'dragging';
+        if (prevSideBtn) prevSideBtn.classList.remove('hotspot-highlight');
+        if (nextSideBtn) nextSideBtn.classList.remove('hotspot-highlight');
+        return;
+      }
+
+      const spot = getSingleHotspot(clientX);
+      viewModeSingle.dataset.hotspot = spot;
+
+      if (prevSideBtn) {
+        prevSideBtn.classList.toggle('hotspot-highlight', spot === 'prev' && singlePageIdx > 1);
+      }
+      if (nextSideBtn) {
+        nextSideBtn.classList.toggle('hotspot-highlight', spot === 'next' && singlePageIdx < TOTAL_PAGES);
+      }
+    }
+
+    viewModeSingle.addEventListener('pointermove', e => {
+      if (singlePan.active) {
+        const dx = e.clientX - singlePan.startX;
+        const dy = e.clientY - singlePan.startY;
+
+        if (!singlePan.hasMoved && Math.hypot(dx, dy) > 5) {
+          singlePan.hasMoved = true;
+          updateHotspotPerception(e.clientX);
+        }
+
+        if (singlePan.hasMoved) {
+          viewModeSingle.scrollLeft = singlePan.scrollLeft - dx;
+          viewModeSingle.scrollTop = singlePan.scrollTop - dy;
+        }
+      } else {
+        updateHotspotPerception(e.clientX);
+      }
+    });
+
+    viewModeSingle.addEventListener('pointerleave', () => {
+      viewModeSingle.dataset.hotspot = 'center';
+      const prevSideBtn = document.getElementById('singleSidePrevBtn');
+      const nextSideBtn = document.getElementById('singleSideNextBtn');
+      if (prevSideBtn) prevSideBtn.classList.remove('hotspot-highlight');
+      if (nextSideBtn) nextSideBtn.classList.remove('hotspot-highlight');
+    });
+
     viewModeSingle.addEventListener('pointerdown', e => {
-      // 僅限滑鼠左鍵 (button === 0) 或觸控，排除按鈕控制區
+      // 僅響應滑鼠左鍵
       if (e.button !== 0) return;
-      if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn') || e.target.closest('.mobile-single-tip')) return;
+      if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn')) return;
 
       singlePan.active = true;
       singlePan.hasMoved = false;
@@ -4182,22 +4333,7 @@ let singlePan = {
       singlePan.scrollTop = viewModeSingle.scrollTop;
 
       viewModeSingle.classList.add('is-dragging');
-      viewModeSingle.setPointerCapture(e.pointerId);
-    });
-
-    viewModeSingle.addEventListener('pointermove', e => {
-      if (!singlePan.active) return;
-      const dx = e.clientX - singlePan.startX;
-      const dy = e.clientY - singlePan.startY;
-
-      if (!singlePan.hasMoved && Math.hypot(dx, dy) > 5) {
-        singlePan.hasMoved = true;
-      }
-
-      if (singlePan.hasMoved) {
-        viewModeSingle.scrollLeft = singlePan.scrollLeft - dx;
-        viewModeSingle.scrollTop = singlePan.scrollTop - dy;
-      }
+      try { viewModeSingle.setPointerCapture(e.pointerId); } catch(err) {}
     });
 
     const finishSinglePan = e => {
@@ -4213,7 +4349,7 @@ let singlePan = {
         }
       } catch(err) {}
 
-      // 若滑鼠有產生拖曳位移，攔截後續點擊，避免誤觸放大
+      // 如果有發生顯著拖曳，阻擋後續 click 事件，不觸發點擊操作
       if (wasMoved) {
         const blockClick = ev => {
           ev.stopPropagation();
@@ -4221,14 +4357,34 @@ let singlePan = {
           window.removeEventListener('click', blockClick, true);
         };
         window.addEventListener('click', blockClick, true);
+        updateHotspotPerception(e.clientX);
         return;
       }
 
-      // 純點擊（無位移且點擊在紙張範圍內）：左鍵每按一下 放大一級
+      // 未拖曳的短按點擊 (Click)：依所在分區智慧執行功能
       if (!wasMoved && elapsed < 400) {
         if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn')) return;
-        stepSingleZoomLevel(e.clientX, e.clientY);
+
+        const spot = getSingleHotspot(e.clientX);
+        if (spot === 'prev') {
+          if (singlePageIdx > 1) {
+            setSinglePage(singlePageIdx - 1);
+          } else {
+            showToast('已是第一頁 (封面)');
+          }
+        } else if (spot === 'next') {
+          if (singlePageIdx < TOTAL_PAGES) {
+            setSinglePage(singlePageIdx + 1);
+          } else {
+            showToast('已是最後一頁 (服務據點)');
+          }
+        } else {
+          // 中央工作區：以滑鼠游標所在處為中心循級放大
+          stepSingleZoomLevel(e.clientX, e.clientY);
+        }
       }
+
+      updateHotspotPerception(e.clientX);
     };
 
     viewModeSingle.addEventListener('pointerup', finishSinglePan);

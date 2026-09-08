@@ -1133,7 +1133,7 @@
       -webkit-backdrop-filter: blur(12px);
       color: #fff;
       display: grid;
-      grid-template-columns: 240px 290px 1fr 260px;
+      grid-template-columns: 210px auto 1fr 240px;
       align-items: center;
       padding: 0 16px;
       gap: 12px;
@@ -1173,30 +1173,49 @@
 
     /* Col 2: Category Buttons Container - Strictly Fixed 220px (位置絕不跑位) */
     
-    /* ---------------- Category Menu Selector (下方類別選單) ---------------- */
+        /* ---------------- Category Menu Selector (快速切換類別選單) ---------------- */
     .category-menu-wrap {
       display: flex;
       align-items: center;
-      gap: 5px;
-      width: 290px;
+      gap: 6px;
       flex-shrink: 0;
+    }
+    .cat-menu-quick-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, rgba(0, 91, 172, 0.65) 0%, rgba(56, 189, 248, 0.3) 100%);
+      border: 1.2px solid rgba(56, 189, 248, 0.65);
+      border-radius: 6px;
+      padding: 0 8px;
+      height: 34px;
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .cat-quick-icon {
+      font-size: 13px;
     }
     .category-select-box {
       position: relative;
-      flex: 1;
+      width: 250px;
       display: flex;
       align-items: center;
     }
     .category-select {
       width: 100%;
-      height: 32px;
-      background: rgba(16, 42, 84, 0.95);
-      border: 1px solid rgba(56, 189, 248, 0.45);
-      border-radius: 6px;
-      color: #38bdf8;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 0 26px 0 8px;
+      height: 34px;
+      background: linear-gradient(135deg, rgba(16, 42, 84, 0.98), rgba(0, 91, 172, 0.5));
+      border: 1.5px solid rgba(56, 189, 248, 0.65);
+      border-radius: 7px;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 0 62px 0 10px;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
@@ -1205,58 +1224,67 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     .category-select:hover {
-      background: rgba(0, 91, 172, 0.4);
+      background: rgba(0, 91, 172, 0.7);
       border-color: #38bdf8;
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.55);
     }
     .category-select:focus {
       border-color: #38bdf8;
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5);
     }
     .category-select option {
       background: #0a1f3d;
       color: #f8fafc;
-      padding: 8px;
+      padding: 10px 8px;
       font-size: 13px;
+      font-weight: 600;
     }
-    .category-select-arrow {
+    .category-select-badge {
       position: absolute;
-      right: 8px;
+      right: 6px;
       pointer-events: none;
-      width: 14px;
-      height: 14px;
-      stroke: #38bdf8;
-      stroke-width: 2.2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .category-step-btn {
-      width: 28px;
-      height: 32px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(56, 189, 248, 0.22);
+      border: 1px solid rgba(56, 189, 248, 0.45);
       color: #38bdf8;
       font-size: 11px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+    .category-step-btn {
+      width: 32px;
+      height: 34px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 6px;
+      color: #38bdf8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      flex-shrink: 0;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
     .category-step-btn:hover:not(:disabled) {
       background: #005bac;
-      color: #ffffff;
+      color: #fff;
       border-color: #38bdf8;
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(0, 91, 172, 0.4);
     }
     .category-step-btn:disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     /* Single Zoom Pill - Clean & Elegant Floating Controller (不遮擋、不重疊) */
@@ -4048,10 +4076,6 @@
 
       <!-- 目錄、下載型錄、複製連結與操作說明工具組 -->
       <div class="toc-share-group">
-        <button class="nav-btn" id="tocBtn" title="型錄章節索引">
-          <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          <span>目錄</span>
-        </button>
         <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="nav-btn catalog-download-link" id="downloadCatalogBtn" title="下載整本 57 頁完整型錄 (PDF 格式 · 6.7MB)">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span class="download-btn-text">
@@ -4233,26 +4257,30 @@
     </div>
 
     <div class="footer-row-controls">
-      <!-- Col 2: Category Jump Buttons (嚴格固定 220px，位置 100% 鎖死) -->
+            <!-- Col 2: Category Jump Buttons (快速切換契約類別選單) -->
       <div class="category-menu-wrap" id="categoryMenuWrap">
-        <button class="category-step-btn" id="prevCategoryBtn" title="跳至上一類別" disabled>⏮</button>
+        <div class="cat-menu-quick-label" title="快速切換合約類別選單">
+          <span class="cat-quick-icon">⚡</span>
+          <span class="cat-quick-text">快速切換</span>
+        </div>
+        <button class="category-step-btn" id="prevCategoryBtn" title="跳至上一契約類別 (⏮)" disabled>⏮</button>
         <div class="category-select-box">
-          <select class="category-select" id="categorySelect" aria-label="契約類別選單">
+          <select class="category-select" id="categorySelect" aria-label="契約類別快速切換選單">
             <option value="1">📖 封面 (第 1 頁)</option>
-            <option value="2">📑 目錄與簡介 (第 2 頁)</option>
-            <option value="4">🖨️ 傳真機及影印機 · LP5-114036 (第 4 頁)</option>
-            <option value="6">📋 影印機租賃 · LP5-114034 (第 6 頁)</option>
-            <option value="10">♻️ 二手影印機租賃 · LP5-114035 (第 10 頁)</option>
-            <option value="16">💻 電腦週邊設備用品 · LP5-114021 (第 16 頁)</option>
-            <option value="22">🖨️ 傳真機及影印機耗材 · LP5-115006 (第 22 頁)</option>
-            <option value="24">📄 辦公用紙 · LP5-115009 (第 24 頁)</option>
-            <option value="26">🎨 印刷機原廠油墨版紙 · LP5-115008 (第 26 頁)</option>
-            <option value="28">🖨️ 印表機原廠耗材 · LP5-114051 (第 28 頁)</option>
+            <option value="2">📑 目錄快速導覽 (第 2 頁)</option>
+            <option value="4">🖨️ 黑白影印機 · LP5-114036 (第 4 頁)</option>
+            <option value="6">🖨️ 彩色影印機 · LP5-114034 (第 6 頁)</option>
+            <option value="10">🖨️ 二手影印機 · LP5-114035 (第 10 頁)</option>
+            <option value="16">🖨️ 數位印表機 · LP5-114021 (第 16 頁)</option>
+            <option value="22">📦 傳真及影印機耗材 · LP5-115006 (第 22 頁)</option>
+            <option value="24">📦 印表機耗材 · LP5-115009 (第 24 頁)</option>
+            <option value="26">📦 數位影印機耗材 · LP5-115008 (第 26 頁)</option>
+            <option value="28">📠 傳真機 · LP5-114051 (第 28 頁)</option>
             <option value="56">🏢 互盛全台服務據點 (第 56 頁)</option>
           </select>
-          <svg class="category-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="category-select-badge">選單 ▾</div>
         </div>
-        <button class="category-step-btn" id="nextCategoryBtn" title="跳至下一類別">⏭</button>
+        <button class="category-step-btn" id="nextCategoryBtn" title="跳至下一契約類別 (⏭)">⏭</button>
       </div>
 
       <!-- Col 3: Flexible Scrubber & Readout -->

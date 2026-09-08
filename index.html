@@ -1133,7 +1133,7 @@
       -webkit-backdrop-filter: blur(12px);
       color: #fff;
       display: grid;
-      grid-template-columns: 280px 220px 1fr 280px;
+      grid-template-columns: 240px 290px 1fr 260px;
       align-items: center;
       padding: 0 16px;
       gap: 12px;
@@ -1172,7 +1172,132 @@
     }
 
     /* Col 2: Category Buttons Container - Strictly Fixed 220px (位置絕不跑位) */
-    .category-group {
+    
+    /* ---------------- Category Menu Selector (下方類別選單) ---------------- */
+    .category-menu-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 290px;
+      flex-shrink: 0;
+    }
+    .category-select-box {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .category-select {
+      width: 100%;
+      height: 32px;
+      background: rgba(16, 42, 84, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 6px;
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 26px 0 8px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: all 0.2s ease;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .category-select:hover {
+      background: rgba(0, 91, 172, 0.4);
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+    }
+    .category-select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
+    }
+    .category-select option {
+      background: #0a1f3d;
+      color: #f8fafc;
+      padding: 8px;
+      font-size: 13px;
+    }
+    .category-select-arrow {
+      position: absolute;
+      right: 8px;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+      stroke: #38bdf8;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .category-step-btn {
+      width: 28px;
+      height: 32px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      color: #38bdf8;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .category-step-btn:hover:not(:disabled) {
+      background: #005bac;
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+    .category-step-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Single Zoom Pill - Clean & Elegant Floating Controller (不遮擋、不重疊) */
+    .single-zoom-pill {
+      position: fixed;
+      top: 64px;
+      right: 20px;
+      background: rgba(10, 31, 61, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 24px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 95;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    }
+    .view-mode-single {
+      padding: 24px 0 80px 0 !important;
+    }
+
+    
+      .category-menu-wrap {
+        width: 100%;
+        max-width: 100%;
+        gap: 4px;
+        display: flex;
+      }
+      .category-select {
+        font-size: 11px;
+        height: 30px;
+        padding: 0 22px 0 6px;
+      }
+      .category-step-btn {
+        height: 30px;
+        width: 26px;
+      }
+
+      .category-group {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1907,7 +2032,115 @@
       .scrubber-wrap .page-readout {
         display: none;
       }
-      .category-group {
+      
+    /* ---------------- Category Menu Selector (下方類別選單) ---------------- */
+    .category-menu-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 290px;
+      flex-shrink: 0;
+    }
+    .category-select-box {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .category-select {
+      width: 100%;
+      height: 32px;
+      background: rgba(16, 42, 84, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 6px;
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 26px 0 8px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: all 0.2s ease;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .category-select:hover {
+      background: rgba(0, 91, 172, 0.4);
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+    }
+    .category-select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
+    }
+    .category-select option {
+      background: #0a1f3d;
+      color: #f8fafc;
+      padding: 8px;
+      font-size: 13px;
+    }
+    .category-select-arrow {
+      position: absolute;
+      right: 8px;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+      stroke: #38bdf8;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .category-step-btn {
+      width: 28px;
+      height: 32px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      color: #38bdf8;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .category-step-btn:hover:not(:disabled) {
+      background: #005bac;
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+    .category-step-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Single Zoom Pill - Clean & Elegant Floating Controller (不遮擋、不重疊) */
+    .single-zoom-pill {
+      position: fixed;
+      top: 64px;
+      right: 20px;
+      background: rgba(10, 31, 61, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 24px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 95;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+    }
+    .view-mode-single {
+      padding: 24px 0 80px 0 !important;
+    }
+
+    .category-group {
         width: auto;
         gap: 4px;
         display: flex;
@@ -3381,19 +3614,6 @@
   <!-- Share Toast Alert -->
   <div class="share-toast" id="shareToast">🔗 已複製本頁分享連結！</div>
 
-  <!-- 醒目常駐操作說明列 (Quick Guide Bar) -->
-  <div class="quick-guide-bar" id="guideBar">
-    <div class="guide-item">🔍 <strong>滑鼠左鍵點擊</strong>：逐級放大檢視</div>
-    <div class="guide-sep"></div>
-    <div class="guide-item">🖱️ <strong>推動滑鼠滾輪</strong>：頁面上下瀏覽</div>
-    <div class="guide-sep"></div>
-    <div class="guide-item">🖐️ <strong>按住左鍵拖曳</strong>：平移畫面</div>
-    <div class="guide-sep"></div>
-    <div class="guide-item">◀▶ <strong>翻頁按鈕 / 鍵盤左右鍵</strong>：翻頁</div>
-    <div class="guide-sep"></div>
-    <div class="guide-item">⌨️ <strong>Esc / 雙擊</strong>：還原預設大小</div>
-  </div>
-
   <!-- Main Viewport -->
   <main class="main-viewport">
 
@@ -3442,12 +3662,6 @@
         <button class="pill-btn pill-text" id="btnFitPage" title="適合全頁 (整頁不需捲動)">整頁</button>
         <button class="pill-btn pill-text" id="btnZoomHuge" title="超大巨幅 (250% 2450px)">巨幅 2.5x</button>
         <button class="pill-btn pill-text" id="btnZoomMax" title="最高 5 倍放大 (500% 4900px 極限顯微)">5x 極限</button>
-        <span class="pill-sep"></span>
-        <button class="pill-btn pill-text active" id="btnWheelMode" title="切換滑鼠滾輪行為：縮放 或 捲動 (亦可直接按住 Ctrl 滾動縮放)">🖱️ 滾輪縮放</button>
-      </div>
-
-      <div class="mobile-single-tip" id="mobileSingleTip">
-        💡 左右滑動翻頁 · 雙擊放大
       </div>
 
       <div class="single-page-sheet" id="singlePageSheet">
@@ -3485,13 +3699,25 @@
 
     <div class="footer-row-controls">
       <!-- Col 2: Category Jump Buttons (嚴格固定 220px，位置 100% 鎖死) -->
-      <div class="category-group">
-        <button class="category-btn" id="prevCategoryBtn" title="切換至上個類別" disabled>
-          <span>⏮ 上一類別</span>
-        </button>
-        <button class="category-btn" id="nextCategoryBtn" title="切換至下個類別">
-          <span>下一類別 ⏭</span>
-        </button>
+      <div class="category-menu-wrap" id="categoryMenuWrap">
+        <button class="category-step-btn" id="prevCategoryBtn" title="跳至上一類別" disabled>⏮</button>
+        <div class="category-select-box">
+          <select class="category-select" id="categorySelect" aria-label="契約類別選單">
+            <option value="1">📖 封面 (第 1 頁)</option>
+            <option value="2">📑 目錄與簡介 (第 2 頁)</option>
+            <option value="4">🖨️ 傳真機及影印機 · LP5-114036 (第 4 頁)</option>
+            <option value="6">📋 影印機租賃 · LP5-114034 (第 6 頁)</option>
+            <option value="10">♻️ 二手影印機租賃 · LP5-114035 (第 10 頁)</option>
+            <option value="16">💻 電腦週邊設備用品 · LP5-114021 (第 16 頁)</option>
+            <option value="22">🖨️ 傳真機及影印機耗材 · LP5-115006 (第 22 頁)</option>
+            <option value="24">📄 辦公用紙 · LP5-115009 (第 24 頁)</option>
+            <option value="26">🎨 印刷機原廠油墨版紙 · LP5-115008 (第 26 頁)</option>
+            <option value="28">🖨️ 印表機原廠耗材 · LP5-114051 (第 28 頁)</option>
+            <option value="56">🏢 互盛全台服務據點 (第 56 頁)</option>
+          </select>
+          <svg class="category-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <button class="category-step-btn" id="nextCategoryBtn" title="跳至下一類別">⏭</button>
       </div>
 
       <!-- Col 3: Flexible Scrubber & Readout -->
@@ -3771,8 +3997,6 @@
     const btnFitPage = document.getElementById('btnFitPage');
     const btnZoomHuge = document.getElementById('btnZoomHuge');
     const btnZoomMax = document.getElementById('btnZoomMax');
-    const btnWheelMode = document.getElementById('btnWheelMode');
-    let wheelMode = 'zoom'; // 預設直接推動滾輪放大縮小！
 
     let reRasterTimer = null;
     function forceSingleImageReRaster() {
@@ -3863,12 +4087,6 @@
       applySingleWidth(fitW, '整頁');
     };
 
-    btnWheelMode.onclick = () => {
-      wheelMode = wheelMode === 'zoom' ? 'scroll' : 'zoom';
-      btnWheelMode.classList.toggle('active', wheelMode === 'zoom');
-      btnWheelMode.innerHTML = wheelMode === 'zoom' ? '🖱️ 滾輪縮放' : '🖱️ 滾輪捲動';
-      btnWheelMode.title = wheelMode === 'zoom' ? '當前：直接推動滾輪即可縮放 (點擊切換為捲動)' : '當前：滾輪捲動頁面 (點擊切換為縮放，亦可隨時按住 Ctrl 縮放)';
-    };
 
     // 單頁模式滑鼠滾輪：依指示改為「頁面上下瀏覽」
     viewModeSingle.addEventListener('wheel', e => {
@@ -4068,27 +4286,19 @@ let singlePan = {
       return { prevCat, nextCat };
     }
 
-    prevCategoryBtn.onclick = () => {
-      const { prevCat } = getAdjacentCategories();
-      if (prevCat) {
-        if (isSingleMode) {
-          setSinglePage(prevCat.page);
-        } else {
-          goTo(prevCat.spread);
-        }
-      }
-    };
+    if (prevCategoryBtn) {
+      prevCategoryBtn.onclick = () => {
+        const { prevCat } = getAdjacentCategories();
+        if (prevCat) setSinglePage(prevCat.page);
+      };
+    }
 
-    nextCategoryBtn.onclick = () => {
-      const { nextCat } = getAdjacentCategories();
-      if (nextCat) {
-        if (isSingleMode) {
-          setSinglePage(nextCat.page);
-        } else {
-          goTo(nextCat.spread);
-        }
-      }
-    };
+    if (nextCategoryBtn) {
+      nextCategoryBtn.onclick = () => {
+        const { nextCat } = getAdjacentCategories();
+        if (nextCat) setSinglePage(nextCat.page);
+      };
+    }
 
     /* ---------------- Controls & Meta ---------------- */
     const contractBadge = document.getElementById('contractBadge');
@@ -4270,15 +4480,24 @@ let singlePan = {
       if (prevPageBtn) prevPageBtn.disabled = p <= 1;
       if (nextPageBtn) nextPageBtn.disabled = p >= TOTAL_PAGES;
 
-      const { prevCat, nextCat } = getAdjacentCategories();
-      if (prevCategoryBtn) {
-        prevCategoryBtn.disabled = !prevCat;
-        if (prevCat) prevCategoryBtn.title = '跳至上個類別：' + (prevCat ? prevCat.title : '');
+      // 同步下方類別選單之選中項
+      const catSelect = document.getElementById('categorySelect');
+      if (catSelect) {
+        let currentCatPage = 1;
+        for (let i = 0; i < CATEGORIES.length; i++) {
+          if (p >= CATEGORIES[i].page) {
+            currentCatPage = CATEGORIES[i].page;
+          } else {
+            break;
+          }
+        }
+        catSelect.value = String(currentCatPage);
       }
-      if (nextCategoryBtn) {
-        nextCategoryBtn.disabled = !nextCat;
-        if (nextCat) nextCategoryBtn.title = '跳至下個類別：' + (nextCat ? nextCat.title : '');
-      }
+
+      const prevCatBtn = document.getElementById('prevCategoryBtn');
+      const nextCatBtn = document.getElementById('nextCategoryBtn');
+      if (prevCatBtn) prevCatBtn.disabled = (p <= 1);
+      if (nextCatBtn) nextCatBtn.disabled = (p >= 56);
 
       document.querySelectorAll('.drawer-item').forEach((item, i) => {
         item.classList.toggle('active', i === spreadIdx);
@@ -4441,6 +4660,21 @@ let singlePan = {
     }
 
     /* ---------------- Preload & Init (支援手機自動單頁 + URL 路由直連) ---------------- */
+    
+    // 下方類別選單切換與步進邏輯
+    const catSelectEl = document.getElementById('categorySelect');
+    if (catSelectEl) {
+      catSelectEl.addEventListener('change', e => {
+        const targetPage = parseInt(e.target.value, 10);
+        if (!isNaN(targetPage)) {
+          setSinglePage(targetPage);
+        }
+      });
+    }
+
+
+
+
     async function init() {
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
@@ -5268,6 +5502,7 @@ let singlePan = {
       setSinglePage(pageNum);
     }
 
+    window.switchViewMode = switchViewMode;
     function switchViewMode(mode) {
       if (mode !== 'dm' && mode !== 'single') mode = 'single';
       currentViewMode = mode;

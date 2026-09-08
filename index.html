@@ -3611,6 +3611,207 @@
       .hotspot-zone-cue { display: none !important; }
     }
 
+
+    /* ---------------- 左側空白區懸浮操作說明卡片 ---------------- */
+    html.mode-dm .desktop-guide-card {
+      display: none !important;
+    }
+    html.mode-single .desktop-guide-card {
+      display: flex;
+    }
+
+    .desktop-guide-card {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 205px;
+      background: rgba(10, 31, 61, 0.90);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(56, 189, 248, 0.32);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+      border-radius: 14px;
+      padding: 12px 14px;
+      z-index: 92;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .desktop-guide-card.collapsed {
+      left: 12px;
+      width: 42px;
+      height: auto;
+      padding: 12px 8px;
+      cursor: pointer;
+      background: rgba(10, 31, 61, 0.94);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+    .desktop-guide-card.collapsed:hover {
+      background: #005bac;
+      transform: translateY(-50%) scale(1.05);
+      box-shadow: 0 12px 30px rgba(0, 91, 172, 0.5);
+    }
+    .desktop-guide-card.collapsed .guide-card-body,
+    .desktop-guide-card.collapsed .guide-card-header span,
+    .desktop-guide-card.collapsed .guide-card-toggle {
+      display: none !important;
+    }
+    .desktop-guide-card.collapsed .guide-title-icon {
+      display: block !important;
+      font-size: 18px;
+      margin: 0 auto;
+    }
+    .desktop-guide-card.collapsed .guide-collapsed-label {
+      display: block !important;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-top: 6px;
+    }
+
+    .guide-collapsed-label {
+      display: none;
+    }
+
+    .guide-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .guide-card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #38bdf8;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .guide-title-icon {
+      font-size: 14px;
+    }
+    .guide-card-toggle {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .guide-card-toggle:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .guide-card-toggle svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .guide-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .guide-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      transition: background 0.15s;
+    }
+    .guide-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .guide-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .guide-badge.prev {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .guide-badge.next {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .guide-badge.center {
+      background: rgba(168, 85, 247, 0.18);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+    .guide-badge.drag {
+      background: rgba(34, 197, 94, 0.18);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .guide-badge.wheel {
+      background: rgba(251, 191, 36, 0.18);
+      color: #fcd34d;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+    }
+    .guide-text {
+      color: #e2e8f0;
+      font-size: 11px;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    .guide-text strong {
+      color: #ffffff;
+    }
+    .guide-card-footer {
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      font-size: 10.5px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .guide-tip-kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      font-size: 9.5px;
+      font-family: monospace;
+      background: rgba(255, 255, 255, 0.14);
+      color: #38bdf8;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin-right: 3px;
+    }
+
+    @media (max-width: 1200px) {
+      .desktop-guide-card {
+        display: none !important;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -3738,6 +3939,45 @@
 
     <!-- Mode 2: Single Page Mode (單頁超高清大圖閱讀模式，滾輪放大支援到 5x) -->
     <div class="view-mode-single" id="viewModeSingle">
+    <!-- 左側空白區懸浮操作說明卡片 (使用者指定位置) -->
+    <div class="desktop-guide-card" id="desktopGuideCard">
+      <div class="guide-card-header">
+        <div class="guide-card-title">
+          <span class="guide-title-icon">💡</span>
+          <span>操作說明</span>
+        </div>
+        <button class="guide-card-toggle" id="guideCardToggle" title="收合說明" aria-label="收合說明">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+      <span class="guide-collapsed-label">操作說明</span>
+      <div class="guide-card-body">
+        <div class="guide-item">
+          <div class="guide-badge prev">👈 左側</div>
+          <div class="guide-text"><strong>點擊左側</strong> 翻上一頁</div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-badge next">👉 右側</div>
+          <div class="guide-text"><strong>點擊右側</strong> 翻下一頁</div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-badge center">🔍 中央</div>
+          <div class="guide-text"><strong>點擊中間</strong> 循級放大</div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-badge drag">✋ 拖曳</div>
+          <div class="guide-text"><strong>按住滑動</strong> 平移畫面</div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-badge wheel">📜 滾輪</div>
+          <div class="guide-text"><strong>推動滾輪</strong> 上下瀏覽</div>
+        </div>
+        <div class="guide-card-footer">
+          <span class="guide-tip-kbd">Ctrl + 滾輪</span> 自由無段縮放
+        </div>
+      </div>
+    </div>
+
       <!-- On-page floating side buttons (做在頁面上) -->
       <button class="single-side-btn left" id="singleSidePrevBtn" title="上一頁 (←)">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -4322,7 +4562,7 @@
     viewModeSingle.addEventListener('pointerdown', e => {
       // 僅響應滑鼠左鍵
       if (e.button !== 0) return;
-      if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn')) return;
+      if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn') || e.target.closest('#desktopGuideCard')) return;
 
       singlePan.active = true;
       singlePan.hasMoved = false;
@@ -4363,7 +4603,7 @@
 
       // 未拖曳的短按點擊 (Click)：依所在分區智慧執行功能
       if (!wasMoved && elapsed < 400) {
-        if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn')) return;
+        if (e.target.closest('#singleZoomPill') || e.target.closest('.single-side-btn') || e.target.closest('#desktopGuideCard')) return;
 
         const spot = getSingleHotspot(e.clientX);
         if (spot === 'prev') {
@@ -5656,6 +5896,30 @@
     function goToOfficialContractPage(pageNum) {
       switchViewMode('single');
       setSinglePage(pageNum);
+    }
+
+        /* 左側操作說明卡片收合與展開邏輯 */
+    const desktopGuideCard = document.getElementById('desktopGuideCard');
+    const guideCardToggle = document.getElementById('guideCardToggle');
+    if (desktopGuideCard && guideCardToggle) {
+      try {
+        if (localStorage.getItem('huxen_guide_collapsed') === '1') {
+          desktopGuideCard.classList.add('collapsed');
+        }
+      } catch(e) {}
+
+      guideCardToggle.addEventListener('click', e => {
+        e.stopPropagation();
+        desktopGuideCard.classList.add('collapsed');
+        try { localStorage.setItem('huxen_guide_collapsed', '1'); } catch(err) {}
+      });
+
+      desktopGuideCard.addEventListener('click', e => {
+        if (desktopGuideCard.classList.contains('collapsed')) {
+          desktopGuideCard.classList.remove('collapsed');
+          try { localStorage.removeItem('huxen_guide_collapsed'); } catch(err) {}
+        }
+      });
     }
 
     window.switchViewMode = switchViewMode;

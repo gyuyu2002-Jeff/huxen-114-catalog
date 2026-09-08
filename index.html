@@ -3946,6 +3946,51 @@
       box-shadow: 0 4px 14px rgba(0, 91, 172, 0.5);
     }
 
+    
+    /* 右側下一頁感應卡片收合狀態 (智慧避讓) */
+    .desktop-zone-card.right.collapsed {
+      right: 12px;
+      width: 44px;
+      height: auto;
+      padding: 16px 8px;
+      cursor: pointer;
+      background: rgba(10, 31, 61, 0.94);
+      border-color: rgba(56, 189, 248, 0.45);
+      transform: translateY(-50%);
+    }
+    .desktop-zone-card.right.collapsed:hover {
+      background: #005bac;
+      transform: translateY(-50%) scale(1.06);
+      box-shadow: 0 14px 32px rgba(0, 91, 172, 0.55);
+    }
+    .desktop-zone-card.right.collapsed .zone-card-desc,
+    .desktop-zone-card.right.collapsed .zone-card-btn-hint,
+    .desktop-zone-card.right.collapsed .zone-card-title span:first-child {
+      display: none !important;
+    }
+    .desktop-zone-card.right.collapsed .zone-card-title {
+      border-bottom: none;
+      padding: 0;
+      justify-content: center;
+    }
+    .desktop-zone-card.right.collapsed .zone-card-icon {
+      font-size: 20px;
+      margin: 0 auto;
+    }
+    .desktop-zone-card.right.collapsed .zone-collapsed-label {
+      display: block !important;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin-top: 8px;
+    }
+    .zone-collapsed-label {
+      display: none;
+    }
+
     @media (max-width: 1280px) {
       .desktop-zone-card.right {
         display: none !important;
@@ -4146,6 +4191,7 @@
         <span>切換下一頁感應區</span>
         <span class="zone-card-icon">👉</span>
       </div>
+      <span class="zone-collapsed-label">下一頁</span>
       <div class="zone-card-desc">點擊右側灰色區域任意處<br>即可翻至下一頁</div>
       <div class="zone-card-btn-hint">
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -4521,6 +4567,34 @@
       }, 40);
     }
 
+    
+    /* ---------------- 智慧自動避讓：放大時自動收合左右說明卡片，縮小至預設寬度時自動展開 ---------------- */
+    let userManuallyCollapsedLeft = false;
+
+    function updateCardsAutoCollapse(w) {
+      const leftCard = document.getElementById('desktopGuideCard');
+      const rightCard = document.getElementById('desktopZoneCardRight');
+      if (window.innerWidth <= 1200) return;
+
+      const isZoomed = (w > 1150);
+
+      if (isZoomed) {
+        if (leftCard && !leftCard.classList.contains('collapsed')) {
+          leftCard.classList.add('collapsed', 'is-auto-collapsed');
+        }
+        if (rightCard && !rightCard.classList.contains('collapsed')) {
+          rightCard.classList.add('collapsed', 'is-auto-collapsed');
+        }
+      } else {
+        if (leftCard && leftCard.classList.contains('is-auto-collapsed') && !userManuallyCollapsedLeft) {
+          leftCard.classList.remove('collapsed', 'is-auto-collapsed');
+        }
+        if (rightCard && rightCard.classList.contains('is-auto-collapsed')) {
+          rightCard.classList.remove('collapsed', 'is-auto-collapsed');
+        }
+      }
+    }
+
     function applySingleWidth(w, modeLabel) {
       const minW = window.innerWidth <= 768 ? Math.min(window.innerWidth - 12, 380) : 600;
       singleWidth = Math.max(minW, Math.min(4900, Math.round(w)));
@@ -4532,6 +4606,7 @@
       btnZoomMax.classList.toggle('active', singleWidth >= 4800);
       btnFitPage.classList.toggle('active', modeLabel === '整頁');
       forceSingleImageReRaster();
+      updateCardsAutoCollapse(singleWidth);
     }
 
     function setSinglePage(pageNumber) {
@@ -6067,13 +6142,16 @@
 
       guideCardToggle.addEventListener('click', e => {
         e.stopPropagation();
+        userManuallyCollapsedLeft = true;
         desktopGuideCard.classList.add('collapsed');
+        desktopGuideCard.classList.remove('is-auto-collapsed');
         try { localStorage.setItem('huxen_guide_collapsed', '1'); } catch(err) {}
       });
 
       desktopGuideCard.addEventListener('click', e => {
         if (desktopGuideCard.classList.contains('collapsed')) {
-          desktopGuideCard.classList.remove('collapsed');
+          userManuallyCollapsedLeft = false;
+          desktopGuideCard.classList.remove('collapsed', 'is-auto-collapsed');
           try { localStorage.removeItem('huxen_guide_collapsed'); } catch(err) {}
         }
       });

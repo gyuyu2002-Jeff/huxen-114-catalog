@@ -1905,7 +1905,7 @@
     .mobile-page-readout { display: none; }
 
     @media (max-width: 1080px) {
-      .header-search { display: none; }
+      .header-search { max-width: 200px; }
       .quick-guide-bar { font-size: 11px; padding: 5px 14px; gap: 8px; }
       .footer {
         grid-template-columns: 200px 210px 1fr 200px;
@@ -1914,6 +1914,17 @@
     }
 
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .header {
         padding: 0 10px;
         height: 52px;
@@ -2241,6 +2252,27 @@
     .view-mode-single {
       padding: 24px 0 80px 0 !important;
     }
+
+      .view-mode-single {
+        padding: 8px 8px 72px 8px !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .single-page-sheet {
+        width: var(--single-w, 100%) !important;
+        max-width: 100% !important;
+        margin: 0 auto 20px auto !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+      }
+      .single-page-sheet img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+      }
+    
 
     .category-group {
         width: auto;
@@ -2710,6 +2742,17 @@
     }
 
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .product-modal-body {
         flex-direction: column;
         padding: 16px;
@@ -2907,6 +2950,17 @@
     }
 
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .page-active-products-bar {
         bottom: 96px;
         padding: 5px 12px;
@@ -3090,6 +3144,17 @@
       transform: translate(-50%, 0);
     }
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .header-left {
         gap: 5px;
       }
@@ -3383,6 +3448,17 @@
     }
 
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .view-mode-dm { padding: 14px 10px 80px 10px; }
       .dm-hero-banner { padding: 18px 20px; }
       .dm-hero-title { font-size: 20px; }
@@ -3626,6 +3702,27 @@
     .view-mode-single {
       position: relative;
     }
+
+      .view-mode-single {
+        padding: 8px 8px 72px 8px !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .single-page-sheet {
+        width: var(--single-w, 100%) !important;
+        max-width: 100% !important;
+        margin: 0 auto 20px auto !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+      }
+      .single-page-sheet img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+      }
+    
     .view-mode-single[data-hotspot="center"] {
       cursor: grab;
     }
@@ -3710,6 +3807,17 @@
     }
 
     @media (max-width: 768px) {
+      .mobile-search-btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    
       .hotspot-zone-cue { display: none !important; }
     }
 
@@ -4099,6 +4207,471 @@
       }
     }
 
+
+    /* ==========================================================================
+       MOBILE RWD & TOUCH FLIPPING SYSTEM
+       ========================================================================== */
+    
+    /* Mobile Search Header Button */
+    .mobile-search-btn {
+      display: none;
+      background: rgba(56, 189, 248, 0.18) !important;
+      border: 1px solid rgba(56, 189, 248, 0.45) !important;
+      color: #38bdf8 !important;
+    }
+    .mobile-search-btn:hover, .mobile-search-btn.active {
+      background: rgba(56, 189, 248, 0.35) !important;
+      color: #ffffff !important;
+    }
+
+    /* Mobile Slide-down Search Panel (固定頂端懸浮) */
+    .mobile-search-panel {
+      display: none;
+      position: fixed;
+      top: 52px;
+      left: 0;
+      right: 0;
+      background: rgba(10, 31, 61, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      padding: 10px 14px;
+      animation: mobileSearchSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-search-panel.open {
+      display: block;
+    }
+
+    @keyframes mobileSearchSlideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mobile-search-bar-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 24px;
+      padding: 4px 12px;
+      position: relative;
+    }
+    .mobile-search-bar-inner:focus-within {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+    .mobile-search-icon {
+      width: 16px;
+      height: 16px;
+      color: #38bdf8;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      flex-shrink: 0;
+    }
+    .mobile-search-input {
+      flex: 1;
+      height: 38px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 14.5px;
+      min-width: 0;
+    }
+    .mobile-search-input::placeholder {
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    .mobile-search-clear {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .mobile-search-close {
+      background: transparent;
+      border: none;
+      color: #38bdf8;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 0 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .mobile-search-results {
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-top: 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: none;
+    }
+    .mobile-search-results.open {
+      display: block;
+    }
+
+    /* DM In-Page Search Bar */
+    .dm-search-wrapper {
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .dm-search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 6px 16px;
+      box-shadow: 0 4px 16px rgba(10, 31, 61, 0.06);
+      transition: all 0.2s;
+    }
+    .dm-search-bar:focus-within {
+      border-color: #005bac;
+      box-shadow: 0 0 0 4px rgba(0, 91, 172, 0.15);
+    }
+    .dm-search-icon {
+      width: 18px;
+      height: 18px;
+      color: #005bac;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      flex-shrink: 0;
+    }
+    .dm-search-input {
+      flex: 1;
+      height: 38px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #0f172a;
+      font-size: 14.5px;
+      font-weight: 500;
+    }
+    .dm-search-input::placeholder {
+      color: #94a3b8;
+    }
+    .dm-search-clear {
+      background: #f1f5f9;
+      border: none;
+      color: #64748b;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .dm-search-results {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+      border: 1px solid #cbd5e1;
+      max-height: 380px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .dm-search-results.open {
+      display: block;
+    }
+    .dm-search-results .search-group-title {
+      background: #f8fafc;
+      color: #005bac;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .dm-search-results .search-item {
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+    .dm-search-results .search-item:hover {
+      background: #f0f9ff;
+    }
+    .dm-search-results .search-item-title {
+      color: #0f172a;
+    }
+    .dm-search-results .search-item-snippet {
+      color: #64748b;
+    }
+    .dm-search-results .search-item-price {
+      color: #dc2626;
+      background: #fef2f2;
+    }
+
+    /* Mobile Floating Nav Arrows (手機端兩側半透明翻頁按鈕) */
+    .mobile-float-prev,
+    .mobile-float-next {
+      display: none;
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 48px;
+      background: rgba(10, 31, 61, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 20px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 800;
+      border-radius: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      transition: all 0.2s;
+    }
+    .mobile-float-prev { left: 8px; }
+    .mobile-float-next { right: 8px; }
+    .mobile-float-prev:active, .mobile-float-next:active {
+      transform: translateY(-50%) scale(0.92);
+      background: rgba(0, 91, 172, 0.95);
+    }
+    .mobile-float-prev:disabled, .mobile-float-next:disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Mobile Footer Toolbar (手機端底部固定翻頁與進度控制列) */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(10, 31, 61, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.4);
+      z-index: 850;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      gap: 8px;
+    }
+    .mobile-bottom-bar.active {
+      display: flex;
+    }
+
+    .mobile-btn-nav {
+      height: 40px;
+      padding: 0 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .mobile-btn-nav:active {
+      background: rgba(56, 189, 248, 0.3);
+      transform: scale(0.96);
+    }
+    .mobile-btn-nav:disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .mobile-cat-select {
+      flex: 1;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 6px;
+      outline: none;
+      min-width: 0;
+    }
+    .mobile-cat-select option {
+      background: #0a1f3d;
+      color: #ffffff;
+    }
+    .mobile-page-badge {
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: 0 4px;
+    }
+
+    /* RWD Media Queries */
+    @media (max-width: 1080px) {
+      .header-search { max-width: 200px; }
+      .quick-guide-bar { font-size: 11px; padding: 5px 14px; gap: 8px; }
+      .footer { grid-template-columns: 200px 210px 1fr 200px; }
+      .page-actions .nav-btn span { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 8px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 0 0 auto;
+        min-width: 0;
+      }
+      .logo-icon {
+        font-size: 12px;
+        padding: 2px 5px;
+      }
+      .catalog-title {
+        display: flex;
+        flex-direction: column;
+      }
+      .title-desktop { display: none !important; }
+      .title-mobile {
+        display: inline !important;
+        font-size: 13px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .catalog-sub { display: none !important; }
+      .header-product-btn { display: none !important; }
+
+      /* 手機端模式切換按鈕保留並精簡 */
+      .mode-segmented {
+        display: inline-flex !important;
+        padding: 2px;
+        gap: 2px;
+        height: 32px;
+      }
+      .mode-segmented .seg-btn {
+        padding: 0 7px;
+        font-size: 11.5px;
+        height: 28px;
+        gap: 3px;
+      }
+      .mode-segmented .text-desktop { display: none !important; }
+      .mode-segmented .text-mobile { display: inline !important; }
+
+      .header-search { display: none !important; }
+      .mobile-search-btn { display: inline-flex !important; }
+
+      .header-center {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0;
+        flex: 1;
+        justify-content: flex-end;
+      }
+      .toc-share-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .toc-share-group .nav-btn {
+        height: 32px;
+        padding: 0 7px;
+        font-size: 11.5px;
+        gap: 3px;
+      }
+      .download-btn-badge { display: none; }
+      .text-desktop { display: none !important; }
+      .text-mobile { display: inline !important; }
+
+      .header-actions { display: none; }
+
+      /* 單頁型錄在手機端的排版與翻頁感應 */
+      .view-mode-single {
+        padding-bottom: 64px; /* 保留底部操作列空間 */
+      }
+
+      .view-mode-single {
+        padding: 8px 8px 72px 8px !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .single-page-sheet {
+        width: var(--single-w, 100%) !important;
+        max-width: 100% !important;
+        margin: 0 auto 20px auto !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+      }
+      .single-page-sheet img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+      }
+    
+      .mobile-float-prev,
+      .mobile-float-next {
+        display: flex;
+      }
+      .mobile-bottom-bar {
+        display: flex;
+      }
+      .desktop-guide-card {
+        display: none !important;
+      }
+      .footer {
+        display: none !important;
+      }
+
+      /* DM 卡片在手機端單欄滿版優化 */
+      .dm-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .dm-hero-banner {
+        padding: 16px;
+        border-radius: 10px;
+        margin-bottom: 14px;
+      }
+      .dm-hero-title {
+        font-size: 17px;
+      }
+      .dm-desc {
+        font-size: 12.5px;
+      }
+    }
+    
 </style>
 </head>
 <body>
@@ -4150,6 +4723,11 @@
 
       <!-- 目錄、下載型錄、複製連結與操作說明工具組 -->
       <div class="toc-share-group">
+        <button class="nav-btn mobile-search-btn" id="mobileSearchBtn" title="搜尋機型、契約案號與型錄頁面">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="search-btn-text">搜尋</span>
+        </button>
+        
         <a href="huxen-114-catalog.pdf" download="臺灣銀行採購部114年度共同供應契約型錄_互盛.pdf" class="nav-btn catalog-download-link" id="downloadCatalogBtn" title="下載整本 57 頁完整型錄 (PDF 格式 · 6.7MB)">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span class="download-btn-text">
@@ -4187,6 +4765,44 @@
     </div>
   </header>
 
+  <!-- Mobile Slide-down Search Panel (手機專用極速搜尋欄) -->
+  <div class="mobile-search-panel" id="mobileSearchPanel">
+    <div class="mobile-search-bar-inner">
+      <svg class="mobile-search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="mobileSearchInput" class="mobile-search-input" placeholder="🔍 搜尋型號、案號（如 C2510、用紙、LP5）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="mobile-search-clear" id="mobileSearchClearBtn" title="清除內容" style="display:none;">✕</button>
+      <button class="mobile-search-close" id="mobileSearchCloseBtn" title="關閉搜尋">取消</button>
+    </div>
+    <div class="mobile-search-results" id="mobileSearchResults"></div>
+  </div>
+
+  <!-- Mobile Floating Nav Arrows (手機端懸浮上一頁/下一頁按鈕) -->
+  <button class="mobile-float-prev" id="mobileFloatPrevBtn" title="上一頁 (👈)" aria-label="上一頁">◀</button>
+  <button class="mobile-float-next" id="mobileFloatNextBtn" title="下一頁 (👉)" aria-label="下一頁">▶</button>
+
+  <!-- Mobile Fixed Bottom Toolbar (手機端底部固定翻頁與進度導覽列) -->
+  <div class="mobile-bottom-bar" id="mobileBottomBar">
+    <button class="mobile-btn-nav" id="mobileBottomPrevBtn">◀ 上頁</button>
+    <select class="mobile-cat-select" id="mobileCategorySelect" aria-label="手機端契約類別切換">
+      <option value="1">📖 封面 (第 1 頁)</option>
+      <option value="2">📑 目錄快速導覽 (第 2 頁)</option>
+      <option value="5">🖨️ 傳真機及影印機 · LP5-114036 (P.4 / 第 5 頁)</option>
+      <option value="6">🖨️ 影印機租賃 · LP5-114034 (P.5 / 第 6 頁)</option>
+      <option value="11">🖨️ 二手影印機租賃 · LP5-114035 (P.10 / 第 11 頁)</option>
+      <option value="16">🖥️ 電腦週邊設備用品 · LP5-114021 (P.15 / 第 16 頁)</option>
+      <option value="22">📦 傳真及影印機耗材 · LP5-115006 (P.21 / 第 22 頁)</option>
+      <option value="25">📄 辦公用紙 · LP5-115009 (P.24 / 第 25 頁)</option>
+      <option value="26">🛢️ 印刷機原廠油墨版紙 · LP5-115008 (P.25 / 第 26 頁)</option>
+      <option value="27">🖨️ 印表機原廠耗材 · LP5-114051 (P.26 / 第 27 頁)</option>
+      <option value="57">🏢 互盛全台服務據點 (封底 / 第 57 頁)</option>
+    </select>
+    <button class="mobile-btn-nav" id="mobileBottomNextBtn">下頁 ▶</button>
+  </div>
+    
+
+  
+    
+
   <!-- Share Toast Alert -->
   <div class="share-toast" id="shareToast">🔗 已複製本頁分享連結！</div>
 
@@ -4204,6 +4820,16 @@
           </div>
           <h1 class="dm-hero-title">互盛 114 年度影印機採購型錄 (大字清晰版)</h1>
           <p class="dm-desc">依震旦版面規格打造：大字體機種規格、實機彩照、組別項次與契約單價一目了然，免放大鏡即可輕鬆閱讀！</p>
+        </div>
+
+        <!-- In-page DM Search Bar (方便使用者直接在卡片清單中即時搜尋品名/型號/紙張) -->
+        <div class="dm-search-wrapper" id="dmSearchBar" style="margin-bottom: 20px; position: relative;">
+          <div style="display: flex; gap: 8px; align-items: center; background: #fff; padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--huxen-blue, #005bac); box-shadow: 0 4px 12px rgba(0,91,172,0.08);">
+            <span style="font-size: 16px;">🔍</span>
+            <input type="text" id="dmSearchInput" placeholder="即時搜尋機種型號、組別項次、辦公用紙 (例: IM C2010, 用紙, 第1組)..." style="flex: 1; border: none; outline: none; font-size: 14px; background: transparent; padding: 4px 0; color: #1e293b;">
+            <button id="dmSearchClearBtn" style="background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 14px; padding: 2px 6px; display: none;">✕</button>
+          </div>
+          <div class="search-results-dropdown" id="dmSearchResults" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 1000; max-height: 360px; overflow-y: auto; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;"></div>
         </div>
 
         <!-- Filter Bar -->
@@ -5229,6 +5855,30 @@
       if (prevCatBtn) prevCatBtn.disabled = (p <= 1);
       if (nextCatBtn) nextCatBtn.disabled = (p >= 56);
 
+      
+      // 同步手機端底部類別選單與按鈕狀態
+      const mobCatSelect = document.getElementById('mobileCategorySelect');
+      if (mobCatSelect) {
+        let currentCatPage = 1;
+        for (let i = 0; i < CATEGORIES.length; i++) {
+          if (p >= CATEGORIES[i].page) {
+            currentCatPage = CATEGORIES[i].page;
+          } else {
+            break;
+          }
+        }
+        mobCatSelect.value = String(currentCatPage);
+      }
+
+      const mobPrev = document.getElementById('mobileBottomPrevBtn');
+      const mobNext = document.getElementById('mobileBottomNextBtn');
+      const mobFloatPrev = document.getElementById('mobileFloatPrevBtn');
+      const mobFloatNext = document.getElementById('mobileFloatNextBtn');
+      if (mobPrev) mobPrev.disabled = p <= 1;
+      if (mobNext) mobNext.disabled = p >= TOTAL_PAGES;
+      if (mobFloatPrev) mobFloatPrev.disabled = p <= 1;
+      if (mobFloatNext) mobFloatNext.disabled = p >= TOTAL_PAGES;
+    
       document.querySelectorAll('.drawer-item').forEach((item, i) => {
         item.classList.toggle('active', i === spreadIdx);
       });
@@ -5342,7 +5992,31 @@
     if (drawerSearchInput) {
       drawerSearchInput.addEventListener('input', e => {
         const q = e.target.value.trim().toLowerCase();
-        document.querySelectorAll('.drawer-item').forEach(item => {
+        
+      // 同步手機端底部類別選單與按鈕狀態
+      const mobCatSelect = document.getElementById('mobileCategorySelect');
+      if (mobCatSelect) {
+        let currentCatPage = 1;
+        for (let i = 0; i < CATEGORIES.length; i++) {
+          if (p >= CATEGORIES[i].page) {
+            currentCatPage = CATEGORIES[i].page;
+          } else {
+            break;
+          }
+        }
+        mobCatSelect.value = String(currentCatPage);
+      }
+
+      const mobPrev = document.getElementById('mobileBottomPrevBtn');
+      const mobNext = document.getElementById('mobileBottomNextBtn');
+      const mobFloatPrev = document.getElementById('mobileFloatPrevBtn');
+      const mobFloatNext = document.getElementById('mobileFloatNextBtn');
+      if (mobPrev) mobPrev.disabled = p <= 1;
+      if (mobNext) mobNext.disabled = p >= TOTAL_PAGES;
+      if (mobFloatPrev) mobFloatPrev.disabled = p <= 1;
+      if (mobFloatNext) mobFloatNext.disabled = p >= TOTAL_PAGES;
+    
+      document.querySelectorAll('.drawer-item').forEach(item => {
           const t = item.textContent.toLowerCase();
           item.style.display = t.includes(q) ? 'flex' : 'none';
         });
@@ -5406,6 +6080,9 @@
 
 
     async function init() {
+      if (window.innerWidth <= 768) {
+        applySingleWidth(window.innerWidth - 16, '手機滿版');
+      }
       const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const route = parseHashRoute();
 
@@ -6326,6 +7003,9 @@
           const hay = `${key} ${prod.name} ${prod.family || ''} ${prod.type || ''} ${prod.speed || ''} ${prod.priceSummary || ''} ${contractsStr} ${itemsStr}`.toLowerCase();
 
           if (hay.includes(q)) {
+            let pScore = 10;
+            if (key.toLowerCase().includes(q) || prod.name.toLowerCase().includes(q)) pScore += 60;
+            if ((prod.family || '').toLowerCase().includes(q)) pScore += 30;
             const sampleFilePage = prod.samplePage || 5;
             const printedTag = sampleFilePage >= 5 ? `P. ${sampleFilePage - 1}` : (sampleFilePage === 1 ? '封面' : '目錄');
             matchedProducts.push({
@@ -6337,27 +7017,45 @@
               priceSummary: prod.priceSummary,
               image: prod.image,
               filePage: sampleFilePage,
-              pageBadge: printedTag
+              pageBadge: printedTag,
+              score: pScore
             });
           }
         }
+        matchedProducts.sort((a, b) => b.score - a.score);
       }
 
       // 2. 搜尋 57 頁型錄詳細頁碼與品項 (CATALOG_PAGES_INDEX)
       const matchedPages = [];
       if (typeof CATALOG_PAGES_INDEX !== 'undefined') {
         CATALOG_PAGES_INDEX.forEach(pg => {
-          const hay = `${pg.title} ${pg.contract} ${pg.summary} ${pg.keywords}`.toLowerCase();
-          if (hay.includes(q)) {
+          const tHay = (pg.title || '').toLowerCase();
+          const cHay = (pg.contract || '').toLowerCase();
+          const sHay = (pg.summary || '').toLowerCase();
+          const kHay = (pg.keywords || '').toLowerCase();
+          const fullHay = `${tHay} ${cHay} ${sHay} ${kHay}`;
+
+          if (fullHay.includes(q)) {
+            let score = 0;
+            if (tHay.includes(q)) score += 60;
+            if (cHay.includes(q)) score += 50;
+            if (sHay.includes(q)) score += 20;
+            if (kHay.includes(q)) score += 10;
+            // 優先呈現專屬內容頁（P.3~P.57），避免封面與目錄因列出全案號而搶佔首位
+            if (pg.filePage > 2) {
+              score += 30;
+            }
             matchedPages.push({
               title: pg.title,
               contract: pg.contract,
               summary: pg.summary,
               filePage: pg.filePage,
-              pageBadge: pg.pageBadge
+              pageBadge: pg.pageBadge,
+              score
             });
           }
         });
+        matchedPages.sort((a, b) => b.score - a.score);
       }
 
       if (matchedProducts.length === 0 && matchedPages.length === 0) {
@@ -6408,57 +7106,168 @@
         });
       }
 
-      searchResults.innerHTML = html;
-      searchResults.classList.add('open');
+      
+      // Render to all 3 search containers (Desktop, Mobile, DM)
+      const targetContainers = [searchResults, mobileSearchResults, dmSearchResults].filter(Boolean);
+      targetContainers.forEach(container => {
+        container.innerHTML = html;
+        container.classList.add('open');
 
-      // 綁定點擊跳轉事件
-      searchResults.querySelectorAll('.search-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const targetPage = parseInt(item.dataset.page, 10) || 1;
-          const pageBadge = item.dataset.badge || `第 ${targetPage} 頁`;
-          const itemTitle = item.dataset.title || '';
-          searchResults.classList.remove('open');
-          searchInput.value = '';
+        container.querySelectorAll('.search-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const targetPage = parseInt(item.dataset.page, 10) || 1;
+            const pageBadge = item.dataset.badge || `第 ${targetPage} 頁`;
+            const itemTitle = item.dataset.title || '';
 
-          // 切換至逐頁型錄並跳轉
-          switchViewMode('single');
-          setSinglePage(targetPage);
+            // Close all search dropdowns & mobile panel
+            targetContainers.forEach(c => {
+              c.classList.remove('open');
+            });
+            if (typeof toggleMobileSearch === 'function') {
+              toggleMobileSearch(false);
+            }
+            if (searchInput) searchInput.value = '';
+            if (mobileSearchInput) mobileSearchInput.value = '';
+            if (dmSearchInput) dmSearchInput.value = '';
 
-          if (typeof showToast === 'function') {
-            showToast(`🔍 已跳轉至 ${pageBadge} · ${itemTitle}`);
-          }
+            // 切換至逐頁型錄並跳轉
+            switchViewMode('single');
+            setSinglePage(targetPage);
+
+            if (typeof showToast === 'function') {
+              showToast(`🔍 已跳轉至 ${pageBadge} · ${itemTitle}`);
+            }
+          });
         });
+      });
+    
+    }
+
+    
+    // Multi-Input Search Sync & Mobile Search Panel Logic
+    const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+    const mobileSearchPanel = document.getElementById('mobileSearchPanel');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mobileSearchClearBtn = document.getElementById('mobileSearchClearBtn');
+    const mobileSearchCloseBtn = document.getElementById('mobileSearchCloseBtn');
+    const mobileSearchResults = document.getElementById('mobileSearchResults');
+
+    const dmSearchInput = document.getElementById('dmSearchInput');
+    const dmSearchClearBtn = document.getElementById('dmSearchClearBtn');
+    const dmSearchResults = document.getElementById('dmSearchResults');
+
+    function toggleMobileSearch(open) {
+      if (!mobileSearchPanel) return;
+      const willOpen = open !== undefined ? open : !mobileSearchPanel.classList.contains('open');
+      if (willOpen) {
+        mobileSearchPanel.classList.add('open');
+        if (mobileSearchBtn) mobileSearchBtn.classList.add('active');
+        if (mobileSearchInput) {
+          mobileSearchInput.value = searchInput ? searchInput.value : '';
+          mobileSearchInput.focus();
+          if (mobileSearchInput.value.trim()) {
+            performGlobalSearch(mobileSearchInput.value);
+          }
+        }
+      } else {
+        mobileSearchPanel.classList.remove('open');
+        if (mobileSearchBtn) mobileSearchBtn.classList.remove('active');
+        if (mobileSearchResults) mobileSearchResults.classList.remove('open');
+      }
+    }
+
+    if (mobileSearchBtn) {
+      mobileSearchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMobileSearch();
       });
     }
 
-    if (searchInput) {
-      searchInput.addEventListener('input', e => {
-        performGlobalSearch(e.target.value);
+    if (mobileSearchCloseBtn) {
+      mobileSearchCloseBtn.addEventListener('click', () => {
+        toggleMobileSearch(false);
       });
-      searchInput.addEventListener('focus', e => {
+    }
+
+    if (mobileSearchClearBtn && mobileSearchInput) {
+      mobileSearchClearBtn.addEventListener('click', () => {
+        mobileSearchInput.value = '';
+        mobileSearchClearBtn.style.display = 'none';
+        performGlobalSearch('');
+        mobileSearchInput.focus();
+      });
+    }
+
+    if (dmSearchClearBtn && dmSearchInput) {
+      dmSearchClearBtn.addEventListener('click', () => {
+        dmSearchInput.value = '';
+        dmSearchClearBtn.style.display = 'none';
+        performGlobalSearch('');
+        dmSearchInput.focus();
+      });
+    }
+
+    // Sync input handlers across desktop, mobile and DM bars
+    [
+      { input: searchInput, clear: null, targetResults: searchResults },
+      { input: mobileSearchInput, clear: mobileSearchClearBtn, targetResults: mobileSearchResults },
+      { input: dmSearchInput, clear: dmSearchClearBtn, targetResults: dmSearchResults }
+    ].forEach(({ input, clear, targetResults }) => {
+      if (!input) return;
+      input.addEventListener('input', e => {
+        const val = e.target.value;
+        if (clear) clear.style.display = val ? 'flex' : 'none';
+        
+        // Sync values across inputs
+        if (searchInput && searchInput !== input) searchInput.value = val;
+        if (mobileSearchInput && mobileSearchInput !== input) {
+          mobileSearchInput.value = val;
+          if (mobileSearchClearBtn) mobileSearchClearBtn.style.display = val ? 'flex' : 'none';
+        }
+        if (dmSearchInput && dmSearchInput !== input) {
+          dmSearchInput.value = val;
+          if (dmSearchClearBtn) dmSearchClearBtn.style.display = val ? 'flex' : 'none';
+        }
+
+        performGlobalSearch(val);
+      });
+
+      input.addEventListener('focus', e => {
         if (e.target.value.trim()) {
           performGlobalSearch(e.target.value);
         }
       });
-      searchInput.addEventListener('keydown', e => {
+
+      input.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
           if (searchResults) searchResults.classList.remove('open');
-          searchInput.blur();
+          if (mobileSearchResults) mobileSearchResults.classList.remove('open');
+          if (dmSearchResults) dmSearchResults.classList.remove('open');
+          if (mobileSearchPanel) toggleMobileSearch(false);
+          input.blur();
         } else if (e.key === 'Enter') {
-          const firstItem = searchResults ? searchResults.querySelector('.search-item') : null;
+          const activeContainer = targetResults || searchResults;
+          const firstItem = activeContainer ? activeContainer.querySelector('.search-item') : null;
           if (firstItem) {
             firstItem.click();
           }
         }
       });
-    }
+    });
 
-    // 點擊空白處自動收合搜尋結果
+    // Close on click outside
     document.addEventListener('click', e => {
       if (!e.target.closest('.header-search') && searchResults) {
         searchResults.classList.remove('open');
       }
+      if (!e.target.closest('.mobile-search-panel') && !e.target.closest('#mobileSearchBtn') && mobileSearchPanel) {
+        toggleMobileSearch(false);
+      }
+      if (!e.target.closest('.dm-search-wrapper') && dmSearchResults) {
+        dmSearchResults.classList.remove('open');
+      }
     });
+    
 
     window.switchViewMode = switchViewMode;
     function switchViewMode(mode) {
@@ -6483,6 +7292,21 @@
 
       const guideBar = document.getElementById('guideBar');
       if (guideBar) guideBar.style.display = (mode === 'dm' ? 'none' : 'flex');
+
+      // Update mobile bottom bar & floating buttons
+      const mobBar = document.getElementById('mobileBottomBar');
+      const mobFloatPrev = document.getElementById('mobileFloatPrevBtn');
+      const mobFloatNext = document.getElementById('mobileFloatNextBtn');
+      if (mobBar) {
+        if (mode === 'single') mobBar.classList.add('active');
+        else mobBar.classList.remove('active');
+      }
+      if (mobFloatPrev) {
+        mobFloatPrev.style.display = (mode === 'single') ? 'flex' : 'none';
+      }
+      if (mobFloatNext) {
+        mobFloatNext.style.display = (mode === 'single') ? 'flex' : 'none';
+      }
 
       try {
         localStorage.setItem('huxen_catalog_view_mode', mode);
@@ -6534,6 +7358,73 @@ if (segDmBtn) {
       });
     }
 
+
+    
+    /* ==========================================================================
+       MOBILE NAVIGATION, FLIPPING & GESTURES BINDINGS
+       ========================================================================== */
+    const mobileFloatPrev = document.getElementById('mobileFloatPrevBtn');
+    const mobileFloatNext = document.getElementById('mobileFloatNextBtn');
+    const mobileBottomPrev = document.getElementById('mobileBottomPrevBtn');
+    const mobileBottomNext = document.getElementById('mobileBottomNextBtn');
+    const mobileCatSelect = document.getElementById('mobileCategorySelect');
+    const mobileBotBar = document.getElementById('mobileBottomBar');
+
+    if (mobileFloatPrev) {
+      mobileFloatPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (singlePageIdx > 1) {
+          setSinglePage(singlePageIdx - 1);
+        } else if (typeof showToast === 'function') {
+          showToast('已是第一頁 (封面)');
+        }
+      });
+    }
+
+    if (mobileFloatNext) {
+      mobileFloatNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (singlePageIdx < TOTAL_PAGES) {
+          setSinglePage(singlePageIdx + 1);
+        } else if (typeof showToast === 'function') {
+          showToast('已是最後一頁 (封底)');
+        }
+      });
+    }
+
+    if (mobileBottomPrev) {
+      mobileBottomPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (singlePageIdx > 1) {
+          setSinglePage(singlePageIdx - 1);
+        } else if (typeof showToast === 'function') {
+          showToast('已是第一頁 (封面)');
+        }
+      });
+    }
+
+    if (mobileBottomNext) {
+      mobileBottomNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (singlePageIdx < TOTAL_PAGES) {
+          setSinglePage(singlePageIdx + 1);
+        } else if (typeof showToast === 'function') {
+          showToast('已是最後一頁 (封底)');
+        }
+      });
+    }
+
+    if (mobileCatSelect) {
+      mobileCatSelect.addEventListener('change', (e) => {
+        const targetPage = parseInt(e.target.value, 10);
+        if (!isNaN(targetPage)) {
+          setSinglePage(targetPage);
+        }
+      });
+    }
+
+    
+    
 
     window.addEventListener('DOMContentLoaded', init);
   </script>

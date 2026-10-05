@@ -1039,7 +1039,7 @@
     }
 
     /* ==========================================================================
-       REALISTIC 3D BOOK PAGE FLIP SYSTEM (擬真實體書本翻頁物理系統)
+       MENGTO SKETCHBOOK: NESTED 18-STRIP CSS 3D PAPER BENDING SYSTEM
        ========================================================================== */
     .single-page-sheet {
       cursor: zoom-in;
@@ -1054,12 +1054,12 @@
       flex-shrink: 0;
       min-height: auto;
       transform-origin: center center;
-      perspective: 3200px;
+      perspective: 2800px;
       transform-style: preserve-3d;
       overflow: visible;
     }
     .view-mode-single {
-      perspective: 3600px;
+      perspective: 3200px;
       perspective-origin: 50% 50%;
     }
     .view-mode-single.is-dragging .single-page-sheet {
@@ -1082,235 +1082,86 @@
       z-index: 1;
     }
 
-    /* 擬真翻動葉片覆蓋層 (3D Page Leaf) - 硬體加速與平滑消隱 */
-    .flip-leaf-overlay {
+    /* ---------------- The 18-Strip 3D Chain (MengTo Sketchbook) ---------------- */
+    .curl {
       position: absolute;
-      inset: 0;
+      top: 0; bottom: 0;
+      width: 100%;
+      transform-style: preserve-3d;
+      z-index: 20;
       pointer-events: none;
       display: none;
-      transform-style: preserve-3d;
-      z-index: 10;
-      overflow: visible;
-      will-change: transform, box-shadow;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
     }
-    .flip-leaf-overlay.active {
+    .curl.active {
       display: block;
     }
+    .curl.next {
+      left: 0;
+      transform-origin: left center;
+      transform: rotateY(calc(-1 * var(--tt, 0deg)));
+    }
+    .curl.prev {
+      right: 0; left: auto;
+      transform-origin: right center;
+      transform: rotateY(var(--tt, 0deg));
+    }
 
-    /* 翻動中正面 (正在離開的頁面) 與 背面 (翻過來的頁面背部/次頁) */
-    .flip-leaf-front,
-    .flip-leaf-back {
+    .strip {
       position: absolute;
-      inset: 0;
-      border-radius: 6px;
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      top: 0; bottom: 0;
+      width: calc(100% / var(--n, 18));
+      transform-style: preserve-3d;
+    }
+    .curl.next .strip { transform-origin: left center; }
+    .curl.prev .strip { transform-origin: right center; }
+    .curl.next > .strip { left: 0; }
+    .curl.prev > .strip { right: 0; left: auto; }
+    .curl.next .strip .strip { left: 100%; transform: rotateY(var(--td, 0deg)); }
+    .curl.prev .strip .strip { right: 100%; transform: rotateY(calc(-1 * var(--td, 0deg))); }
+
+    .face {
+      position: absolute;
+      top: 0; bottom: 0; left: 0; right: -1.2px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
+      background-repeat: no-repeat;
+      background-size: var(--single-w, 1020px) 100%;
     }
-    .flip-leaf-back {
-      transform: rotateY(180deg) translateZ(1px);
-      background-color: #f8fafc;
-    }
+    .face.back { transform: rotateY(180deg); }
 
-    /* 紙張光澤與立體捲曲反光高光 (Dynamic Paper Sheen & Specular) */
-    .flip-leaf-front::after,
-    .flip-leaf-back::after {
-      content: '';
+    .face .sh, .face .gl {
       position: absolute;
       inset: 0;
-      border-radius: 6px;
       pointer-events: none;
-      will-change: opacity, background;
+    }
+    .curl.next .face.front .sh, .curl.prev .face.back .sh {
+      background: linear-gradient(90deg, rgba(16,42,84,var(--a1,0)), rgba(16,42,84,var(--a2,0)));
+    }
+    .curl.next .face.back .sh, .curl.prev .face.front .sh {
+      background: linear-gradient(90deg, rgba(16,42,84,var(--a2,0)), rgba(16,42,84,var(--a1,0)));
+    }
+    .face .gl {
+      background: #ffffff;
+      opacity: calc(var(--shade, 0) * var(--lit, 1) * var(--lit, 1) * 0.22);
     }
 
-    /* 翻頁底層投射陰影 (Drop Shadow on Underlying Page) */
-    .flip-leaf-shadow {
+    /* 底層投射陰影 */
+    .curl-drop-shadow {
       position: absolute;
       inset: 0;
-      border-radius: 6px;
       pointer-events: none;
-      opacity: 0;
       z-index: 2;
-      will-change: opacity, background;
+      opacity: 0;
+      transition: opacity 0.1s linear;
     }
-
-    /* ---------- 下一頁 (Next: 右側掀起向左翻, 0.44s 乾脆靈敏) ---------- */
-    .flip-leaf-overlay.flip-forward {
-      transform-origin: left center;
-      animation: bookCurlForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    .curl-drop-shadow.active {
+      opacity: calc(var(--shade, 0) * 0.7);
     }
-    .flip-leaf-overlay.flip-forward .flip-leaf-front::after {
-      animation: frontShadeForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    .curl.next ~ .curl-drop-shadow {
+      background: linear-gradient(90deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 32%, transparent 60%);
     }
-    .flip-leaf-overlay.flip-forward .flip-leaf-back::after {
-      animation: backShadeForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-    .flip-leaf-overlay.flip-forward .flip-leaf-shadow {
-      animation: pageShadowForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-
-    /* ---------- 上一頁 (Prev: 左側掀起向右翻, 0.44s 乾脆靈敏) ---------- */
-    .flip-leaf-overlay.flip-backward {
-      transform-origin: right center;
-      animation: bookCurlBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-    .flip-leaf-overlay.flip-backward .flip-leaf-front::after {
-      animation: frontShadeBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-    .flip-leaf-overlay.flip-backward .flip-leaf-back::after {
-      animation: backShadeBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-    .flip-leaf-overlay.flip-backward .flip-leaf-shadow {
-      animation: pageShadowBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-    }
-
-    /* 物理書頁弧形翻動軌跡 (紙張拱起彎曲 skewX + rotateY + scale) */
-    @keyframes bookCurlForward {
-      0% {
-        transform: rotateY(0deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      }
-      40% {
-        /* 紙張掀起中段：右角微彎拱起，俐落流暢 */
-        transform: rotateY(-75deg) skewY(-2deg) scale(1.015) translateZ(20px);
-        box-shadow: -16px 14px 38px rgba(10, 31, 61, 0.38);
-      }
-      70% {
-        transform: rotateY(-135deg) skewY(1.5deg) scale(1.008) translateZ(12px);
-        box-shadow: -10px 10px 24px rgba(10, 31, 61, 0.25);
-      }
-      100% {
-        transform: rotateY(-180deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-      }
-    }
-
-    @keyframes frontShadeForward {
-      0% {
-        background: transparent;
-        opacity: 0;
-      }
-      40% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.35) 45%, rgba(0,0,0,0.1) 100%);
-        opacity: 0.75;
-      }
-      100% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-        opacity: 1;
-      }
-    }
-
-    @keyframes backShadeForward {
-      0% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-        opacity: 1;
-      }
-      65% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.08) 100%);
-        opacity: 0.65;
-      }
-      100% {
-        background: transparent;
-        opacity: 0;
-      }
-    }
-
-    @keyframes pageShadowForward {
-      0% {
-        opacity: 0;
-        background: transparent;
-      }
-      35% {
-        opacity: 0.7;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.1) 28%, transparent 55%);
-      }
-      80% {
-        opacity: 0.25;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, transparent 35%);
-      }
-      100% {
-        opacity: 0;
-        background: transparent;
-      }
-    }
-
-    /* 往回翻上一頁軌跡 (Backward) */
-    @keyframes bookCurlBackward {
-      0% {
-        transform: rotateY(0deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      }
-      40% {
-        transform: rotateY(75deg) skewY(2deg) scale(1.015) translateZ(20px);
-        box-shadow: 16px 14px 38px rgba(10, 31, 61, 0.38);
-      }
-      70% {
-        transform: rotateY(135deg) skewY(-1.5deg) scale(1.008) translateZ(12px);
-        box-shadow: 10px 10px 24px rgba(10, 31, 61, 0.25);
-      }
-      100% {
-        transform: rotateY(180deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-      }
-    }
-
-    @keyframes frontShadeBackward {
-      0% {
-        background: transparent;
-        opacity: 0;
-      }
-      40% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.35) 45%, rgba(0,0,0,0.1) 100%);
-        opacity: 0.75;
-      }
-      100% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-        opacity: 1;
-      }
-    }
-
-    @keyframes backShadeBackward {
-      0% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-        opacity: 1;
-      }
-      65% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.08) 100%);
-        opacity: 0.65;
-      }
-      100% {
-        background: transparent;
-        opacity: 0;
-      }
-    }
-
-    @keyframes pageShadowBackward {
-      0% {
-        opacity: 0;
-        background: transparent;
-      }
-      35% {
-        opacity: 0.7;
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.1) 28%, transparent 55%);
-      }
-      80% {
-        opacity: 0.25;
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.18) 0%, transparent 35%);
-      }
-      100% {
-        opacity: 0;
-        background: transparent;
-      }
-    }
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
+    .curl.prev ~ .curl-drop-shadow {
+      background: linear-gradient(270deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 32%, transparent 60%);
     }
 
     /* Single page side navigation buttons (依指示：直接做在頁面上兩側，不論視窗多寬皆貼齊頁面) */
@@ -5178,12 +5029,9 @@
       <div class="single-page-sheet" id="singlePageSheet">
         <!-- 當前底層頁面 -->
         <img class="single-page-img" id="singlePageImg" width="4961" height="7016" style="aspect-ratio: 4961 / 7016;" src="pages/page_01.webp" alt="型錄頁面">
-        <!-- 擬真 3D 捲曲翻動葉片 (動畫時出現) -->
-        <div class="flip-leaf-overlay" id="flipLeafOverlay">
-          <div class="flip-leaf-front" id="flipLeafFront"></div>
-          <div class="flip-leaf-back" id="flipLeafBack"></div>
-          <div class="flip-leaf-shadow" id="flipLeafShadow"></div>
-        </div>
+        <!-- MengTo Sketchbook 18-Strip 3D 擬真紙張捲曲翻頁層 -->
+        <div class="curl" id="curlContainer"></div>
+        <div class="curl-drop-shadow" id="curlDropShadow"></div>
       </div>
 
       <button class="single-side-btn right" id="singleSideNextBtn" title="下一頁 (→)">
@@ -5574,8 +5422,84 @@
       updateCardsAutoCollapse(singleWidth);
     }
 
+    /* ---------------- MengTo Sketchbook 18-Strip 3D Paper Bending Engine ---------------- */
+    const N_STRIPS = 18;
+    const BETA_CURL = 0.58;
     let isPageFlipping = false;
-    let flipAnimTimer = null;
+    let flipRaf = null;
+    let flipStrips = [];
+
+    function build18StripCurl(dir, fromUrl, toUrl) {
+      const container = document.getElementById('curlContainer');
+      if (!container) return;
+      container.textContent = '';
+      container.className = 'curl active ' + dir;
+      container.style.setProperty('--n', N_STRIPS);
+      flipStrips = [];
+
+      let host = container;
+      const bw = singleWidth || 1020;
+      const sw = bw / N_STRIPS;
+
+      for (let i = 0; i < N_STRIPS; i++) {
+        const s = document.createElement('div');
+        s.className = 'strip';
+        s.style.setProperty('--i', i);
+
+        const A = `-${(i * sw).toFixed(1)}px`;
+        const B = `${((i + 1) * sw - bw).toFixed(1)}px`;
+
+        const f = document.createElement('div');
+        f.className = 'face front';
+        const b = document.createElement('div');
+        b.className = 'face back';
+
+        f.style.backgroundImage = `url("${fromUrl}")`;
+        f.style.backgroundPositionX = dir === 'next' ? A : B;
+
+        b.style.backgroundImage = `url("${toUrl}")`;
+        b.style.backgroundPositionX = dir === 'next' ? B : A;
+
+        f.innerHTML = '<div class="sh"></div><div class="gl"></div>';
+        b.innerHTML = '<div class="sh"></div><div class="gl"></div>';
+
+        s.appendChild(f);
+        s.appendChild(b);
+        host.appendChild(s);
+        host = s;
+        flipStrips.push(s);
+      }
+    }
+
+    function apply18StripMath(t) {
+      const sheet = document.getElementById('singlePageSheet');
+      const dropShadow = document.getElementById('curlDropShadow');
+      if (!sheet) return;
+
+      const th = Math.PI * t;
+      const beta = BETA_CURL * Math.sin(Math.PI * t);
+      const D = 180 / Math.PI;
+      const tt = th + beta;
+      const td = (2 * beta) / N_STRIPS;
+
+      sheet.style.setProperty('--tt', (tt * D).toFixed(2) + 'deg');
+      sheet.style.setProperty('--td', (td * D).toFixed(3) + 'deg');
+      const shadeVal = Math.sin(Math.PI * t);
+      sheet.style.setProperty('--shade', shadeVal.toFixed(3));
+
+      if (dropShadow) {
+        dropShadow.classList.toggle('active', t > 0.02 && t < 0.98);
+      }
+
+      for (let i = 0; i < flipStrips.length; i++) {
+        const l1 = Math.abs(Math.cos(tt - i * td));
+        const l2 = Math.abs(Math.cos(tt - (i + 1) * td));
+        const st = flipStrips[i].style;
+        st.setProperty('--lit', l1.toFixed(3));
+        st.setProperty('--a1', ((1 - l1) * 0.58).toFixed(3));
+        st.setProperty('--a2', ((1 - l2) * 0.58).toFixed(3));
+      }
+    }
 
     function setSinglePage(pageNumber, options = {}) {
       const targetPage = Math.max(1, Math.min(TOTAL_PAGES, pageNumber));
@@ -5583,16 +5507,17 @@
       const direction = options.direction || (targetPage > singlePageIdx ? 'next' : 'prev');
 
       clearTimeout(reRasterTimer);
-      clearTimeout(flipAnimTimer);
+      if (flipRaf) cancelAnimationFrame(flipRaf);
 
-      const flipOverlay = document.getElementById('flipLeafOverlay');
-      const flipFront = document.getElementById('flipLeafFront');
-      const flipBack = document.getElementById('flipLeafBack');
+      const curlContainer = document.getElementById('curlContainer');
+      const dropShadow = document.getElementById('curlDropShadow');
 
-      if (!animate || isPageFlipping || !flipOverlay || !flipFront || !flipBack) {
-        if (flipOverlay) {
-          flipOverlay.className = 'flip-leaf-overlay';
+      if (!animate || isPageFlipping || !curlContainer) {
+        if (curlContainer) {
+          curlContainer.className = 'curl';
+          curlContainer.textContent = '';
         }
+        if (dropShadow) dropShadow.classList.remove('active');
         isPageFlipping = false;
         singlePageIdx = targetPage;
         singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
@@ -5605,33 +5530,56 @@
         return;
       }
 
-      // 觸發擬真實體書本 3D 捲曲弧形翻動
+      // 觸發 MengTo Sketchbook 18-Strip 3D 捲曲物理翻頁
       isPageFlipping = true;
-      const fromSrc = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
-      const toSrc = `pages/page_${String(targetPage).padStart(2, '0')}.webp`;
+      const fromUrl = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
+      const toUrl = `pages/page_${String(targetPage).padStart(2, '0')}.webp`;
 
-      // 準備翻頁葉片正面與背面圖片
-      flipFront.style.backgroundImage = `url("${fromSrc}")`;
-      flipBack.style.backgroundImage = `url("${toSrc}")`;
+      // 構建 18 節鏈條
+      build18StripCurl(direction, fromUrl, toUrl);
 
-      // 下層立即切換為目標頁面，當上層葉片掀起時透出底層新頁面
-      singlePageImg.src = toSrc;
+      // 下層立即替換為目標頁（當上層翻走時透出下層）
+      singlePageImg.src = toUrl;
       singlePageSheet.classList.remove('is-zoomed');
       viewModeSingle.scrollTop = 0;
-
-      // 啟動 3D 翻書弧線動畫
-      flipOverlay.className = 'flip-leaf-overlay active ' + (direction === 'next' ? 'flip-forward' : 'flip-backward');
 
       singlePageIdx = targetPage;
       idx = singlePageIdx === 1 ? 0 : Math.floor(singlePageIdx / 2);
       updateMeta();
       updateNavButtons();
 
-      flipAnimTimer = setTimeout(() => {
-        flipOverlay.className = 'flip-leaf-overlay';
-        isPageFlipping = false;
-        preloadAdjacentPages(singlePageIdx);
-      }, 440);
+      // 二階彈簧阻尼系統 (Second-order Spring Physics)
+      // k = 175 (剛度), c = 24 (阻尼) - 0.42s 精準自然收合
+      let curT = 0;
+      let vel = 0;
+      let lastTime = performance.now();
+      const k = 170;
+      const c = 23;
+      const targetT = 1.0;
+
+      function stepSpring(now) {
+        const dt = Math.min(0.032, (now - lastTime) / 1000 || 0.016);
+        lastTime = now;
+
+        const diff = curT - targetT;
+        vel += (-k * diff - c * vel) * dt;
+        curT += vel * dt;
+
+        if (curT >= 0.995 && Math.abs(vel) < 0.05) {
+          apply18StripMath(1.0);
+          curlContainer.className = 'curl';
+          curlContainer.textContent = '';
+          if (dropShadow) dropShadow.classList.remove('active');
+          isPageFlipping = false;
+          preloadAdjacentPages(singlePageIdx);
+        } else {
+          apply18StripMath(Math.max(0, Math.min(1, curT)));
+          flipRaf = requestAnimationFrame(stepSpring);
+        }
+      }
+
+      apply18StripMath(0);
+      flipRaf = requestAnimationFrame(stepSpring);
     }
 
     function updateNavButtons() {

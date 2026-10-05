@@ -1050,11 +1050,115 @@
       transition: box-shadow 0.2s ease;
       flex-shrink: 0;
       min-height: auto;
+      transform-origin: center center;
+      backface-visibility: hidden;
+      will-change: transform, opacity, box-shadow;
+    }
+    .view-mode-single {
+      perspective: 2400px;
+      perspective-origin: 50% 40%;
     }
     .view-mode-single.is-dragging .single-page-sheet {
       cursor: zoom-in;
       cursor: grabbing !important;
       box-shadow: 0 20px 56px rgba(10, 31, 61, 0.35);
+    }
+
+    /* 3D 擬真紙張翻頁動畫 (Page Flip Transitions) */
+    /* 下一頁：右掀向左 (Turn Forward) */
+    .single-page-sheet.flipping-next-out {
+      animation: flipTurnNextOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      pointer-events: none;
+    }
+    .single-page-sheet.flipping-next-in {
+      animation: flipTurnNextIn 0.38s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+      pointer-events: none;
+    }
+
+    /* 上一頁：左掀向右 (Turn Backward) */
+    .single-page-sheet.flipping-prev-out {
+      animation: flipTurnPrevOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      pointer-events: none;
+    }
+    .single-page-sheet.flipping-prev-in {
+      animation: flipTurnPrevIn 0.38s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes flipTurnNextOut {
+      0% {
+        transform: perspective(2400px) rotateY(0deg) scale(1);
+        transform-origin: left center;
+        opacity: 1;
+        box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
+      }
+      50% {
+        opacity: 0.85;
+        box-shadow: -15px 24px 60px rgba(0, 0, 0, 0.45);
+      }
+      100% {
+        transform: perspective(2400px) rotateY(-85deg) scale(0.96);
+        transform-origin: left center;
+        opacity: 0;
+        box-shadow: -30px 30px 70px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    @keyframes flipTurnNextIn {
+      0% {
+        transform: perspective(2400px) rotateY(85deg) scale(0.96);
+        transform-origin: right center;
+        opacity: 0;
+        box-shadow: 30px 30px 70px rgba(0, 0, 0, 0.5);
+      }
+      50% {
+        opacity: 0.85;
+        box-shadow: 15px 24px 60px rgba(0, 0, 0, 0.45);
+      }
+      100% {
+        transform: perspective(2400px) rotateY(0deg) scale(1);
+        transform-origin: right center;
+        opacity: 1;
+        box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
+      }
+    }
+
+    @keyframes flipTurnPrevOut {
+      0% {
+        transform: perspective(2400px) rotateY(0deg) scale(1);
+        transform-origin: right center;
+        opacity: 1;
+        box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
+      }
+      50% {
+        opacity: 0.85;
+        box-shadow: 15px 24px 60px rgba(0, 0, 0, 0.45);
+      }
+      100% {
+        transform: perspective(2400px) rotateY(85deg) scale(0.96);
+        transform-origin: right center;
+        opacity: 0;
+        box-shadow: 30px 30px 70px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    @keyframes flipTurnPrevIn {
+      0% {
+        transform: perspective(2400px) rotateY(-85deg) scale(0.96);
+        transform-origin: left center;
+        opacity: 0;
+        box-shadow: -30px 30px 70px rgba(0, 0, 0, 0.5);
+      }
+      50% {
+        opacity: 0.85;
+        box-shadow: -15px 24px 60px rgba(0, 0, 0, 0.45);
+      }
+      100% {
+        transform: perspective(2400px) rotateY(0deg) scale(1);
+        transform-origin: left center;
+        opacity: 1;
+        box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
+      }
     }
 
     .single-page-img {
@@ -5323,26 +5427,68 @@
       updateCardsAutoCollapse(singleWidth);
     }
 
-    function setSinglePage(pageNumber) {
+    let isPageFlipping = false;
+    let flipAnimTimer = null;
+
+    function setSinglePage(pageNumber, options = {}) {
+      const targetPage = Math.max(1, Math.min(TOTAL_PAGES, pageNumber));
+      const animate = options.animate !== false && targetPage !== singlePageIdx;
+      const direction = options.direction || (targetPage > singlePageIdx ? 'next' : 'prev');
+
       clearTimeout(reRasterTimer);
-      singlePageIdx = Math.max(1, Math.min(TOTAL_PAGES, pageNumber));
-      singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
-      singlePageSheet.classList.remove('is-zoomed');
+      clearTimeout(flipAnimTimer);
 
-      // Reset scroll to top
-      viewModeSingle.scrollTop = 0;
+      if (!animate || isPageFlipping) {
+        singlePageSheet.classList.remove('flipping-next-out', 'flipping-next-in', 'flipping-prev-out', 'flipping-prev-in');
+        isPageFlipping = false;
+        singlePageIdx = targetPage;
+        singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
+        singlePageSheet.classList.remove('is-zoomed');
+        viewModeSingle.scrollTop = 0;
+        idx = singlePageIdx === 1 ? 0 : Math.floor(singlePageIdx / 2);
+        updateMeta();
+        updateNavButtons();
+        preloadAdjacentPages(singlePageIdx);
+        return;
+      }
 
-      // Map to corresponding spread
-      idx = singlePageIdx === 1 ? 0 : Math.floor((singlePageIdx) / 2);
-      updateMeta();
+      // 觸發 3D 掀頁動畫
+      isPageFlipping = true;
+      const outClass = direction === 'next' ? 'flipping-next-out' : 'flipping-prev-out';
+      const inClass = direction === 'next' ? 'flipping-next-in' : 'flipping-prev-in';
 
+      singlePageSheet.classList.remove('flipping-next-out', 'flipping-next-in', 'flipping-prev-out', 'flipping-prev-in');
+      singlePageSheet.classList.add(outClass);
+
+      flipAnimTimer = setTimeout(() => {
+        singlePageIdx = targetPage;
+        singlePageImg.src = `pages/page_${String(singlePageIdx).padStart(2, '0')}.webp`;
+        singlePageSheet.classList.remove('is-zoomed');
+        viewModeSingle.scrollTop = 0;
+        idx = singlePageIdx === 1 ? 0 : Math.floor(singlePageIdx / 2);
+        updateMeta();
+        updateNavButtons();
+
+        singlePageSheet.classList.remove(outClass);
+        singlePageSheet.classList.add(inClass);
+
+        flipAnimTimer = setTimeout(() => {
+          singlePageSheet.classList.remove(inClass);
+          isPageFlipping = false;
+          preloadAdjacentPages(singlePageIdx);
+        }, 380);
+      }, 340);
+    }
+
+    function updateNavButtons() {
       const prevSideBtn = document.getElementById('singleSidePrevBtn');
       const nextSideBtn = document.getElementById('singleSideNextBtn');
       if (prevSideBtn) prevSideBtn.disabled = singlePageIdx <= 1;
       if (nextSideBtn) nextSideBtn.disabled = singlePageIdx >= TOTAL_PAGES;
+    }
 
-      // Preload adjacent single pages
-      [singlePageIdx + 1, singlePageIdx - 1].forEach(p => {
+    function preloadAdjacentPages(pIdx) {
+      [pIdx + 1, pIdx - 1].forEach(p => {
         if (p >= 1 && p <= TOTAL_PAGES) {
           const pre = new Image();
           pre.src = `pages/page_${String(p).padStart(2, '0')}.webp`;

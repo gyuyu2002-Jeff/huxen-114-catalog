@@ -26,9 +26,10 @@
     /* 三模態架構：產品圖片 (大字體)、單頁合約大圖 (滿版大字)、雙頁 3D 擬真 */
     html.mode-dm .view-mode-dm { display: block !important; }
     html.mode-dm .view-mode-single { display: none !important; }
-        html.mode-dm .footer { display: none !important; }
+    html.mode-dm .footer { display: none !important; }
     html.mode-dm .quick-guide-bar { display: none !important; }
     html.mode-dm #pageActiveProductsBar { display: none !important; }
+    html.mode-dm .main-viewport { bottom: 0 !important; }
 
     html.mode-single .view-mode-dm { display: none !important; }
     html.mode-single .view-mode-single { display: flex !important; }
@@ -1047,6 +1048,8 @@
       box-shadow: 0 16px 48px rgba(10, 31, 61, 0.28);
       cursor: grab;
       transition: box-shadow 0.2s ease;
+      flex-shrink: 0;
+      min-height: auto;
     }
     .view-mode-single.is-dragging .single-page-sheet {
       cursor: zoom-in;
@@ -2252,26 +2255,6 @@
     .view-mode-single {
       padding: 24px 0 80px 0 !important;
     }
-
-      .view-mode-single {
-        padding: 8px 8px 72px 8px !important;
-        overflow-x: auto !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-      }
-      .single-page-sheet {
-        width: var(--single-w, 100%) !important;
-        max-width: 100% !important;
-        margin: 0 auto 20px auto !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
-        border-radius: 8px !important;
-        overflow: hidden !important;
-      }
-      .single-page-sheet img {
-        width: 100% !important;
-        height: auto !important;
-        display: block !important;
-      }
     
 
     .category-group {
@@ -3336,7 +3319,7 @@
     /* ---------------- 產品圖片模式 (Product DM Mode) ---------------- */
     .view-mode-dm {
       position: absolute;
-      inset: 56px 0 0 0;
+      inset: 0;
       overflow-y: auto;
       overflow-x: hidden;
       background: #f8fafc;
@@ -3702,26 +3685,6 @@
     .view-mode-single {
       position: relative;
     }
-
-      .view-mode-single {
-        padding: 8px 8px 72px 8px !important;
-        overflow-x: auto !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-      }
-      .single-page-sheet {
-        width: var(--single-w, 100%) !important;
-        max-width: 100% !important;
-        margin: 0 auto 20px auto !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
-        border-radius: 8px !important;
-        overflow: hidden !important;
-      }
-      .single-page-sheet img {
-        width: 100% !important;
-        height: auto !important;
-        display: block !important;
-      }
     
     .view-mode-single[data-hotspot="center"] {
       cursor: grab;
@@ -4687,7 +4650,8 @@
         margin: 0 auto 20px auto !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
         border-radius: 8px !important;
-        overflow: hidden !important;
+        flex-shrink: 0;
+        min-height: auto;
       }
       .single-page-sheet img {
         width: 100% !important;
@@ -5434,15 +5398,86 @@
     };
 
 
-    // 單頁模式滑鼠滾輪：依指示改為「頁面上下瀏覽」
+    // 單頁模式滑鼠滾輪：支援「頁面上下瀏覽」、「Ctrl+滾輪無段縮放」與「邊界/整頁推動翻頁」
+    let wheelTurnTimer = 0;
+    let wheelBoundaryAccum = 0;
+    let wheelBoundaryResetTimer = null;
+
+    function handleWheelPageTurn(direction) {
+      const now = performance.now();
+      if (now - wheelTurnTimer < 380) return;
+      wheelTurnTimer = now;
+      if (direction > 0) {
+        if (singlePageIdx < TOTAL_PAGES) {
+          setSinglePage(singlePageIdx + 1);
+          viewModeSingle.scrollTop = 0;
+        } else {
+          showToast('已是最後一頁 (服務據點)');
+        }
+      } else {
+        if (singlePageIdx > 1) {
+          setSinglePage(singlePageIdx - 1);
+          requestAnimationFrame(() => {
+            viewModeSingle.scrollTop = viewModeSingle.scrollHeight;
+          });
+        } else {
+          showToast('已是第一頁 (封面)');
+        }
+      }
+    }
+
     viewModeSingle.addEventListener('wheel', e => {
       if (e.ctrlKey) {
         e.preventDefault();
         const delta = e.deltaY < 0 ? 140 : -140;
         applySingleWidth(singleWidth + delta);
+        return;
       }
-      // 純推動滾輪：瀏覽器原生流暢上下捲動頁面 (不呼叫 preventDefault)
-    }, { passive: true });
+
+      const canScrollY = viewModeSingle.scrollHeight > (viewModeSingle.clientHeight + 10);
+      if (!canScrollY) {
+        // 整頁無滾動條時：直接推動滾輪換頁
+        if (Math.abs(e.deltaY) > 20) {
+          e.preventDefault();
+          handleWheelPageTurn(e.deltaY > 0 ? 1 : -1);
+        }
+        return;
+      }
+
+      // 有滾動條時：原生上下捲動；捲至頂端/底端後繼續推動滾輪則順暢換頁
+      const atBottom = (viewModeSingle.scrollTop + viewModeSingle.clientHeight) >= (viewModeSingle.scrollHeight - 6);
+      const atTop = viewModeSingle.scrollTop <= 6;
+
+      clearTimeout(wheelBoundaryResetTimer);
+      wheelBoundaryResetTimer = setTimeout(() => { wheelBoundaryAccum = 0; }, 320);
+
+      if (e.deltaY > 0 && atBottom) {
+        wheelBoundaryAccum += e.deltaY;
+        if (wheelBoundaryAccum > 160) {
+          wheelBoundaryAccum = 0;
+          handleWheelPageTurn(1);
+        }
+      } else if (e.deltaY < 0 && atTop) {
+        wheelBoundaryAccum += e.deltaY;
+        if (wheelBoundaryAccum < -160) {
+          wheelBoundaryAccum = 0;
+          handleWheelPageTurn(-1);
+        }
+      } else {
+        wheelBoundaryAccum = 0;
+      }
+    }, { passive: false });
+
+    // 游標在左右空白熱區或背景時，推動滾輪亦可同步上下瀏覽
+    const mainViewportEl = document.querySelector('.main-viewport');
+    if (mainViewportEl) {
+      mainViewportEl.addEventListener('wheel', e => {
+        if (!isSingleMode) return;
+        if (e.target === mainViewportEl || e.target.classList?.contains('hotspot-zone-cue')) {
+          viewModeSingle.scrollTop += e.deltaY;
+        }
+      }, { passive: true });
+    }
 
     // Single page side buttons
     document.getElementById('singleSidePrevBtn').onclick = () => setSinglePage(singlePageIdx - 1);
@@ -5950,15 +5985,8 @@
     function syncUrlHash() {
       clearTimeout(hashSyncTimer);
       hashSyncTimer = setTimeout(() => {
-        const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const curMode = isSingleMode ? 'single' : (isMobileDevice ? 'single' : 'spread');
-        let curPage = 1;
-        if (isSingleMode) {
-          curPage = singlePageIdx;
-        } else {
-          const cur = PAGES[idx];
-          curPage = cur && cur.pages ? cur.pages[0] : 1;
-        }
+        const curMode = isSingleMode ? 'single' : 'dm';
+        const curPage = isSingleMode ? singlePageIdx : 1;
         const targetHash = `#page=${curPage}&mode=${curMode}`;
         if (window.location.hash !== targetHash) {
           history.replaceState(null, '', targetHash);
@@ -5982,25 +6010,20 @@
     }
 
     function applyHashRoute() {
-      const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const r = parseHashRoute();
       if (!r) return false;
 
-      // 手機端只有在使用者手動點擊切換時才改變模式，不因歷史 hash 誤跳回雙頁
-      if (!isMobileDevice) {
-        if (r.mode === 'single' && !isSingleMode) {
-          switchToSingle();
-        } else if (r.mode === 'spread' && isSingleMode) {
-          switchToSpread();
+      let targetMode = r.mode;
+      if (targetMode === 'spread') targetMode = 'single';
+      if (targetMode && ['dm', 'single'].includes(targetMode)) {
+        if (targetMode !== currentViewMode) {
+          switchViewMode(targetMode);
         }
       }
 
       if (r.page && r.page >= 1 && r.page <= TOTAL_PAGES) {
         if (isSingleMode) {
           setSinglePage(r.page);
-        } else {
-          const targetSpread = r.page === 1 ? 0 : Math.floor(r.page / 2);
-          if (targetSpread !== idx) goTo(targetSpread);
         }
         return true;
       }
@@ -6145,8 +6168,12 @@
       // 僅當網址明確帶有 #mode=spread 時才進入雙頁模式
       // 預設採用產品圖片模式，直接展示大字體機種與契約價格；亦支援路由直接指定單頁或雙頁
       let initialMode = 'dm';
-      if (route && route.mode && ['dm', 'single'].includes(route.mode)) {
-        initialMode = route.mode;
+      if (route && route.mode) {
+        if (route.mode === 'spread' || route.mode === 'single') {
+          initialMode = 'single';
+        } else if (route.mode === 'dm') {
+          initialMode = 'dm';
+        }
       }
       switchViewMode(initialMode);
 
@@ -7368,6 +7395,7 @@
 
       if (mode === 'dm') {
         renderDmCards();
+        syncUrlHash();
       } else if (mode === 'single') {
         forceSingleImageReRaster();
         updateMeta();

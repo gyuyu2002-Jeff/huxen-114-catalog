@@ -3785,7 +3785,7 @@
     }
 
 
-    /* ---------------- 左側空白區懸浮操作說明卡片 (加大清晰版) ---------------- */
+    /* ---------------- 左側空白區懸浮操作說明卡片 (極簡輕量側邊膠囊模式) ---------------- */
     html.mode-dm .desktop-guide-card {
       display: none !important;
     }
@@ -3795,66 +3795,88 @@
 
     .desktop-guide-card {
       position: fixed;
-      left: 24px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      width: clamp(265px, 19vw, 305px);
-      background: rgba(10, 31, 61, 0.92);
+      width: 44px;
+      background: rgba(10, 31, 61, 0.94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1.8px solid rgba(56, 189, 248, 0.38);
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.36);
-      border-radius: 16px;
-      padding: 16px 18px;
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border-radius: 24px;
+      padding: 16px 8px;
       z-index: 92;
       flex-direction: column;
-      gap: 12px;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      align-items: center;
+      gap: 0;
+      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), 
+                  padding 0.32s cubic-bezier(0.16, 1, 0.3, 1), 
+                  background 0.25s ease, 
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease,
+                  transform 0.25s ease;
       user-select: none;
       -webkit-user-select: none;
+      cursor: pointer;
     }
 
-    .desktop-guide-card.collapsed {
-      left: 14px;
-      width: 48px;
-      height: auto;
-      padding: 16px 10px;
-      cursor: pointer;
-      background: rgba(10, 31, 61, 0.95);
-      border-color: rgba(56, 189, 248, 0.5);
-    }
-    .desktop-guide-card.collapsed:hover {
-      background: #005bac;
-      transform: translateY(-50%) scale(1.06);
-      box-shadow: 0 14px 32px rgba(0, 91, 172, 0.55);
-    }
-    .desktop-guide-card.collapsed .guide-card-body,
-    .desktop-guide-card.collapsed .guide-card-header span,
-    .desktop-guide-card.collapsed .guide-card-toggle {
-      display: none !important;
-    }
-    .desktop-guide-card.collapsed .guide-title-icon {
-      display: block !important;
+    .desktop-guide-card .guide-title-icon {
       font-size: 20px;
+      line-height: 1;
+      display: block;
       margin: 0 auto;
+      filter: drop-shadow(0 2px 6px rgba(56, 189, 248, 0.5));
     }
-    .desktop-guide-card.collapsed .guide-collapsed-label {
-      display: block !important;
+
+    .desktop-guide-card .guide-collapsed-label {
+      display: block;
       writing-mode: vertical-rl;
       text-orientation: upright;
-      color: #fff;
-      font-size: 13.5px;
+      color: #ffffff;
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 3px;
-      margin-top: 8px;
+      letter-spacing: 4px;
+      margin-top: 10px;
+      line-height: 1;
+      opacity: 0.95;
     }
 
-    .guide-collapsed-label {
+    .desktop-guide-card .guide-card-header,
+    .desktop-guide-card .guide-card-body {
       display: none;
     }
 
-    .guide-card-header {
+    /* 懸停 (Hover) 或展開 (.expanded) 時流暢開展為完整說明面板 */
+    .desktop-guide-card:hover,
+    .desktop-guide-card.expanded {
+      width: clamp(265px, 19vw, 305px);
+      border-radius: 16px;
+      padding: 16px 18px;
+      gap: 12px;
+      align-items: stretch;
+      cursor: default;
+      background: rgba(10, 31, 61, 0.96);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), 0 0 25px rgba(56, 189, 248, 0.25);
+    }
+
+    .desktop-guide-card:hover .guide-collapsed-label,
+    .desktop-guide-card.expanded .guide-collapsed-label {
+      display: none !important;
+    }
+
+    .desktop-guide-card:hover .guide-card-header,
+    .desktop-guide-card.expanded .guide-card-header {
       display: flex;
+    }
+
+    .desktop-guide-card:hover .guide-card-body,
+    .desktop-guide-card.expanded .guide-card-body {
+      display: flex;
+    }
+
+    .guide-card-header {
       align-items: center;
       justify-content: space-between;
       padding-bottom: 10px;
@@ -3865,12 +3887,9 @@
       align-items: center;
       gap: 8px;
       color: #38bdf8;
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: 0.6px;
-    }
-    .guide-title-icon {
-      font-size: 18px;
     }
     .guide-card-toggle {
       background: rgba(255, 255, 255, 0.08);
@@ -3901,7 +3920,6 @@
     }
 
     .guide-card-body {
-      display: flex;
       flex-direction: column;
       gap: 9px;
     }
@@ -3993,40 +4011,7 @@
       }
     }
 
-
-    /* 左側卡片頂部感應區大標籤 */
-    .guide-zone-alert {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 12px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(0, 91, 172, 0.45) 0%, rgba(56, 189, 248, 0.22) 100%);
-      border: 1.5px solid rgba(56, 189, 248, 0.55);
-      color: #38bdf8;
-      box-shadow: 0 4px 14px rgba(0, 91, 172, 0.3);
-      margin-bottom: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .guide-zone-alert .guide-zone-icon {
-      font-size: 18px;
-    }
-    .guide-zone-alert .guide-zone-title {
-      font-size: 14.5px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: #ffffff;
-    }
-    .guide-zone-alert:hover,
-    .view-mode-single[data-hotspot="prev"] .guide-zone-alert {
-      background: linear-gradient(135deg, rgba(0, 91, 172, 0.75) 0%, rgba(56, 189, 248, 0.45) 100%);
-      border-color: #38bdf8;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
-      transform: scale(1.02);
-    }
-
-    /* 右側切換下一頁感應區卡片 */
+    /* ---------------- 右側切換下一頁感應區卡片 (極簡輕量側邊膠囊模式) ---------------- */
     html.mode-dm .desktop-zone-card {
       display: none !important;
     }
@@ -4036,39 +4021,102 @@
 
     .desktop-zone-card.right {
       position: fixed;
-      right: 24px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
-      width: clamp(220px, 16vw, 260px);
-      background: rgba(10, 31, 61, 0.92);
+      width: 44px;
+      background: rgba(10, 31, 61, 0.94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1.8px solid rgba(56, 189, 248, 0.38);
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.36);
-      border-radius: 16px;
-      padding: 16px 18px;
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border-radius: 24px;
+      padding: 16px 8px;
       z-index: 92;
       flex-direction: column;
-      gap: 10px;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      align-items: center;
+      gap: 0;
+      transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.25s ease,
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease,
+                  transform 0.25s ease;
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
     }
+
+    .desktop-zone-card.right .zone-card-icon {
+      font-size: 20px;
+      line-height: 1;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 2px 6px rgba(56, 189, 248, 0.5));
+    }
+
+    .desktop-zone-card.right .zone-collapsed-label {
+      display: block;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-top: 10px;
+      line-height: 1;
+      opacity: 0.95;
+    }
+
+    .desktop-zone-card.right .zone-card-title,
+    .desktop-zone-card.right .zone-card-desc,
+    .desktop-zone-card.right .zone-card-btn-hint {
+      display: none;
+    }
+
+    /* 懸停 (Hover) 或展開 (.expanded) 時流暢開展為完整提示卡片 */
     .desktop-zone-card.right:hover,
+    .desktop-zone-card.right.expanded,
     .view-mode-single[data-hotspot="next"] .desktop-zone-card.right {
-      border-color: #38bdf8;
+      width: clamp(210px, 15vw, 240px);
+      border-radius: 16px;
+      padding: 16px 18px;
+      gap: 10px;
+      align-items: stretch;
       background: rgba(10, 31, 61, 0.96);
-      box-shadow: 0 0 28px rgba(56, 189, 248, 0.5), 0 20px 50px rgba(0, 0, 0, 0.45);
-      transform: translateY(-50%) scale(1.04);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), 0 0 25px rgba(56, 189, 248, 0.3);
+    }
+
+    .desktop-zone-card.right:hover .zone-collapsed-label,
+    .desktop-zone-card.right.expanded .zone-collapsed-label,
+    .view-mode-single[data-hotspot="next"] .desktop-zone-card.right .zone-collapsed-label {
+      display: none !important;
+    }
+
+    .desktop-zone-card.right:hover .zone-card-title,
+    .desktop-zone-card.right.expanded .zone-card-title,
+    .view-mode-single[data-hotspot="next"] .desktop-zone-card.right .zone-card-title {
+      display: flex;
+    }
+
+    .desktop-zone-card.right:hover .zone-card-desc,
+    .desktop-zone-card.right.expanded .zone-card-desc,
+    .view-mode-single[data-hotspot="next"] .desktop-zone-card.right .zone-card-desc {
+      display: block;
+    }
+
+    .desktop-zone-card.right:hover .zone-card-btn-hint,
+    .desktop-zone-card.right.expanded .zone-card-btn-hint,
+    .view-mode-single[data-hotspot="next"] .desktop-zone-card.right .zone-card-btn-hint {
+      display: flex;
     }
 
     .zone-card-title {
-      display: flex;
       align-items: center;
       justify-content: space-between;
       color: #38bdf8;
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: 0.6px;
       padding-bottom: 8px;
@@ -4077,91 +4125,35 @@
     .zone-card-title span:first-child {
       color: #ffffff;
       font-weight: 800;
-      font-size: 15px;
-    }
-    .zone-card-icon {
-      font-size: 18px;
+      font-size: 14.5px;
     }
     .zone-card-desc {
       color: #94a3b8;
-      font-size: 12.5px;
+      font-size: 12px;
       line-height: 1.45;
     }
     .zone-card-btn-hint {
-      display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       padding: 8px 12px;
       border-radius: 8px;
-      background: linear-gradient(135deg, rgba(0, 91, 172, 0.35) 0%, rgba(56, 189, 248, 0.2) 100%);
-      border: 1.2px solid rgba(56, 189, 248, 0.45);
-      color: #38bdf8;
-      font-size: 13px;
+      background: linear-gradient(135deg, rgba(0, 91, 172, 0.45) 0%, rgba(56, 189, 248, 0.25) 100%);
+      border: 1.2px solid rgba(56, 189, 248, 0.5);
+      color: #ffffff;
+      font-size: 12.5px;
       font-weight: 700;
       letter-spacing: 0.5px;
       transition: all 0.2s;
     }
     .zone-card-btn-hint svg {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       stroke: currentColor;
       fill: none;
       stroke-width: 2.8;
       stroke-linecap: round;
       stroke-linejoin: round;
-    }
-    .desktop-zone-card.right:hover .zone-card-btn-hint,
-    .view-mode-single[data-hotspot="next"] .desktop-zone-card.right .zone-card-btn-hint {
-      background: #005bac;
-      color: #ffffff;
-      border-color: #38bdf8;
-      box-shadow: 0 4px 14px rgba(0, 91, 172, 0.5);
-    }
-
-    
-    /* 右側下一頁感應卡片收合狀態 (智慧避讓) */
-    .desktop-zone-card.right.collapsed {
-      right: 12px;
-      width: 44px;
-      height: auto;
-      padding: 16px 8px;
-      cursor: pointer;
-      background: rgba(10, 31, 61, 0.94);
-      border-color: rgba(56, 189, 248, 0.45);
-      transform: translateY(-50%);
-    }
-    .desktop-zone-card.right.collapsed:hover {
-      background: #005bac;
-      transform: translateY(-50%) scale(1.06);
-      box-shadow: 0 14px 32px rgba(0, 91, 172, 0.55);
-    }
-    .desktop-zone-card.right.collapsed .zone-card-desc,
-    .desktop-zone-card.right.collapsed .zone-card-btn-hint,
-    .desktop-zone-card.right.collapsed .zone-card-title span:first-child {
-      display: none !important;
-    }
-    .desktop-zone-card.right.collapsed .zone-card-title {
-      border-bottom: none;
-      padding: 0;
-      justify-content: center;
-    }
-    .desktop-zone-card.right.collapsed .zone-card-icon {
-      font-size: 20px;
-      margin: 0 auto;
-    }
-    .desktop-zone-card.right.collapsed .zone-collapsed-label {
-      display: block !important;
-      writing-mode: vertical-rl;
-      text-orientation: upright;
-      color: #fff;
-      font-size: 13.5px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      margin-top: 8px;
-    }
-    .zone-collapsed-label {
-      display: none;
     }
 
     @media (max-width: 1280px) {
@@ -4866,21 +4858,18 @@
 
     <!-- Mode 2: Single Page Mode (單頁超高清大圖閱讀模式，滾輪放大支援到 5x) -->
     <div class="view-mode-single" id="viewModeSingle">
-    <!-- 左側空白區懸浮操作說明卡片 (使用者指定位置) -->
-    <div class="desktop-guide-card" id="desktopGuideCard">
+    <!-- 左側空白區懸浮操作說明卡片 (極簡輕量側邊膠囊模式) -->
+    <div class="desktop-guide-card" id="desktopGuideCard" title="點擊或將滑鼠移至此處查看操作說明">
+      <span class="guide-title-icon">💡</span>
+      <span class="guide-collapsed-label">操作說明</span>
       <div class="guide-card-header">
         <div class="guide-card-title">
-          <span class="guide-title-icon">💡</span>
+          <span class="guide-title-icon" style="filter:none;">💡</span>
           <span>操作說明</span>
         </div>
         <button class="guide-card-toggle" id="guideCardToggle" title="收合說明" aria-label="收合說明">
           <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-      </div>
-      <span class="guide-collapsed-label">操作說明</span>
-      <div class="guide-zone-alert" id="guideZoneAlert" title="點擊切換上一頁">
-        <span class="guide-zone-icon">👈</span>
-        <span class="guide-zone-title">切換上一頁感應區</span>
       </div>
       <div class="guide-card-body">
         <div class="guide-item">
@@ -4927,13 +4916,14 @@
         <button class="pill-btn pill-text" id="btnZoomMax" title="最高 5 倍放大 (500% 4900px 極限顯微)">5x 極限</button>
       </div>
 
-          <!-- 右側空白區懸浮感應區卡片 (切換下一頁感應區) -->
-    <div class="desktop-zone-card right" id="desktopZoneCardRight">
+    <!-- 右側空白區懸浮感應區卡片 (極簡輕量側邊膠囊模式) -->
+    <div class="desktop-zone-card right" id="desktopZoneCardRight" title="點擊或將滑鼠移至此處查看翻頁說明">
+      <span class="zone-card-icon">👉</span>
+      <span class="zone-collapsed-label">下一頁</span>
       <div class="zone-card-title">
         <span>切換下一頁感應區</span>
-        <span class="zone-card-icon">👉</span>
+        <span class="zone-card-icon" style="filter:none;">👉</span>
       </div>
-      <span class="zone-collapsed-label">下一頁</span>
       <div class="zone-card-desc">點擊右側灰色區域任意處<br>即可翻至下一頁</div>
       <div class="zone-card-btn-hint">
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -5314,31 +5304,9 @@
     }
 
     
-    /* ---------------- 智慧自動避讓：放大時自動收合左右說明卡片，縮小至預設寬度時自動展開 ---------------- */
-    let userManuallyCollapsedLeft = false;
-
+    /* ---------------- 側邊膠囊說明標籤：已常態保持輕量膠囊，不佔用閱讀版面 ---------------- */
     function updateCardsAutoCollapse(w) {
-      const leftCard = document.getElementById('desktopGuideCard');
-      const rightCard = document.getElementById('desktopZoneCardRight');
-      if (window.innerWidth <= 1200) return;
-
-      const isZoomed = (w > 1150);
-
-      if (isZoomed) {
-        if (leftCard && !leftCard.classList.contains('collapsed')) {
-          leftCard.classList.add('collapsed', 'is-auto-collapsed');
-        }
-        if (rightCard && !rightCard.classList.contains('collapsed')) {
-          rightCard.classList.add('collapsed', 'is-auto-collapsed');
-        }
-      } else {
-        if (leftCard && leftCard.classList.contains('is-auto-collapsed') && !userManuallyCollapsedLeft) {
-          leftCard.classList.remove('collapsed', 'is-auto-collapsed');
-        }
-        if (rightCard && rightCard.classList.contains('is-auto-collapsed')) {
-          rightCard.classList.remove('collapsed', 'is-auto-collapsed');
-        }
-      }
+      // 膠囊模式預設寬度僅 44px，Hover 或點擊才展開，任何縮放尺寸均不擋版面
     }
 
     function applySingleWidth(w, modeLabel) {
@@ -6990,35 +6958,37 @@
       setSinglePage(pageNum);
     }
 
-        /* 左側操作說明卡片收合與展開邏輯 */
+    /* 左側操作說明膠囊卡片：支援點擊展開/收合切換 */
     const desktopGuideCard = document.getElementById('desktopGuideCard');
     const guideCardToggle = document.getElementById('guideCardToggle');
-    if (desktopGuideCard && guideCardToggle) {
-      try {
-        if (localStorage.getItem('huxen_guide_collapsed') === '1') {
-          desktopGuideCard.classList.add('collapsed');
-        }
-      } catch(e) {}
-
-      guideCardToggle.addEventListener('click', e => {
-        e.stopPropagation();
-        userManuallyCollapsedLeft = true;
-        desktopGuideCard.classList.add('collapsed');
-        desktopGuideCard.classList.remove('is-auto-collapsed');
-        try { localStorage.setItem('huxen_guide_collapsed', '1'); } catch(err) {}
-      });
-
+    if (desktopGuideCard) {
       desktopGuideCard.addEventListener('click', e => {
-        if (desktopGuideCard.classList.contains('collapsed')) {
-          userManuallyCollapsedLeft = false;
-          desktopGuideCard.classList.remove('collapsed', 'is-auto-collapsed');
-          try { localStorage.removeItem('huxen_guide_collapsed'); } catch(err) {}
+        // 如果點擊的是收合按鈕
+        if (e.target.closest('#guideCardToggle')) {
+          e.stopPropagation();
+          desktopGuideCard.classList.remove('expanded');
+          return;
+        }
+        // 如果當前未展開且點在膠囊上，切換展開
+        if (!desktopGuideCard.classList.contains('expanded')) {
+          e.stopPropagation();
+          desktopGuideCard.classList.add('expanded');
         }
       });
     }
 
-    
-    /* 右側下一頁感應卡片點擊監聽 */
+    // 點擊頁面其他任意處時，自動收合已展開的側邊卡片
+    document.addEventListener('click', e => {
+      if (desktopGuideCard && !desktopGuideCard.contains(e.target)) {
+        desktopGuideCard.classList.remove('expanded');
+      }
+      const desktopZoneCardRight = document.getElementById('desktopZoneCardRight');
+      if (desktopZoneCardRight && !desktopZoneCardRight.contains(e.target)) {
+        desktopZoneCardRight.classList.remove('expanded');
+      }
+    });
+
+    /* 右側下一頁感應膠囊卡片：點擊翻頁，懸停展開提示 */
     const desktopZoneCardRight = document.getElementById('desktopZoneCardRight');
     if (desktopZoneCardRight) {
       desktopZoneCardRight.addEventListener('click', e => {
@@ -7027,19 +6997,6 @@
           setSinglePage(singlePageIdx + 1);
         } else {
           showToast('已是最後一頁 (服務據點)');
-        }
-      });
-    }
-
-    /* 左側上一頁大標籤點擊監聽 */
-    const guideZoneAlert = document.getElementById('guideZoneAlert');
-    if (guideZoneAlert) {
-      guideZoneAlert.addEventListener('click', e => {
-        e.stopPropagation();
-        if (singlePageIdx > 1) {
-          setSinglePage(singlePageIdx - 1);
-        } else {
-          showToast('已是第一頁 (封面)');
         }
       });
     }

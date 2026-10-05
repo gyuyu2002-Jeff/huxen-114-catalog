@@ -1082,7 +1082,7 @@
       z-index: 1;
     }
 
-    /* 擬真翻動葉片覆蓋層 (3D Page Leaf) */
+    /* 擬真翻動葉片覆蓋層 (3D Page Leaf) - 硬體加速與平滑消隱 */
     .flip-leaf-overlay {
       position: absolute;
       inset: 0;
@@ -1091,6 +1091,9 @@
       transform-style: preserve-3d;
       z-index: 10;
       overflow: visible;
+      will-change: transform, box-shadow;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .flip-leaf-overlay.active {
       display: block;
@@ -1108,9 +1111,10 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       transform-style: preserve-3d;
+      will-change: transform;
     }
     .flip-leaf-back {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg) translateZ(1px);
       background-color: #f8fafc;
     }
 
@@ -1122,7 +1126,7 @@
       inset: 0;
       border-radius: 6px;
       pointer-events: none;
-      transition: opacity 0.1s linear;
+      will-change: opacity, background;
     }
 
     /* 翻頁底層投射陰影 (Drop Shadow on Underlying Page) */
@@ -1133,58 +1137,57 @@
       pointer-events: none;
       opacity: 0;
       z-index: 2;
+      will-change: opacity, background;
     }
 
-    /* ---------- 下一頁 (Next: 右側掀起向左翻, 擬真紙張弧度) ---------- */
+    /* ---------- 下一頁 (Next: 右側掀起向左翻, 0.44s 乾脆靈敏) ---------- */
     .flip-leaf-overlay.flip-forward {
       transform-origin: left center;
-      animation: bookCurlForward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: bookCurlForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-forward .flip-leaf-front::after {
-      animation: frontShadeForward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: frontShadeForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-forward .flip-leaf-back::after {
-      animation: backShadeForward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: backShadeForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-forward .flip-leaf-shadow {
-      animation: pageShadowForward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: pageShadowForward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
 
-    /* ---------- 上一頁 (Prev: 左側掀起向右翻, 擬真紙張弧度) ---------- */
+    /* ---------- 上一頁 (Prev: 左側掀起向右翻, 0.44s 乾脆靈敏) ---------- */
     .flip-leaf-overlay.flip-backward {
       transform-origin: right center;
-      animation: bookCurlBackward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: bookCurlBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-backward .flip-leaf-front::after {
-      animation: frontShadeBackward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: frontShadeBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-backward .flip-leaf-back::after {
-      animation: backShadeBackward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: backShadeBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
     .flip-leaf-overlay.flip-backward .flip-leaf-shadow {
-      animation: pageShadowBackward 0.62s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: pageShadowBackward 0.44s cubic-bezier(0.33, 1, 0.68, 1) forwards;
     }
 
     /* 物理書頁弧形翻動軌跡 (紙張拱起彎曲 skewX + rotateY + scale) */
     @keyframes bookCurlForward {
       0% {
-        transform: rotateY(0deg) skewY(0deg) scale(1);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: rotateY(0deg) skewY(0deg) scale(1) translateZ(0);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       }
-      35% {
-        /* 紙張掀起中段：右角彎折拱起，透視向外突出 */
-        transform: rotateY(-65deg) skewY(-3.5deg) scale(1.025) translateZ(30px);
-        box-shadow: -22px 18px 50px rgba(10, 31, 61, 0.45);
+      40% {
+        /* 紙張掀起中段：右角微彎拱起，俐落流暢 */
+        transform: rotateY(-75deg) skewY(-2deg) scale(1.015) translateZ(20px);
+        box-shadow: -16px 14px 38px rgba(10, 31, 61, 0.38);
       }
-      65% {
-        /* 紙張越過中心點：彎曲向反面順平 */
-        transform: rotateY(-120deg) skewY(2.8deg) scale(1.015) translateZ(25px);
-        box-shadow: -15px 12px 35px rgba(10, 31, 61, 0.35);
+      70% {
+        transform: rotateY(-135deg) skewY(1.5deg) scale(1.008) translateZ(12px);
+        box-shadow: -10px 10px 24px rgba(10, 31, 61, 0.25);
       }
       100% {
-        /* 平貼落回左側 */
         transform: rotateY(-180deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
       }
     }
 
@@ -1193,25 +1196,24 @@
         background: transparent;
         opacity: 0;
       }
-      35% {
-        /* 掀起時在紙張折痕處產生立體柱狀陰影與亮面 */
-        background: linear-gradient(90deg, rgba(0,0,0,0.28) 0%, rgba(255,255,255,0.45) 45%, rgba(0,0,0,0.18) 100%);
-        opacity: 0.85;
+      40% {
+        background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.35) 45%, rgba(0,0,0,0.1) 100%);
+        opacity: 0.75;
       }
       100% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
         opacity: 1;
       }
     }
 
     @keyframes backShadeForward {
       0% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        background: linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
         opacity: 1;
       }
       65% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.25) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.12) 100%);
-        opacity: 0.75;
+        background: linear-gradient(270deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.08) 100%);
+        opacity: 0.65;
       }
       100% {
         background: transparent;
@@ -1224,14 +1226,13 @@
         opacity: 0;
         background: transparent;
       }
-      30% {
-        /* 在下方新頁面上投射逼真翻頁陰影 */
-        opacity: 0.8;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 30%, transparent 60%);
+      35% {
+        opacity: 0.7;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.1) 28%, transparent 55%);
       }
       80% {
-        opacity: 0.35;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%);
+        opacity: 0.25;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, transparent 35%);
       }
       100% {
         opacity: 0;
@@ -1242,20 +1243,20 @@
     /* 往回翻上一頁軌跡 (Backward) */
     @keyframes bookCurlBackward {
       0% {
-        transform: rotateY(0deg) skewY(0deg) scale(1);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: rotateY(0deg) skewY(0deg) scale(1) translateZ(0);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       }
-      35% {
-        transform: rotateY(65deg) skewY(3.5deg) scale(1.025) translateZ(30px);
-        box-shadow: 22px 18px 50px rgba(10, 31, 61, 0.45);
+      40% {
+        transform: rotateY(75deg) skewY(2deg) scale(1.015) translateZ(20px);
+        box-shadow: 16px 14px 38px rgba(10, 31, 61, 0.38);
       }
-      65% {
-        transform: rotateY(120deg) skewY(-2.8deg) scale(1.015) translateZ(25px);
-        box-shadow: 15px 12px 35px rgba(10, 31, 61, 0.35);
+      70% {
+        transform: rotateY(135deg) skewY(-1.5deg) scale(1.008) translateZ(12px);
+        box-shadow: 10px 10px 24px rgba(10, 31, 61, 0.25);
       }
       100% {
         transform: rotateY(180deg) skewY(0deg) scale(1) translateZ(0);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
       }
     }
 
@@ -1264,24 +1265,24 @@
         background: transparent;
         opacity: 0;
       }
-      35% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.28) 0%, rgba(255,255,255,0.45) 45%, rgba(0,0,0,0.18) 100%);
-        opacity: 0.85;
+      40% {
+        background: linear-gradient(270deg, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.35) 45%, rgba(0,0,0,0.1) 100%);
+        opacity: 0.75;
       }
       100% {
-        background: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        background: linear-gradient(270deg, rgba(0,0,0,0.5) 0%, transparent 100%);
         opacity: 1;
       }
     }
 
     @keyframes backShadeBackward {
       0% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 100%);
         opacity: 1;
       }
       65% {
-        background: linear-gradient(90deg, rgba(0,0,0,0.25) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.12) 100%);
-        opacity: 0.75;
+        background: linear-gradient(90deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.08) 100%);
+        opacity: 0.65;
       }
       100% {
         background: transparent;
@@ -1294,13 +1295,13 @@
         opacity: 0;
         background: transparent;
       }
-      30% {
-        opacity: 0.8;
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 30%, transparent 60%);
+      35% {
+        opacity: 0.7;
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.1) 28%, transparent 55%);
       }
       80% {
-        opacity: 0.35;
-        background: linear-gradient(270deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%);
+        opacity: 0.25;
+        background: linear-gradient(270deg, rgba(0, 0, 0, 0.18) 0%, transparent 35%);
       }
       100% {
         opacity: 0;
@@ -5630,7 +5631,7 @@
         flipOverlay.className = 'flip-leaf-overlay';
         isPageFlipping = false;
         preloadAdjacentPages(singlePageIdx);
-      }, 620);
+      }, 440);
     }
 
     function updateNavButtons() {
